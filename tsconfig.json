@@ -17,5 +17,6 @@
       "@utils/*": ["src/utils/*"],
       "@config/*": ["src/config/*"]
     }
-  }
+  },
+  "exclude": ["supabase/functions"]
 }
