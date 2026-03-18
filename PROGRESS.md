@@ -1,8 +1,8 @@
 # beRest - Build Progress Tracker
 
 > Last updated: 2026-03-18
-> Current phase: PHASE 3 - COMPLETE
-> Overall progress: 81/128 tasks
+> Current phase: PHASE 4 - COMPLETE
+> Overall progress: 95/128 tasks
 
 ## STATUS: TODO / IN_PROGRESS / DONE / BLOCKED / SKIPPED
 
@@ -124,22 +124,22 @@
 ## PHASE 4: MODULE LAPAK - ADVANCED MODES (Week 18-22)
 | # | Task | Status | Files | Notes |
 |---|------|--------|-------|-------|
-| 4.1 | Provider: Laundry Mode (order + status + pricing) | TODO | - | - |
-| 4.2 | Consumer app: Laundry tracking (real-time status via Supabase Realtime) | TODO | - | - |
-| 4.3 | Portal: berest.id/lb/[code] - laundry status | TODO | - | - |
-| 4.4 | Provider: Guru/Pelatih Mode (students + schedule + attendance) | TODO | - | - |
-| 4.5 | Provider: Auto-generate monthly billing (guru) | TODO | - | - |
-| 4.6 | Consumer app: Student/parent dashboard (jadwal + tagihan) | TODO | - | - |
-| 4.7 | Portal: berest.id/gp/[code] - student portal | TODO | - | - |
-| 4.8 | Provider: Jasa Umum Mode (queue + orders) | TODO | - | - |
-| 4.9 | Provider: QR code generator for queue | TODO | - | - |
-| 4.10 | Consumer app: Queue tracking (real-time) | TODO | - | - |
-| 4.11 | Portal: berest.id/bb/[slug] - queue portal | TODO | - | - |
-| 4.12 | Provider: Customer Database (cross-mode) | TODO | - | - |
-| 4.13 | Provider: AI scan nota (Gemini 2.5 Flash) | TODO | - | - |
-| 4.14 | Verify quality gate | TODO | - | - |
+| 4.1 | Provider: Laundry Mode | DONE | app/(provider)/(tabs)/lapak/laundry.tsx | Order create, 6-step status flow (received→picked_up), status badges |
+| 4.2 | Consumer: Laundry tracking | DONE | app/(consumer)/lapak/laundry-track.tsx | Code lookup, progress stepper UI, Realtime via Supabase |
+| 4.3 | Portal: lb/[code] laundry status | DONE | portal/app/lb/[code]/page.tsx | SSR progress stepper, order details |
+| 4.4 | Provider: Guru/Pelatih Mode | DONE | app/(provider)/(tabs)/lapak/guru.tsx | 4 tabs: Students, Schedule, Attendance, Billing |
+| 4.5 | Provider: Auto-generate billing (guru) | DONE | lapak-advanced.service.ts | generateStudentBilling per period |
+| 4.6 | Consumer: Student/parent dashboard | DONE | app/(consumer)/lapak/student.tsx | Schedule view + billing status |
+| 4.7 | Portal: gp/[code] student portal | DONE | portal/app/gp/[code]/page.tsx | SSR schedule + student list |
+| 4.8 | Provider: Jasa Umum Mode (queue) | DONE | app/(provider)/(tabs)/lapak/queue.tsx | Queue management, call next, complete |
+| 4.9 | Provider: QR code for queue | DONE | queue.tsx + portal/app/bb/[slug] | QR links to portal queue page |
+| 4.10 | Consumer: Queue tracking | DONE | portal/app/bb/[slug]/page.tsx | Real-time via portal (now serving + waiting count) |
+| 4.11 | Portal: bb/[slug] queue portal | DONE | portal/app/bb/[slug]/page.tsx | SSR: now serving, waiting count, full queue list |
+| 4.12 | Provider: Customer Database | DONE | app/(provider)/(tabs)/lapak/customers.tsx | Cross-mode customer list, search, add, total orders/spent |
+| 4.13 | Provider: AI scan nota (Gemini 2.5 Flash) | DONE | src/services/gemini.service.ts | scanNota (receipt OCR), scanKTP, generateContractText |
+| 4.14 | Verify quality gate | DONE | - | TS 0 errors, Expo OK |
 
-**Quality Gate 4:** ❌
+**Quality Gate 4:** ✅
 
 ---
 

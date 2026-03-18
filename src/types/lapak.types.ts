@@ -90,3 +90,129 @@ export interface DailySummary {
   profit: number;
   transactionCount: number;
 }
+
+// ==================== LAUNDRY MODE ====================
+
+export type LaundryStatus =
+  | "received"
+  | "washing"
+  | "drying"
+  | "ironing"
+  | "ready"
+  | "picked_up"
+  | "cancelled";
+
+export interface LaundryOrder {
+  id: string;
+  business_id: string;
+  order_code: string;
+  customer_name: string;
+  customer_phone: string | null;
+  consumer_id: string | null;
+  items: LaundryItem[];
+  total_weight: number | null;
+  total: number;
+  status: LaundryStatus;
+  payment_status: PaymentStatus;
+  notes: string | null;
+  estimated_done: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LaundryItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface LaundryPricing {
+  id: string;
+  business_id: string;
+  name: string;
+  price_per_kg: number | null;
+  price_per_piece: number | null;
+  is_active: boolean;
+}
+
+// ==================== GURU/PELATIH MODE ====================
+
+export type AttendanceStatus = "present" | "absent" | "excused";
+
+export interface Student {
+  id: string;
+  business_id: string;
+  name: string;
+  phone: string | null;
+  parent_name: string | null;
+  parent_phone: string | null;
+  consumer_id: string | null;
+  monthly_fee: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Schedule {
+  id: string;
+  business_id: string;
+  day_of_week: number; // 0=Sun, 1=Mon...
+  start_time: string; // "HH:MM"
+  end_time: string;
+  subject: string | null;
+  location: string | null;
+}
+
+export interface Attendance {
+  id: string;
+  business_id: string;
+  student_id: string;
+  schedule_id: string | null;
+  date: string;
+  status: AttendanceStatus;
+  notes: string | null;
+}
+
+export interface StudentBilling {
+  id: string;
+  business_id: string;
+  student_id: string;
+  student_name: string;
+  period: string;
+  amount: number;
+  status: PaymentStatus;
+  paid_date: string | null;
+  created_at: string;
+}
+
+// ==================== JASA UMUM MODE ====================
+
+export type QueueStatus = "waiting" | "serving" | "completed" | "cancelled";
+
+export interface QueueEntry {
+  id: string;
+  business_id: string;
+  queue_number: number;
+  customer_name: string;
+  customer_phone: string | null;
+  consumer_id: string | null;
+  service_name: string | null;
+  status: QueueStatus;
+  notes: string | null;
+  estimated_time: number | null; // minutes
+  created_at: string;
+  called_at: string | null;
+  completed_at: string | null;
+}
+
+export interface CustomerRecord {
+  id: string;
+  business_id: string;
+  name: string;
+  phone: string | null;
+  total_orders: number;
+  total_spent: number;
+  last_order_at: string | null;
+  tags: string[];
+  notes: string | null;
+  created_at: string;
+}
