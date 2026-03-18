@@ -210,6 +210,18 @@
 | 2026-03-18 | New | src/components/shared/UpgradeModal.tsx | Subscription upgrade modal | Shows Starter/Pro tiers with features |
 | 2026-03-18 | New | app/(consumer)/warga/jadwal.tsx | Consumer jadwal view | Upcoming/past schedule sections |
 | 2026-03-18 | New | app/(consumer)/sewa/rental.tsx | Consumer rental status | Code lookup + rental details |
+| 2026-03-18 | New | src/hooks/shared/useContacts.ts | K5: Missing hooks | CRUD + search, wraps contact.service |
+| 2026-03-18 | New | src/hooks/shared/useNotifications.ts | K5: Missing hooks | List + read/unread + unread count |
+| 2026-03-18 | New | src/hooks/shared/useReminders.ts | K5: Missing hooks | Schedule/cancel local reminders |
+| 2026-03-18 | New | src/hooks/consumer/useConnections.ts | K5: Missing hooks | Connect/disconnect + store sync |
+| 2026-03-18 | New | src/hooks/consumer/useConsumerDashboard.ts | K5: Missing hooks | Aggregated dashboard: connections by module + unread |
+| 2026-03-18 | New | src/hooks/lapak/useLapak.ts | K5: Missing hooks | useLapak, useLapakDetail, useLapakWeekly |
+| 2026-03-18 | New | src/hooks/sewa/useSewa.ts | K5: Missing hooks | useSewa, useSewaDetail |
+| 2026-03-18 | New | src/hooks/warga/useWarga.ts | K5: Missing hooks | useWarga, useWargaDetail |
+| 2026-03-18 | New | src/hooks/hajat/useHajat.ts | K5: Missing hooks | useHajat, useHajatDetail, useHajatGifts |
+| 2026-03-18 | New | src/config/invitation-templates.ts | K6: Invitation templates | 13 templates across all event types + HTML generator |
+| 2026-03-18 | New | src/services/analytics.service.ts | K8: Analytics service | Per-module analytics: lapak/sewa/warga/hajat |
+| 2026-03-18 | New | app/(provider)/analytics.tsx | K8: Analytics UI screen | Metrics per module with trend badges |
 
 ## KNOWN ISSUES
 | # | Issue | Phase | Severity | Status |
@@ -218,10 +230,10 @@
 | K2 | Consumer notifications screen is a stub (no notification list) | 0 | MEDIUM | FIXED |
 | K3 | Consumer profile screen is a stub (no logout, no connections) | 0 | MEDIUM | FIXED |
 | K4 | Subscription tier mismatch: constants.ts free.modules=1, subscription.service.ts free.maxModules=2 | 6 | LOW | FIXED |
-| K5 | Hooks directory severely incomplete: 1/17 hooks exist (useProviderUpdates only) | ALL | WARNING | OPEN |
-| K6 | No invitation template files (hajat invitations are text-only via WA) | 5 | LOW | OPEN |
+| K5 | Hooks directory severely incomplete: 1/17 hooks exist (useProviderUpdates only) | ALL | WARNING | FIXED |
+| K6 | No invitation template files (hajat invitations are text-only via WA) | 5 | LOW | FIXED |
 | K7 | Portal missing .env.example (deploy will fail without Supabase env vars) | 1 | MEDIUM | FIXED |
-| K8 | No analytics UI screens (service logic exists but no screens) | 6 | LOW | OPEN |
+| K8 | No analytics UI screens (service logic exists but no screens) | 6 | LOW | FIXED |
 | K9 | No subscription/paywall upgrade UI (service exists but no modal/screen) | 6 | LOW | FIXED |
 | K10 | No export PDF/CSV buttons in any screen (service exists but no UI integration) | 6 | LOW | FIXED |
 | K11 | Deep link handler only supports https://apick.id, not apick:// native scheme | 0 | LOW | FIXED |
