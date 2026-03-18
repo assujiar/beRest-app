@@ -2,7 +2,7 @@
 
 > Last updated: 2026-03-18
 > Current phase: PHASE 0 - IN PROGRESS
-> Overall progress: 1/128 tasks
+> Overall progress: 15/128 tasks
 
 ## STATUS: TODO / IN_PROGRESS / DONE / BLOCKED / SKIPPED
 
@@ -18,14 +18,14 @@
 | 0.5 | Setup Supabase client + env vars | DONE | .env, .env.example, src/config/supabase.config.ts, src/services/supabase.ts, .gitignore | Supabase client with AsyncStorage auth persistence |
 | 0.6 | Create full folder structure | DONE | src/types/*.ts, src/utils/*.ts, src/stores/*.ts, src/config/*.ts | All types, utils, stores, config created. Path alias @app-types instead of @types |
 | 0.7 | Create shared UI components (Button, Input, Card, Badge, Modal, Toast, Skeleton) | DONE | src/components/ui/*.tsx, src/components/ui/index.ts | All 7 components per design system specs. Button: primary/secondary/destructive/whatsapp variants. Skeleton: shimmer animation. |
-| 0.8 | Create shared components (CurrencyInput, DatePicker, PhotoPicker, SearchBar, EmptyState, SmartBanner) | TODO | - | - |
-| 0.9 | Build auth screens (login + register + phone OTP) | TODO | - | - |
-| 0.10 | Build provider onboarding (module selection + guided setup) | TODO | - | - |
-| 0.11 | Build consumer onboarding (auto-detect + code input + QR scan) | TODO | - | - |
-| 0.12 | Build role switcher (provider <-> consumer toggle for role='both') | TODO | - | - |
-| 0.13 | Build provider tab navigation (dynamic based on active modules) | TODO | - | - |
-| 0.14 | Build consumer tab navigation (Home + Notifications + Profile) | TODO | - | - |
-| 0.15 | Build provider home dashboard (summary cards per module) | TODO | - | - |
+| 0.8 | Create shared components (CurrencyInput, DatePicker, PhotoPicker, SearchBar, EmptyState, SmartBanner) | DONE | src/components/shared/*.tsx | All 6 components. CurrencyInput auto-format Rp. DatePicker modal calendar. PhotoPicker camera+gallery. |
+| 0.9 | Build auth screens (login + register + phone OTP) | DONE | app/(auth)/login.tsx, app/(auth)/otp.tsx, app/(auth)/register.tsx, src/services/auth.service.ts | Google 1-tap + Phone OTP + 6-digit OTP input with auto-submit |
+| 0.10 | Build provider onboarding (module selection + guided setup) | DONE | app/(onboarding)/provider.tsx | Module cards with color borders, checkbox, skip-to-consumer option |
+| 0.11 | Build consumer onboarding (auto-detect + code input + QR scan) | DONE | app/(onboarding)/consumer.tsx | Code input, QR scan link, auto-detect flow, skip option |
+| 0.12 | Build role switcher (provider <-> consumer toggle for role='both') | DONE | src/components/shared/RoleSwitcher.tsx | Pill toggle Pengelola/Pengguna, navigates between views |
+| 0.13 | Build provider tab navigation (dynamic based on active modules) | DONE | app/(provider)/(tabs)/_layout.tsx, app/(provider)/(tabs)/lapak/*, sewa/*, warga/*, hajat/* | Dynamic tabs: hidden when module inactive. Module colors on active tab. |
+| 0.14 | Build consumer tab navigation (Home + Notifications + Profile) | DONE | app/(consumer)/(tabs)/_layout.tsx | 3 tabs: Home, Notifikasi, Profil. Orange active, h-64 |
+| 0.15 | Build provider home dashboard (summary cards per module) | DONE | app/(provider)/(tabs)/index.tsx | Summary cards per active module with stats, role switcher in header, empty state |
 | 0.16 | Build consumer home dashboard (connected providers list + status summaries) | TODO | - | - |
 | 0.17 | Implement contacts service (shared CRUD) | TODO | - | - |
 | 0.18 | Implement connection service (link/unlink consumer-provider) | TODO | - | - |
