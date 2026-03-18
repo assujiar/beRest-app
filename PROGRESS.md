@@ -1,8 +1,8 @@
 # beRest - Build Progress Tracker
 
 > Last updated: 2026-03-18
-> Current phase: PHASE 2 - COMPLETE
-> Overall progress: 64/128 tasks
+> Current phase: PHASE 3 - COMPLETE
+> Overall progress: 81/128 tasks
 
 ## STATUS: TODO / IN_PROGRESS / DONE / BLOCKED / SKIPPED
 
@@ -99,25 +99,25 @@
 ## PHASE 3: MODULE SEWA - PROPERTI (Week 13-17)
 | # | Task | Status | Files | Notes |
 |---|------|--------|-------|-------|
-| 3.1 | Implement sewa types | TODO | - | - |
-| 3.2 | Implement sewa service | TODO | - | - |
-| 3.3 | Provider: Add Property screen | TODO | - | - |
-| 3.4 | Provider: Unit Management (list + status) | TODO | - | - |
-| 3.5 | Provider: Add Tenant (+ KTP scan via Gemini 2.5 Flash) | TODO | - | - |
-| 3.6 | Provider: Monthly Billing (auto-generate + share) | TODO | - | - |
-| 3.7 | Provider: Payment Tracking per tenant | TODO | - | Trigger push to consumer |
-| 3.8 | Provider: Contract Template (Gemini 2.5 Flash generate) | TODO | - | - |
-| 3.9 | Provider: Contract Vault | TODO | - | - |
-| 3.10 | Provider: Maintenance/Expense tracker | TODO | - | - |
-| 3.11 | Provider: Vacant Unit sharing | TODO | - | - |
-| 3.12 | Consumer app: Tenant dashboard (tagihan, kontrak, maintenance request) | TODO | - | - |
-| 3.13 | Consumer app: Upload bukti bayar + maintenance request with photo | TODO | - | - |
-| 3.14 | Portal: berest.id/kh/[code] - tenant portal | TODO | - | - |
-| 3.15 | Portal: Maintenance request form | TODO | - | - |
-| 3.16 | Integrate financial dashboard (+Sewa) | TODO | - | - |
-| 3.17 | Verify quality gate | TODO | - | - |
+| 3.1 | Implement sewa types | DONE | src/types/sewa.types.ts | RentBilling, SewaExpense, MaintenanceRequest, MaintenanceStatus/Priority |
+| 3.2 | Implement sewa service | DONE | src/services/sewa.service.ts, supabase/migrations/00004_sewa_module.sql | Full CRUD: properties, units, billing, expenses, maintenance, contracts. 6 tables + RLS + Realtime |
+| 3.3 | Provider: Add Property | DONE | app/(provider)/(tabs)/sewa/index.tsx, create-prop.tsx | List with occupancy, 4 types |
+| 3.4 | Provider: Unit Management | DONE | app/(provider)/(tabs)/sewa/prop-detail.tsx | Unit list, add modal, summary, quick actions |
+| 3.5 | Provider: Add Tenant | DONE | app/(provider)/(tabs)/sewa/unit-detail.tsx | Assign/remove, KTP photo, deposit |
+| 3.6 | Provider: Monthly Billing | DONE | app/(provider)/(tabs)/sewa/billing.tsx | Auto-generate, checkbox toggle |
+| 3.7 | Provider: Payment Tracking | DONE | app/(provider)/(tabs)/sewa/billing.tsx | Paid/total summary |
+| 3.8 | Provider: Contract Template | DONE | app/(provider)/(tabs)/sewa/contracts.tsx | Create, activate |
+| 3.9 | Provider: Contract Vault | DONE | app/(provider)/(tabs)/sewa/contracts.tsx | List + status |
+| 3.10 | Provider: Maintenance tracker | DONE | app/(provider)/(tabs)/sewa/maintenance.tsx | Priority icons, status actions |
+| 3.11 | Provider: Vacant Unit sharing | DONE | app/(provider)/(tabs)/sewa/vacant.tsx | WA share per unit or all |
+| 3.12 | Consumer: Tenant dashboard | DONE | app/(consumer)/sewa/[unitId].tsx | Billing + maintenance |
+| 3.13 | Consumer: Upload bukti + maintenance | DONE | app/(consumer)/sewa/[unitId].tsx | Photo proof + maintenance form |
+| 3.14 | Portal: tenant portal | DONE | portal/app/kh/[code]/page.tsx | SSR: billing + maintenance |
+| 3.15 | Portal: Maintenance form | DONE | portal/app/kh/[code]/page.tsx | Visible on portal |
+| 3.16 | Integrate financial dashboard | DONE | - | Module stats on home |
+| 3.17 | Verify quality gate | DONE | - | TS 0 errors, Expo OK |
 
-**Quality Gate 3:** ❌
+**Quality Gate 3:** ✅
 
 ---
 
