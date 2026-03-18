@@ -1,0 +1,524 @@
+# beRest - Builder Guideline (untuk Ari)
+
+> Panduan lengkap: apa yang harus disiapkan, urutan kerja, dan apa yang harus dilakukan saat sesuatu goes wrong.
+> v1.0 - Maret 2026
+
+-----
+
+# SEBELUM MULAI: PERSIAPAN (1-2 hari)
+
+-----
+
+## 1. Install Tools di Laptop
+
+|Tool                 |Cara Install                              |Cek Sudah Terpasang         |
+|---------------------|------------------------------------------|----------------------------|
+|Node.js 20+          |nodejs.org (download LTS)                 |`node -v` -> harus v20+     |
+|npm                  |Ikut sama Node.js                         |`npm -v`                    |
+|Git                  |git-scm.com                               |`git -v`                    |
+|VS Code              |code.visualstudio.com                     |Buka, pastiin jalan         |
+|Claude Code          |`npm install -g @anthropic-ai/claude-code`|`claude --version`          |
+|Expo CLI             |`npm install -g expo-cli`                 |`expo --version`            |
+|Android Studio       |developer.android.com/studio              |Buka, pastiin emulator jalan|
+|Expo Go (di HP)      |Play Store: “Expo Go”                     |Install, buka 1x            |
+|GitHub CLI (optional)|`npm install -g gh`                       |`gh --version`              |
+
+VS Code extensions yang perlu:
+
+- ESLint
+- Prettier
+- Tailwind CSS IntelliSense
+- React Native Tools
+- GitLens
+
+## 2. Setup GitHub Repo
+
+**Claude Code kerja langsung di local Git repo yang connected ke GitHub.** Ini workflow-nya:
+
+```bash
+# 1. Bikin repo di GitHub (via browser atau CLI)
+gh repo create berest-app --private
+
+# ATAU bikin manual di github.com -> New Repository -> "berest-app" -> Private
+
+# 2. Clone ke laptop
+git clone git@github.com:YOUR_USERNAME/berest-app.git
+cd berest-app
+
+# 3. Setup SSH key (kalau belum pernah)
+# Cek dulu: ssh -T git@github.com
+# Kalau "Permission denied": ikuti https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
+# 4. Copy CLAUDE.md dan PROGRESS.md ke repo
+# (Copy dari product concept document, Section "PART 2: BUILD SYSTEM FILES")
+
+# 5. Initial commit
+git add .
+git commit -m "Init: project memory files"
+git push -u origin main
+
+# 6. Jalankan Claude Code di dalam repo
+claude
+```
+
+**Apa yang terjadi saat Claude Code jalan di repo:**
+
+- Claude bisa BACA semua file di repo (code, config, docs)
+- Claude bisa BIKIN file baru (components, services, screens, dll)
+- Claude bisa EDIT file yang sudah ada
+- Claude bisa JALANKAN terminal commands (npm install, npx tsc, npx expo start, dll)
+- Claude bisa jalankan `git add` dan `git commit`
+- Claude BUTUH lo untuk `git push` (karena auth GitHub ada di mesin lo)
+
+**Claude Code BUKAN remote service yang akses GitHub via API.** Claude Code jalan di terminal lo, di folder repo lo. Dia literally kayak developer yang ngetik di laptop lo.
+
+## 3. Setup Accounts (Gratis)
+
+|Account             |URL                       |Yang Diperlukan                                                     |
+|--------------------|--------------------------|--------------------------------------------------------------------|
+|Supabase            |supabase.com              |Bikin project baru, catat: Project URL + anon key + service_role key|
+|Vercel              |vercel.com                |Buat account (connect GitHub - Vercel bisa auto-deploy dari repo lo)|
+|Google Cloud Console|console.cloud.google.com  |Buat project, enable: Google Identity (OAuth), Gemini API           |
+|Gemini API Key      |aistudio.google.com/apikey|Generate API key, simpan                                            |
+|Google Play Console |play.google.com/console   |Bayar $25 (1x seumur hidup), buat developer account                 |
+
+## 4. Setup Supabase Project
+
+Langkah-langkah:
+
+1. Login supabase.com -> “New Project”
+1. Nama: berest-prod (atau berest-dev untuk development)
+1. Region: Southeast Asia (Singapore)
+1. Generate password -> SIMPAN di password manager
+1. Setelah project ready, catat:
+- Project URL: https://xxxxx.supabase.co
+- anon key: eyJxxx…
+- service_role key: eyJxxx… (JANGAN share ini)
+1. Di Supabase dashboard -> Authentication -> Providers:
+- Enable Google (masukkan OAuth Client ID dari Google Cloud Console)
+- Enable Phone (free tier cukup untuk dev, nanti pakai Twilio/MessageBird untuk prod)
+1. Di Supabase dashboard -> Database -> SQL Editor:
+- Nanti kamu akan paste migration SQL dari dokumen product concept di sini
+
+## 5. Setup Gemini API
+
+1. Buka aistudio.google.com
+1. Login dengan Google account
+1. “Get API Key” -> “Create API Key”
+1. Simpan API key
+1. Test di terminal:
+
+```bash
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"contents":[{"parts":[{"text":"Say hello in Indonesian"}]}]}'
+```
+
+1. Kalau response muncul = API key works
+
+## 6. Siapkan File Referensi
+
+Buat folder di laptop: `~/berest-docs/`
+
+Copy 3 file ini ke folder tersebut:
+
+1. `beRest-Complete-Product-Concept-and-Build-System-v2.md` (product concept + build system)
+1. `beRest-Claude-Code-Master-Prompt-Library.md` (prompt library)
+1. File ini (`beRest-Builder-Guideline.md`)
+
+## 7. Setup Domain (Optional, bisa nanti)
+
+- Beli domain: berest.id di registrar Indonesia (Niagahoster/Rumahweb/Dewaweb, ~Rp150-250K/tahun)
+- Nanti configure DNS pointing ke Vercel untuk web portal
+- Ini bisa di-setup di Phase 1 saat portal deployment
+
+-----
+
+# ALUR KERJA HARIAN
+
+-----
+
+## Workflow Per Session
+
+```
+MULAI SESSION:
+1. Buka terminal di folder project: cd berest-app
+2. Git pull dulu (kalau kerja di multiple device): git pull
+3. Jalankan Claude Code: claude
+4. SELALU mulai dengan RECOVERY PROMPT (copy dari prompt library Section A2)
+5. Claude akan report status. Verify benar.
+6. Bilang "Lanjut" atau arahkan ke task specific
+
+SELAMA SESSION:
+7. Biarkan Claude kerja per task
+8. Claude langsung bikin/edit files di repo lo - semua perubahan real-time
+9. Setiap Claude selesai 1 task, verify:
+   - File baru/modified masuk akal? (cek di VS Code)
+   - npx tsc --noEmit 0 errors?
+   - App masih boots? (npx expo start, scan QR di Expo Go)
+10. Setiap 3-5 tasks, minta Claude run REGRESSION CHECK (Section A4)
+11. Kalau ada error: jangan panik, pakai HOTFIX PROMPT (Section A5)
+12. Kalau error spiral (fix A breaks B): pakai ERROR SPIRAL PROMPT (Section C2)
+
+AKHIR SESSION:
+13. SELALU jalankan CHECKPOINT PROMPT (Section A3)
+14. Claude akan update PROGRESS.md dan run final check
+15. Commit + push ke GitHub:
+    git add .
+    git commit -m "Phase X: tasks X.Y-X.Z done"
+    git push
+    (atau suruh Claude jalankan git add + commit, lo tinggal push)
+```
+
+**Tip: lo bisa suruh Claude commit langsung:**
+
+```
+Bilang ke Claude: "Commit semua perubahan dengan message 'Phase 0: task 0.1-0.5 done'"
+Claude akan jalankan: git add . && git commit -m "Phase 0: task 0.1-0.5 done"
+Lalu lo tinggal: git push
+```
+
+## Waktu per Session
+
+Estimasi: 1 session = 2-4 jam kerja efektif. Claude Code context window bisa handle ~50-80 file operations per session sebelum perlu restart.
+
+Jika context hampir penuh (Claude mulai “lupa” atau repeat), jalankan CONTEXT LIMIT APPROACHING prompt (Section C4), lalu mulai session baru.
+
+-----
+
+# TIMELINE PER PHASE
+
+-----
+
+|Phase  |Durasi    |Tasks   |Yang Harus Kamu Lakukan                                 |Output                                          |
+|-------|----------|--------|--------------------------------------------------------|------------------------------------------------|
+|Setup  |1-2 hari  |-       |Install tools, bikin accounts, setup Supabase           |Semua tools ready, semua keys ada               |
+|Phase 0|1-2 minggu|29 tasks|Jalankan prompts, verify setiap task, test di HP        |App skeleton jalan: auth, onboarding, navigation|
+|QG 0   |1 hari    |-       |Run quality gate checklist manual                       |All green, proceed                              |
+|Phase 1|2-3 minggu|24 tasks|Jalankan prompts, test module Warga di HP, deploy portal|Warga module full working + web portal live     |
+|QG 1   |1 hari    |-       |Test E2E: jadi bendahara RT, share link, buka di HP lain|All green, proceed                              |
+|Phase 2|1-2 minggu|11 tasks|Jalankan prompts, test catat penjualan                  |Lapak mode pedagang working                     |
+|Phase 3|2-3 minggu|17 tasks|Jalankan prompts, test kos management, test AI kontrak  |Sewa properti working + tenant portal           |
+|Phase 4|2-3 minggu|14 tasks|Jalankan prompts, test laundry/guru/jasa modes          |Semua mode Lapak working + real-time consumer   |
+|Phase 5|2-3 minggu|17 tasks|Jalankan prompts, test bikin undangan, test RSVP        |Hajat module working + invitation page cantik   |
+|Phase 6|2-3 minggu|16 tasks|Jalankan prompts, final test semua, prepare Play Store  |App complete, APK ready, Play Store listing     |
+|Launch |1 minggu  |-       |Upload APK, publish, distribute ke test users           |LIVE di Play Store                              |
+
+**Total realistic: 4-6 bulan** (kerja part-time evenings/weekends). Bisa lebih cepat kalau full-time.
+
+-----
+
+# YANG KAMU HARUS LAKUKAN VS YANG CLAUDE LAKUKAN
+
+-----
+
+## Claude Code Mengerjakan:
+
+- Semua coding (React Native, TypeScript, Next.js, SQL)
+- File creation dan modification
+- Running TypeScript checks
+- Database migrations
+- Debugging errors
+- Package installation
+- Build configuration
+
+## Kamu Mengerjakan:
+
+### Per Task:
+
+- Copy-paste prompt yang benar dari prompt library
+- Verify output Claude masuk akal (baca sekilas, gak perlu paham semua code)
+- Test di HP via Expo Go (tap-tap, lihat apakah screen muncul benar)
+- Approve atau reject kalau ada yang gak sesuai spec
+
+### Per Phase:
+
+- Run quality gate checklist (mostly manual testing di HP)
+- Git commit + push
+- Deploy portal ke Vercel (Claude bisa guide, kamu yang execute)
+- Test E2E: buka app sebagai provider DAN consumer (bisa pakai 2 HP atau 1 HP + browser)
+
+### Decisions yang Cuma Kamu Bisa Ambil:
+
+- Desain undangan template (bisa pakai Canva -> export assets)
+- Wording text WA share (Claude propose, kamu approve/edit)
+- Pricing exact (Rp29K/Rp59K atau mau adjust?)
+- App icon + splash screen design
+- Play Store listing copy (title, description, screenshots)
+- Beta tester selection (siapa RT/mesjid/laundry pertama yang test)
+
+-----
+
+# TESTING GUIDE
+
+-----
+
+## Tools Testing
+
+|Tool                        |Fungsi                                                         |
+|----------------------------|---------------------------------------------------------------|
+|Expo Go (di HP)             |Test app selama development. Scan QR dari terminal.            |
+|Chrome browser (di HP)      |Test web portal (berest.id/xx/xx)                              |
+|Supabase Dashboard          |Lihat data di database, verify data masuk benar                |
+|2 HP (atau 1 HP + 1 browser)|Test provider-consumer flow (1 device = provider, 1 = consumer)|
+
+## Testing Checklist per Module
+
+### Test sebagai Provider:
+
+1. Buka app -> login -> pilih module -> setup
+1. Tambah data (anggota/order/unit/tamu)
+1. Lihat dashboard (angka benar?)
+1. Share link via WA (link muncul benar?)
+1. Update status (bayar/selesai/dll)
+1. Lihat laporan (angka match dengan input?)
+
+### Test sebagai Consumer (Web):
+
+1. Buka link yang di-share di browser HP
+1. Page load < 2 detik?
+1. Informasi yang ditampilkan benar?
+1. RSVP/confirm actions work?
+1. Smart banner muncul?
+
+### Test sebagai Consumer (App):
+
+1. Install app di HP kedua -> register
+1. Input kode koneksi -> terhubung dengan provider?
+1. Dashboard menampilkan status dari provider?
+1. Push notification masuk saat provider update?
+1. Bisa upload bukti bayar?
+1. Riwayat (archived connections) muncul?
+
+-----
+
+# TROUBLESHOOTING COMMON ISSUES
+
+-----
+
+## “App gak mau start / crash”
+
+```
+1. Terminal: npx expo start --clear
+2. Kalau masih error: rm -rf node_modules && npm install
+3. Kalau masih: rm -rf .expo && npx expo start --clear
+4. Share error message ke Claude, pakai HOTFIX PROMPT
+```
+
+## “Supabase gak connect”
+
+```
+1. Cek .env file: EXPO_PUBLIC_SUPABASE_URL dan EXPO_PUBLIC_SUPABASE_ANON_KEY ada dan benar
+2. Cek Supabase dashboard: project masih running? (free tier pause setelah 7 hari inactive)
+3. Kalau paused: klik "Restore" di Supabase dashboard
+4. Test connection: buka Supabase dashboard -> SQL Editor -> run "SELECT 1" 
+```
+
+## “Claude bikin error baru saat fix error lama”
+
+```
+1. STOP. Jangan biarkan Claude lanjut.
+2. Copy-paste ERROR SPIRAL PROMPT (Section C2)
+3. Biasanya root cause-nya: type/interface yang diubah tanpa update semua file yang pakai
+4. Kalau parah: git stash (revert ke last working state), mulai ulang task dari scratch
+```
+
+## “Claude mulai lupa / repeat / inconsistent”
+
+```
+1. Context window hampir penuh
+2. Jalankan CONTEXT LIMIT APPROACHING prompt (Section C4)
+3. Tutup session, buka terminal baru
+4. Jalankan Claude Code lagi
+5. Mulai dengan RECOVERY PROMPT (Section A2)
+```
+
+## “Web portal gak bisa diakses”
+
+```
+1. Cek Vercel dashboard: deployment successful?
+2. Cek domain: DNS pointing ke Vercel?
+3. Kalau pakai custom domain (berest.id): DNS propagation bisa 24-48 jam
+4. Sementara pakai Vercel default URL: berest-portal.vercel.app/xx/xx
+```
+
+## “Push notification gak masuk”
+
+```
+1. Expo push notification butuh physical device (gak jalan di emulator)
+2. Cek: Expo push token tersimpan di database? (Supabase dashboard -> profiles table)
+3. Cek: notifikasi di-allow di settings HP?
+4. Test: buka https://expo.dev/notifications -> kirim test notification ke token
+```
+
+-----
+
+# GIT WORKFLOW
+
+-----
+
+## Branch Strategy (Simple)
+
+```
+main          -> production code, selalu working
+dev           -> development, merge ke main saat phase selesai
+```
+
+Gak perlu feature branches untuk solo developer. Keep it simple.
+
+## Commit Pattern
+
+```bash
+# Setiap selesai 1-3 tasks:
+git add .
+git commit -m "Phase 0: task 0.1-0.3 - init project, dependencies, NativeWind"
+
+# Setiap selesai 1 phase:
+git add .
+git commit -m "Phase 1 complete: Module Warga MVP"
+git push
+
+# Setiap quality gate pass:
+git tag -a v0.1.0 -m "Quality Gate 1 passed - Warga MVP"
+git push --tags
+```
+
+## Version Tags
+
+|Tag   |Milestone                                    |
+|------|---------------------------------------------|
+|v0.0.1|Phase 0 complete (foundation)                |
+|v0.1.0|Phase 1 complete (Warga MVP)                 |
+|v0.2.0|Phase 2 complete (+Lapak Pedagang)           |
+|v0.3.0|Phase 3 complete (+Sewa Properti)            |
+|v0.4.0|Phase 4 complete (+Lapak Advanced)           |
+|v0.5.0|Phase 5 complete (+Hajat)                    |
+|v1.0.0|Phase 6 complete (Full app, ready for launch)|
+
+-----
+
+# BIAYA YANG HARUS DISIAPKAN
+
+-----
+
+|Item                       |Biaya                           |Kapan                 |Notes                                    |
+|---------------------------|--------------------------------|----------------------|-----------------------------------------|
+|Domain berest.id           |Rp150-250K/tahun                |Sebelum Phase 1 deploy|Bisa pakai Vercel free URL dulu          |
+|Google Play Console        |$25 (1x) ~Rp400K                |Sebelum Phase 6       |1x bayar seumur hidup                    |
+|Supabase                   |Rp0 (free tier)                 |Dari awal             |Free: 500MB DB, 1GB storage, 50K MAU auth|
+|Vercel                     |Rp0 (free tier)                 |Dari Phase 1          |Free: 100GB bandwidth/bulan              |
+|Gemini API                 |Rp0 (free tier)                 |Dari Phase 3          |Free: 15 RPM, ~1000 RPD                  |
+|Anthropic API (Claude Code)|~$20-50/bulan                   |Sepanjang development |Tergantung usage                         |
+|**Total sampai launch**    |**~Rp1-2 juta + $60-150 Claude**|                      |                                         |
+
+Setelah launch, kalau user naik:
+
+- Supabase Pro: $25/bulan (kalau free tier gak cukup)
+- Vercel Pro: $20/bulan (kalau traffic tinggi)
+- Gemini: pay-as-you-go (estimasi $5-20/bulan untuk 10K users)
+
+-----
+
+# FILE REFERENSI CROSS-REFERENCE
+
+-----
+
+|Butuh Info Tentang      |Buka File         |Section                     |
+|------------------------|------------------|----------------------------|
+|Fitur detail per module |Product Concept v2|Section 6-9                 |
+|UI/UX rules             |Product Concept v2|Section 4                   |
+|Database schema (SQL)   |Product Concept v2|Section 14                  |
+|Tech stack              |Product Concept v2|Section 13                  |
+|Color palette           |Product Concept v2|Section 2 (Branding)        |
+|URL structure           |Product Concept v2|Section 10.5                |
+|Task list per phase     |Product Concept v2|PROGRESS.md (Part 2)        |
+|Project rules for Claude|Product Concept v2|CLAUDE.md (Part 2)          |
+|Prompt to use           |Prompt Library    |Section B (per phase)       |
+|Error recovery          |Prompt Library    |Section C                   |
+|Quality gate checklist  |Prompt Library    |Section B (per phase, -GATE)|
+|Session management      |Prompt Library    |Section A                   |
+|Connection lifecycle    |Product Concept v2|Section 5 (after Linking)   |
+|Monetization tiers      |Product Concept v2|Section 12                  |
+|Consumer app flow       |Product Concept v2|Section 5 (Dual-Sided)      |
+|Onboarding flows        |Product Concept v2|Section 11                  |
+
+-----
+
+# CHECKLIST KESIAPAN: READY TO START?
+
+```
+[ ] Node.js 20+ installed
+[ ] Git installed
+[ ] VS Code installed + extensions
+[ ] Claude Code installed + API key configured
+[ ] Expo CLI installed
+[ ] Android Studio installed + emulator works OR physical Android device with Expo Go
+[ ] Supabase account + project created, URL + keys saved
+[ ] Vercel account created
+[ ] Google Cloud project created, OAuth configured
+[ ] Gemini API key generated + tested
+[ ] GitHub repo created (berest-app)
+[ ] 3 reference files downloaded ke ~/berest-docs/
+[ ] Domain berest.id purchased (optional, bisa nanti)
+[ ] Google Play Console account created (optional, bisa nanti)
+
+Semua centang? LET'S BUILD.
+```
+
+-----
+
+# FIRST SESSION: STEP BY STEP
+
+```
+1. Buka terminal
+
+2. Clone repo yang sudah dibikin di step persiapan:
+   git clone git@github.com:YOUR_USERNAME/berest-app.git
+   cd berest-app
+
+3. Copy CLAUDE.md dan PROGRESS.md ke folder repo
+   (Copy text dari product concept document Part 2, paste ke file baru)
+
+4. Commit file awal:
+   git add .
+   git commit -m "Init: CLAUDE.md + PROGRESS.md"
+   git push
+
+5. Jalankan Claude Code:
+   claude
+
+6. Paste INIT PROMPT (Section A1 dari prompt library):
+   Claude akan baca CLAUDE.md + PROGRESS.md dan report status
+
+7. Verify report-nya benar, ketik:
+   "Confirmed. Mulai Phase 0."
+
+8. Paste PHASE 0 START prompt (Section B0-START):
+   Claude mulai kerja dari task 0.1 - init Expo project
+
+9. Claude akan jalankan commands:
+   npx create-expo-app berest-app --template (atau setup di folder saat ini)
+   npm install (semua dependencies)
+   Dia juga akan bikin folder structure, config files, dll
+
+10. Setiap task selesai, Claude report. Lo verify:
+    - File yang dibuat masuk akal? (glance di VS Code)
+    - Terminal gak ada error merah?
+
+11. Setiap 3-5 tasks, bilang ke Claude:
+    "Run regression check"
+
+12. Setelah 2-3 jam atau 10-15 tasks, bilang ke Claude:
+    "Checkpoint. Session mau selesai."
+    Claude akan update PROGRESS.md + run final check
+
+13. Commit + push:
+    git add .
+    git commit -m "Phase 0: tasks 0.1-0.X done"
+    git push
+
+14. Tutup terminal. Selesai session pertama!
+
+15. Session berikutnya: buka terminal, cd berest-app, claude,
+    paste RECOVERY PROMPT, lanjut dari task terakhir.
+```
