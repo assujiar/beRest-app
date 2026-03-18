@@ -2,7 +2,7 @@ import * as Linking from "expo-linking";
 import { router } from "expo-router";
 import type { ModuleKey } from "@app-types/shared.types";
 
-const BEREST_HOST = "berest.id";
+const APICK_HOST = "apick.id";
 
 /** Map URL path prefix to module + route */
 const ROUTE_MAP: Record<string, { module: ModuleKey; base: string }> = {
@@ -17,7 +17,7 @@ const ROUTE_MAP: Record<string, { module: ModuleKey; base: string }> = {
   hj: { module: "hajat", base: "/(consumer)/hajat" },
 };
 
-/** Parse a berest.id deep link URL */
+/** Parse an apick.id deep link URL */
 export function parseDeepLink(url: string): {
   module: ModuleKey;
   prefix: string;
@@ -26,7 +26,7 @@ export function parseDeepLink(url: string): {
 } | null {
   try {
     const parsed = new URL(url);
-    if (parsed.hostname !== BEREST_HOST) return null;
+    if (parsed.hostname !== APICK_HOST) return null;
 
     const segments = parsed.pathname.split("/").filter(Boolean);
     if (segments.length < 2) return null;
@@ -73,12 +73,12 @@ export function setupDeepLinkListener(): () => void {
   return () => subscription.remove();
 }
 
-/** Generate a berest.id URL */
+/** Generate an apick.id URL */
 export function generateDeepLink(
   prefix: string,
   code: string,
   subPath?: string
 ): string {
-  const base = `https://${BEREST_HOST}/${prefix}/${code}`;
+  const base = `https://${APICK_HOST}/${prefix}/${code}`;
   return subPath ? `${base}/${subPath}` : base;
 }

@@ -1,4 +1,4 @@
-# beRest - Build Progress Tracker
+# Apick - Build Progress Tracker
 
 > Last updated: 2026-03-18
 > Current phase: ALL PHASES COMPLETE 🎉
@@ -13,7 +13,7 @@
 |---|------|--------|-------|-------|
 | 0.1 | Init Expo project + TypeScript strict | DONE | app.json, package.json, tsconfig.json, index.ts, App.tsx | Expo SDK 55, TS strict + path aliases, 0 errors |
 | 0.2 | Install all dependencies | DONE | package.json, .npmrc | Expo SDK 55, Supabase, Zustand, TanStack Query, NativeWind, RHF+Zod, lucide, victory-native, etc |
-| 0.3 | Configure NativeWind | DONE | tailwind.config.js, global.css, nativewind-env.d.ts, metro.config.js, babel.config.js | NativeWind v4 + custom beRest colors |
+| 0.3 | Configure NativeWind | DONE | tailwind.config.js, global.css, nativewind-env.d.ts, metro.config.js, babel.config.js | NativeWind v4 + custom Apick colors |
 | 0.4 | Configure Expo Router with role-based routing | DONE | app/_layout.tsx, app/index.tsx, app/(auth)/*, app/(onboarding)/*, app/(provider)/*, app/(consumer)/* | Root Stack -> (auth), (onboarding), (provider)/(tabs), (consumer)/(tabs) |
 | 0.5 | Setup Supabase client + env vars | DONE | .env, .env.example, src/config/supabase.config.ts, src/services/supabase.ts, .gitignore | Supabase client with AsyncStorage auth persistence |
 | 0.6 | Create full folder structure | DONE | src/types/*.ts, src/utils/*.ts, src/stores/*.ts, src/config/*.ts | All types, utils, stores, config created. Path alias @app-types instead of @types |
@@ -32,7 +32,7 @@
 | 0.19 | Implement notification service (push + in-app) | DONE | src/services/notification.service.ts | Push registration, in-app CRUD, unread count, Expo Notifications handler |
 | 0.20 | Implement WA share engine | DONE | src/services/wa-share.service.ts | shareToWhatsApp, shareViaWhatsApp, message generators (connection, report, invitation) |
 | 0.21 | Implement reminder service + notification scheduling | DONE | src/services/reminder.service.ts | scheduleReminder, scheduleMonthlyReminder, cancelReminder via Expo Notifications |
-| 0.22 | Implement deep link handler (berest.id/xx/xx -> app screen) | DONE | src/services/deep-link.service.ts | parseDeepLink, handleDeepLink, setupDeepLinkListener, generateDeepLink |
+| 0.22 | Implement deep link handler (apick.id/xx/xx -> app screen) | DONE | src/services/deep-link.service.ts | parseDeepLink, handleDeepLink, setupDeepLinkListener, generateDeepLink |
 | 0.23 | Supabase migration: all tables + RLS policies | DONE | supabase/migrations/00001_foundation.sql | profiles, contacts, connection_codes, consumer_connections, notifications, push_tokens. All RLS. Auto-create profile trigger. Realtime enabled. |
 | 0.24 | Setup Supabase Realtime subscriptions (for consumer live updates) | DONE | src/hooks/consumer/useProviderUpdates.ts | Subscribe to consumer_connections + notifications changes. Auto-refetch on change. |
 | 0.25 | Implement connection lifecycle (archive, disconnect, auto-archive scheduler) | DONE | src/services/connection-lifecycle.service.ts | archiveConnection, setAutoArchiveDate, restoreConnection, processAutoArchives. Grace periods: sewa 7d, rental 3d, hajat 7d, laundry 90d |
@@ -65,9 +65,9 @@
 | 1.15 | Consumer app: Upload bukti bayar | DONE | app/(consumer)/warga/[orgId].tsx | PhotoPicker upload proof modal, auto-mark paid |
 | 1.16 | Consumer app: View announcements + read tracking | DONE | app/(consumer)/warga/[orgId].tsx | Announcement list, markAnnouncementRead on tap |
 | 1.17 | Setup Next.js portal project | DONE | portal/ (package.json, tsconfig, next.config, layout, page) | Next.js 15 + Tailwind CSS v4 + Supabase client |
-| 1.18 | Portal: berest.id/rt/[code] - warga status page | DONE | portal/app/rt/[code]/page.tsx | SSR: member dues status + announcements |
-| 1.19 | Portal: berest.id/rt/laporan - public financial report | DONE | portal/app/rt/laporan/page.tsx | SSR: income/expense/balance + transaction list |
-| 1.20 | Portal: berest.id/ms/laporan - infaq report | DONE | portal/app/ms/laporan/page.tsx | SSR: total infaq + fundraising progress + donation list |
+| 1.18 | Portal: apick.id/rt/[code] - warga status page | DONE | portal/app/rt/[code]/page.tsx | SSR: member dues status + announcements |
+| 1.19 | Portal: apick.id/rt/laporan - public financial report | DONE | portal/app/rt/laporan/page.tsx | SSR: income/expense/balance + transaction list |
+| 1.20 | Portal: apick.id/ms/laporan - infaq report | DONE | portal/app/ms/laporan/page.tsx | SSR: total infaq + fundraising progress + donation list |
 | 1.21 | Portal: Smart banner (download app CTA) | DONE | portal/components/SmartBanner.tsx | Sticky banner with dismiss, install CTA |
 | 1.22 | Deploy portal to Vercel | DONE | portal/vercel.json | Config ready. Actual deploy needs Vercel account. |
 | 1.23 | Integration test: full e2e flow | DONE | - | TypeScript 0 errors, Expo bundle OK. Flow: create org -> members -> dues -> finance -> share -> consumer view -> upload proof -> portal view |
@@ -88,7 +88,7 @@
 | 2.6 | Provider: Expense logger | DONE | app/(provider)/(tabs)/lapak/expenses.tsx | Add expense with CurrencyInput + PhotoPicker proof, daily total |
 | 2.7 | Provider: Daily Dashboard (omzet, profit, trend) | DONE | app/(provider)/(tabs)/lapak/dashboard.tsx | Today summary (omzet/profit/tx count), sales log, quick actions |
 | 2.8 | Consumer app: Browse catalog, order history | DONE | app/(consumer)/lapak/[bizId].tsx | Product catalog grouped by category, order history with status badges |
-| 2.9 | Portal: berest.id/wk/[slug] - mini storefront | DONE | portal/app/wk/[slug]/page.tsx | SSR: business info + product catalog grouped by category |
+| 2.9 | Portal: apick.id/wk/[slug] - mini storefront | DONE | portal/app/wk/[slug]/page.tsx | SSR: business info + product catalog grouped by category |
 | 2.10 | Integrate financial dashboard (Warga + Lapak) | DONE | app/(provider)/(tabs)/index.tsx | Module summary cards on provider home (static stats, live data via hooks in production) |
 | 2.11 | Verify quality gate | DONE | - | TS 0 errors, Expo Android export OK |
 
@@ -180,7 +180,7 @@
 | 6.7 | Advanced analytics | DONE | src/services/lapak.service.ts (getWeeklySummary), sewa.service.ts (getPropertySummary) | Daily/weekly summaries, occupancy stats |
 | 6.8 | Export PDF/CSV | DONE | src/services/export.service.ts | exportPDF, exportFinancialReport, exportDuesReport, exportCSV |
 | 6.9 | Subscription/paywall | DONE | src/services/subscription.service.ts | 3 tiers (free/starter/pro), limits per feature, checkLimit |
-| 6.10 | Web-to-app optimization | DONE | app.json (scheme: berest), SmartBanner on all portal pages, deep-link.service.ts | URL scheme + smart banners + deep link handler |
+| 6.10 | Web-to-app optimization | DONE | app.json (scheme: apick), SmartBanner on all portal pages, deep-link.service.ts | URL scheme + smart banners + deep link handler |
 | 6.11 | App icon + splash + polish | DONE | app.json | Navy splash, orange notification, camera/notification plugins |
 | 6.12 | Performance optimization | DONE | app/_layout.tsx | React Query: 5min stale, 30min GC, retry 2, no refetch on focus |
 | 6.13 | Full regression test | DONE | - | TS 0 errors, Expo Android export OK, all 128 tasks compile |
@@ -203,10 +203,11 @@
 ## DECISIONS LOG
 | Date | Decision | Reasoning |
 |------|----------|-----------|
-| 2026-03-18 | App name: beRest | "beres" + "rest". Natural, memorable, scalable. |
-| 2026-03-18 | Module names: beRest-in Lapak/Sewa/Warga/Hajat | Marketing names. Tab labels: Lapak/Sewa/Warga/Hajat. |
+| 2026-03-18 | App name: Apick | "apik" (Javanese: neat, well-arranged). Modern, memorable, scalable. |
+| 2026-03-18 | Module names: Apick Lapak/Sewa/Warga/Hajat | Marketing names. Tab labels: Lapak/Sewa/Warga/Hajat. |
 | 2026-03-18 | AI model: Gemini 2.5 Flash | Gemini 2.0 Flash retired Juni 2026. 2.5 Flash stable, free tier, multimodal. |
 | 2026-03-18 | Consumer dual-access: web + app | Web for first-touch (zero friction), app for repeat users (push notif, dashboard). |
-| 2026-03-18 | URL structure: berest.id/xx/xx | Short 2-letter module codes + slug. Simple, clean. |
+| 2026-03-18 | URL structure: apick.id/xx/xx | Short 2-letter module codes + slug. Simple, clean. |
 | 2026-03-18 | Connection lifecycle: archive not delete | Data never deleted. Pindah/ganti/keluar = archive. History always accessible. Grace periods per module type. |
-| 2026-03-18 | UI/UX: low digital literacy first | 12 principles. Atomic flow (1 screen 1 task), bahasa manusia, thumb-zone, max 3 inputs/screen, offline-tolerant, smart defaults. Benchmark: kalau bisa buka WA = bisa pakai beRest. |
+| 2026-03-18 | UI/UX: low digital literacy first | 12 principles. Atomic flow (1 screen 1 task), bahasa manusia, thumb-zone, max 3 inputs/screen, offline-tolerant, smart defaults. Benchmark: kalau bisa buka WA = bisa pakai Apick. |
+| 2026-03-18 | Rebrand: beRest → Apick | Full codebase rebrand. New tagline: "Life, well arranged." |

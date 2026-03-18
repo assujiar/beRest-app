@@ -76,7 +76,7 @@ export default function AnnouncementsScreen() {
     const message =
       `📢 *${announcement.title}*\n\n` +
       `${announcement.body}\n\n` +
-      `- ${orgName ?? "Organisasi"} via beRest`;
+      `- ${orgName ?? "Organisasi"} via Apick`;
     shareViaWhatsApp(message);
   }
 

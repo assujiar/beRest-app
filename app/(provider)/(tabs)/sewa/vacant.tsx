@@ -22,13 +22,13 @@ export default function VacantScreen() {
   }
 
   function handleShare(unit: PropertyUnit) {
-    const msg = `🏠 *${propName} - ${unit.unit_name}*\n\nHarga sewa: ${formatRupiah(unit.monthly_rent)}/bulan\n\nHubungi untuk info lebih lanjut.\n\nDibuat dengan beRest`;
+    const msg = `🏠 *${propName} - ${unit.unit_name}*\n\nHarga sewa: ${formatRupiah(unit.monthly_rent)}/bulan\n\nHubungi untuk info lebih lanjut.\n\nDibuat dengan Apick`;
     shareViaWhatsApp(msg);
   }
 
   function handleShareAll() {
     const unitList = units.map((u) => `• ${u.unit_name}: ${formatRupiah(u.monthly_rent)}/bln`).join("\n");
-    const msg = `🏠 *${propName}*\n\nUnit tersedia:\n${unitList}\n\nHubungi untuk info lebih lanjut.\n\nDibuat dengan beRest`;
+    const msg = `🏠 *${propName}*\n\nUnit tersedia:\n${unitList}\n\nHubungi untuk info lebih lanjut.\n\nDibuat dengan Apick`;
     shareViaWhatsApp(msg);
   }
 

@@ -1,9 +1,9 @@
-# beRest - Project Instructions for Claude Code
+# Apick - Project Instructions for Claude Code
 
 ## IDENTITY
-App beRest - "Be at Rest with beRest."
+App Apick - "Life, well arranged."
 Dual-sided modular platform: Provider (Android app) + Consumer (Android app + Web portal).
-4 Modules: beRest-in Lapak, beRest-in Sewa, beRest-in Warga, beRest-in Hajat.
+4 Modules: Apick Lapak, Apick Sewa, Apick Warga, Apick Hajat.
 Indonesia-first.
 
 ## CRITICAL RULES
@@ -85,13 +85,13 @@ Inactive modules = zero memory footprint. Only import module code when activated
 
 ### Web portal
 - Next.js 15 on Vercel
-- Routes: berest.id/[code]/[slug]
+- Routes: apick.id/[code]/[slug]
 - Static/SSR pages, gak butuh login untuk view
 - Actions (RSVP, confirm payment) need simple verification
 - Smart banner for app download with deep link
 
 ## FOLDER STRUCTURE
-berest-app/
+apick-app/
 ├── CLAUDE.md
 ├── PROGRESS.md
 ├── app/                           # Expo Router
@@ -102,10 +102,10 @@ berest-app/
 │   ├── (provider)/                # Provider view
 │   │   ├── (tabs)/
 │   │   │   ├── index.tsx          # Provider home dashboard
-│   │   │   ├── lapak/             # beRest-in Lapak screens
-│   │   │   ├── sewa/              # beRest-in Sewa screens
-│   │   │   ├── warga/             # beRest-in Warga screens
-│   │   │   ├── hajat/             # beRest-in Hajat screens
+│   │   │   ├── lapak/             # Apick Lapak screens
+│   │   │   ├── sewa/              # Apick Sewa screens
+│   │   │   ├── warga/             # Apick Warga screens
+│   │   │   ├── hajat/             # Apick Hajat screens
 │   │   │   └── profile.tsx
 │   │   └── _layout.tsx
 │   ├── (consumer)/                # Consumer view
@@ -147,7 +147,7 @@ berest-app/
 │   │   ├── financial.service.ts
 │   │   ├── reminder.service.ts
 │   │   ├── wa-share.service.ts
-│   │   ├── deep-link.service.ts   # Handle berest.id deep links
+│   │   ├── deep-link.service.ts   # Handle apick.id deep links
 │   │   ├── gemini.service.ts      # Gemini 2.5 Flash
 │   │   ├── lapak.service.ts
 │   │   ├── sewa.service.ts
@@ -211,10 +211,10 @@ berest-app/
 ## COLOR PALETTE
 Primary Navy: #1B3A5C
 Primary Orange: #FF4600
-beRest-in Lapak: #10B981 (green)
-beRest-in Sewa: #3B82F6 (blue)
-beRest-in Warga: #8B5CF6 (purple)
-beRest-in Hajat: #EC4899 (pink)
+Apick Lapak: #10B981 (green)
+Apick Sewa: #3B82F6 (blue)
+Apick Warga: #8B5CF6 (purple)
+Apick Hajat: #EC4899 (pink)
 Dark Text: #1E293B
 Grey Text: #64748B
 Light BG: #F8FAFC

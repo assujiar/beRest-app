@@ -12,7 +12,7 @@ export default function RegisterScreen() {
             Selamat Datang!
           </Text>
           <Text className="text-sm text-grey-text mt-2">
-            Akun kamu sudah dibuat. Sekarang, mau pakai beRest untuk apa?
+            Akun kamu sudah dibuat. Sekarang, mau pakai Apick untuk apa?
           </Text>
         </View>
 

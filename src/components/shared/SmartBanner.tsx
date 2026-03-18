@@ -10,7 +10,7 @@ export function SmartBanner({ onInstall, onDismiss }: SmartBannerProps) {
     <View className="bg-navy flex-row items-center px-4 py-3">
       <View className="flex-1 mr-3">
         <Text className="text-white text-sm font-bold">
-          Download beRest
+          Download Apick
         </Text>
         <Text className="text-white/70 text-xs">
           Notifikasi real-time & semua status di 1 tempat

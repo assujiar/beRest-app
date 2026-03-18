@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "beRest",
-    "slug": "berest",
+    "name": "Apick",
+    "slug": "apick",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "berest",
+    "scheme": "apick",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -14,10 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "id.berest.app"
+      "bundleIdentifier": "id.apick.app"
     },
     "android": {
-      "package": "id.berest.app",
+      "package": "id.apick.app",
       "adaptiveIcon": {
         "backgroundColor": "#1B3A5C",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -34,7 +34,7 @@
       "expo-sharing",
       [
         "expo-camera",
-        { "cameraPermission": "Izinkan beRest mengakses kamera untuk scan QR Code dan foto" }
+        { "cameraPermission": "Izinkan Apick mengakses kamera untuk scan QR Code dan foto" }
       ],
       [
         "expo-notifications",
@@ -42,7 +42,7 @@
       ]
     ],
     "extra": {
-      "eas": { "projectId": "berest-app" }
+      "eas": { "projectId": "apick-app" }
     }
   }
 }

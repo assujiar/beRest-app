@@ -64,7 +64,7 @@ export default function ProviderOnboardingScreen() {
     <SafeAreaView className="flex-1 bg-light-bg">
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingTop: 24 }}>
         <Text className="text-2xl font-bold text-dark-text">
-          Halo! Kamu mau beRest-in apa?
+          Halo! Mau apik-in apa?
         </Text>
         <Text className="text-sm text-grey-text mt-2 mb-6">
           Pilih minimal 1 module. Kamu bisa tambah lagi nanti.

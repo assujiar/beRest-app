@@ -1,23 +1,23 @@
 export default function HomePage() {
   const modules = [
-    { icon: "🏪", name: "beRest-in Lapak", desc: "Catat penjualan, laundry, les privat, jasa", color: "#10B981" },
-    { icon: "🏠", name: "beRest-in Sewa", desc: "Kelola kos, kontrakan, rental barang", color: "#3B82F6" },
-    { icon: "👥", name: "beRest-in Warga", desc: "Iuran RT/RW, mesjid, pengajian, komunitas", color: "#8B5CF6" },
-    { icon: "🎉", name: "beRest-in Hajat", desc: "Undangan digital, RSVP, amplop tracker", color: "#EC4899" },
+    { icon: "🏪", name: "Apick Lapak", desc: "Catat penjualan, laundry, les privat, jasa", color: "#10B981" },
+    { icon: "🏠", name: "Apick Sewa", desc: "Kelola kos, kontrakan, rental barang", color: "#3B82F6" },
+    { icon: "👥", name: "Apick Warga", desc: "Iuran RT/RW, mesjid, pengajian, komunitas", color: "#8B5CF6" },
+    { icon: "🎉", name: "Apick Hajat", desc: "Undangan digital, RSVP, amplop tracker", color: "#EC4899" },
   ];
 
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
       <section className="bg-[#1B3A5C] text-white py-20 px-4 text-center">
-        <h1 className="text-5xl font-bold mb-4">beRest</h1>
-        <p className="text-xl opacity-80 mb-2">Be at Rest with beRest.</p>
+        <h1 className="text-5xl font-bold mb-4">Apick</h1>
+        <p className="text-xl opacity-80 mb-2">Life, well arranged.</p>
         <p className="text-base opacity-60 max-w-md mx-auto mb-8">
           1 app untuk kelola usaha, properti sewa, organisasi warga, dan hajatan.
           Dari pedagang kaki lima sampai ketua RT.
         </p>
         <a
-          href="https://play.google.com/store/apps/details?id=id.berest.app"
+          href="https://play.google.com/store/apps/details?id=id.apick.app"
           className="inline-block bg-[#FF4600] text-white px-8 py-4 rounded-xl text-lg font-bold hover:opacity-90 transition"
         >
           Download Gratis
@@ -46,7 +46,7 @@ export default function HomePage() {
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            Kenapa beRest?
+            Kenapa Apick?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
             {[
@@ -71,17 +71,17 @@ export default function HomePage() {
         </h2>
         <p className="text-gray-500 mb-6">Tidak perlu kartu kredit. Langsung pakai.</p>
         <a
-          href="https://play.google.com/store/apps/details?id=id.berest.app"
+          href="https://play.google.com/store/apps/details?id=id.apick.app"
           className="inline-block bg-[#FF4600] text-white px-8 py-4 rounded-xl text-lg font-bold hover:opacity-90 transition"
         >
-          Download beRest
+          Download Apick
         </a>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-gray-200 py-8 px-4 text-center">
         <p className="text-sm text-gray-400">
-          © 2026 beRest. Be at Rest with beRest.
+          © 2026 Apick. Life, well arranged.
         </p>
       </footer>
     </main>

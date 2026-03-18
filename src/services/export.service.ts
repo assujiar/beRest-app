@@ -16,7 +16,7 @@ export async function exportPDF(title: string, htmlContent: string): Promise<voi
     </style></head><body>
       <h1>${title}</h1>
       ${htmlContent}
-      <div class="footer">Dibuat dengan beRest • ${new Date().toLocaleDateString("id-ID")}</div>
+      <div class="footer">Dibuat dengan Apick • ${new Date().toLocaleDateString("id-ID")}</div>
     </body></html>
   `;
 

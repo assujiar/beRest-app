@@ -1,4 +1,4 @@
-# beRest - Builder Guideline (untuk Ari)
+# Apick - Builder Guideline (untuk Ari)
 
 > Panduan lengkap: apa yang harus disiapkan, urutan kerja, dan apa yang harus dilakukan saat sesuatu goes wrong.
 > v1.0 - Maret 2026
@@ -37,13 +37,13 @@ VS Code extensions yang perlu:
 
 ```bash
 # 1. Bikin repo di GitHub (via browser atau CLI)
-gh repo create berest-app --private
+gh repo create apick-app --private
 
-# ATAU bikin manual di github.com -> New Repository -> "berest-app" -> Private
+# ATAU bikin manual di github.com -> New Repository -> "apick-app" -> Private
 
 # 2. Clone ke laptop
-git clone git@github.com:YOUR_USERNAME/berest-app.git
-cd berest-app
+git clone git@github.com:YOUR_USERNAME/apick-app.git
+cd apick-app
 
 # 3. Setup SSH key (kalau belum pernah)
 # Cek dulu: ssh -T git@github.com
@@ -87,7 +87,7 @@ claude
 Langkah-langkah:
 
 1. Login supabase.com -> “New Project”
-1. Nama: berest-prod (atau berest-dev untuk development)
+1. Nama: apick-prod (atau apick-dev untuk development)
 1. Region: Southeast Asia (Singapore)
 1. Generate password -> SIMPAN di password manager
 1. Setelah project ready, catat:
@@ -118,17 +118,17 @@ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:g
 
 ## 6. Siapkan File Referensi
 
-Buat folder di laptop: `~/berest-docs/`
+Buat folder di laptop: `~/apick-docs/`
 
 Copy 3 file ini ke folder tersebut:
 
-1. `beRest-Complete-Product-Concept-and-Build-System-v2.md` (product concept + build system)
-1. `beRest-Claude-Code-Master-Prompt-Library.md` (prompt library)
-1. File ini (`beRest-Builder-Guideline.md`)
+1. `Apick-Complete-Product-Concept-and-Build-System-v2.md` (product concept + build system)
+1. `Apick-Claude-Code-Master-Prompt-Library.md` (prompt library)
+1. File ini (`Apick-Builder-Guideline.md`)
 
 ## 7. Setup Domain (Optional, bisa nanti)
 
-- Beli domain: berest.id di registrar Indonesia (Niagahoster/Rumahweb/Dewaweb, ~Rp150-250K/tahun)
+- Beli domain: apick.id di registrar Indonesia (Niagahoster/Rumahweb/Dewaweb, ~Rp150-250K/tahun)
 - Nanti configure DNS pointing ke Vercel untuk web portal
 - Ini bisa di-setup di Phase 1 saat portal deployment
 
@@ -142,7 +142,7 @@ Copy 3 file ini ke folder tersebut:
 
 ```
 MULAI SESSION:
-1. Buka terminal di folder project: cd berest-app
+1. Buka terminal di folder project: cd apick-app
 2. Git pull dulu (kalau kerja di multiple device): git pull
 3. Jalankan Claude Code: claude
 4. SELALU mulai dengan RECOVERY PROMPT (copy dari prompt library Section A2)
@@ -258,7 +258,7 @@ Jika context hampir penuh (Claude mulai “lupa” atau repeat), jalankan CONTEX
 |Tool                        |Fungsi                                                         |
 |----------------------------|---------------------------------------------------------------|
 |Expo Go (di HP)             |Test app selama development. Scan QR dari terminal.            |
-|Chrome browser (di HP)      |Test web portal (berest.id/xx/xx)                              |
+|Chrome browser (di HP)      |Test web portal (apick.id/xx/xx)                              |
 |Supabase Dashboard          |Lihat data di database, verify data masuk benar                |
 |2 HP (atau 1 HP + 1 browser)|Test provider-consumer flow (1 device = provider, 1 = consumer)|
 
@@ -338,8 +338,8 @@ Jika context hampir penuh (Claude mulai “lupa” atau repeat), jalankan CONTEX
 ```
 1. Cek Vercel dashboard: deployment successful?
 2. Cek domain: DNS pointing ke Vercel?
-3. Kalau pakai custom domain (berest.id): DNS propagation bisa 24-48 jam
-4. Sementara pakai Vercel default URL: berest-portal.vercel.app/xx/xx
+3. Kalau pakai custom domain (apick.id): DNS propagation bisa 24-48 jam
+4. Sementara pakai Vercel default URL: apick-portal.vercel.app/xx/xx
 ```
 
 ## “Push notification gak masuk”
@@ -403,7 +403,7 @@ git push --tags
 
 |Item                       |Biaya                           |Kapan                 |Notes                                    |
 |---------------------------|--------------------------------|----------------------|-----------------------------------------|
-|Domain berest.id           |Rp150-250K/tahun                |Sebelum Phase 1 deploy|Bisa pakai Vercel free URL dulu          |
+|Domain apick.id           |Rp150-250K/tahun                |Sebelum Phase 1 deploy|Bisa pakai Vercel free URL dulu          |
 |Google Play Console        |$25 (1x) ~Rp400K                |Sebelum Phase 6       |1x bayar seumur hidup                    |
 |Supabase                   |Rp0 (free tier)                 |Dari awal             |Free: 500MB DB, 1GB storage, 50K MAU auth|
 |Vercel                     |Rp0 (free tier)                 |Dari Phase 1          |Free: 100GB bandwidth/bulan              |
@@ -457,9 +457,9 @@ Setelah launch, kalau user naik:
 [ ] Vercel account created
 [ ] Google Cloud project created, OAuth configured
 [ ] Gemini API key generated + tested
-[ ] GitHub repo created (berest-app)
-[ ] 3 reference files downloaded ke ~/berest-docs/
-[ ] Domain berest.id purchased (optional, bisa nanti)
+[ ] GitHub repo created (apick-app)
+[ ] 3 reference files downloaded ke ~/apick-docs/
+[ ] Domain apick.id purchased (optional, bisa nanti)
 [ ] Google Play Console account created (optional, bisa nanti)
 
 Semua centang? LET'S BUILD.
@@ -473,8 +473,8 @@ Semua centang? LET'S BUILD.
 1. Buka terminal
 
 2. Clone repo yang sudah dibikin di step persiapan:
-   git clone git@github.com:YOUR_USERNAME/berest-app.git
-   cd berest-app
+   git clone git@github.com:YOUR_USERNAME/apick-app.git
+   cd apick-app
 
 3. Copy CLAUDE.md dan PROGRESS.md ke folder repo
    (Copy text dari product concept document Part 2, paste ke file baru)
@@ -497,7 +497,7 @@ Semua centang? LET'S BUILD.
    Claude mulai kerja dari task 0.1 - init Expo project
 
 9. Claude akan jalankan commands:
-   npx create-expo-app berest-app --template (atau setup di folder saat ini)
+   npx create-expo-app apick-app --template (atau setup di folder saat ini)
    npm install (semua dependencies)
    Dia juga akan bikin folder structure, config files, dll
 
@@ -519,6 +519,6 @@ Semua centang? LET'S BUILD.
 
 14. Tutup terminal. Selesai session pertama!
 
-15. Session berikutnya: buka terminal, cd berest-app, claude,
+15. Session berikutnya: buka terminal, cd apick-app, claude,
     paste RECOVERY PROMPT, lanjut dari task terakhir.
 ```

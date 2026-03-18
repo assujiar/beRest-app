@@ -23,7 +23,7 @@ export default function ScanQRScreen() {
     try {
       // Extract code from QR data (could be a URL or plain code)
       let code = data;
-      if (data.includes("berest.id")) {
+      if (data.includes("apick.id")) {
         const segments = data.split("/").filter(Boolean);
         code = segments[segments.length - 1];
       }
@@ -45,7 +45,7 @@ export default function ScanQRScreen() {
     return (
       <SafeAreaView className="flex-1 bg-light-bg items-center justify-center px-6">
         <Text className="text-base text-dark-text text-center mb-4">
-          Izinkan beRest mengakses kamera untuk scan QR Code
+          Izinkan Apick mengakses kamera untuk scan QR Code
         </Text>
         <Button title="Izinkan Kamera" onPress={requestPermission} />
       </SafeAreaView>

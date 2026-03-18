@@ -50,9 +50,9 @@ export default function LoginScreen() {
       <View className="flex-1 px-6 justify-between">
         {/* Top section */}
         <View className="items-center pt-16">
-          <Text className="text-4xl font-bold text-navy">beRest</Text>
+          <Text className="text-4xl font-bold text-navy">Apick</Text>
           <Text className="text-base text-grey-text mt-2">
-            Be at Rest with beRest.
+            Life, well arranged.
           </Text>
         </View>
 

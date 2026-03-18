@@ -1,8 +1,8 @@
 export const APP_CONFIG = {
-  name: "beRest",
-  tagline: "Be at Rest with beRest.",
-  scheme: "berest",
-  webDomain: "berest.id",
+  name: "Apick",
+  tagline: "Life, well arranged.",
+  scheme: "apick",
+  webDomain: "apick.id",
   timezone: "Asia/Jakarta",
   locale: "id-ID",
   currency: "IDR",

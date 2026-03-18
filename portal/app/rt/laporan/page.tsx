@@ -140,7 +140,7 @@ export default async function FinancialReportPage({ searchParams }: Props) {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-8">
-          Dibuat dengan beRest • {new Date().toLocaleDateString("id-ID")}
+          Dibuat dengan Apick • {new Date().toLocaleDateString("id-ID")}
         </p>
       </main>
     </>

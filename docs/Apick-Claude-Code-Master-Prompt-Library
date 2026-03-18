@@ -1,6 +1,6 @@
-# beRest - Claude Code Master Prompt Library
+# Apick - Claude Code Master Prompt Library
 
-> Dokumen ini berisi SEMUA prompt yang diperlukan untuk build beRest dari nol hingga launch.
+> Dokumen ini berisi SEMUA prompt yang diperlukan untuk build Apick dari nol hingga launch.
 > Setiap prompt dirancang anti-regression: Claude selalu tau apa yang sudah dikerjakan,
 > apa yang sedang dikerjakan, dan apa yang belum dikerjakan.
 > v1.0 - Maret 2026
@@ -28,7 +28,7 @@ Prompts ini untuk manage context window Claude Code supaya gak kehilangan memori
 ## A1. INIT PROMPT (Jalankan 1x di awal project)
 
 ```
-Kamu adalah senior full-stack developer yang sedang build app "beRest".
+Kamu adalah senior full-stack developer yang sedang build app "Apick".
 
 BACA file-file ini secara berurutan dan KONFIRMASI kamu paham sebelum mulai kerja:
 1. CLAUDE.md (project rules, tech stack, folder structure, color palette, UI/UX rules)
@@ -239,7 +239,7 @@ Mulai dari task 0.1: Init Expo project + TypeScript strict.
 IMPORTANT CONTEXT:
 - App ini dual-sided: Provider (kelola) + Consumer (pengguna). 1 codebase.
 - 4 modules: Lapak (usaha), Sewa (sewaan), Warga (komunitas), Hajat (acara)
-- Consumer bisa akses via web (berest.id) ATAU install app
+- Consumer bisa akses via web (apick.id) ATAU install app
 - UI/UX harus super simple - target user literasi digital rendah (baca Rule 9 di CLAUDE.md)
 - Database schema lengkap ada di product concept document. Copy-paste saat buat migration.
 - Color palette ada di CLAUDE.md. Pakai PERSIS.
@@ -306,7 +306,7 @@ SHARED SERVICES:
 [ ] WA share engine: generates correct message + link, opens WA
 [ ] Reminder service: can schedule local notification
 [ ] Notification service: can send push + show in-app
-[ ] Deep link handler: berest.id/xx/xx -> correct screen in app
+[ ] Deep link handler: apick.id/xx/xx -> correct screen in app
 
 DATABASE:
 [ ] All tables created (run migration, verify in Supabase dashboard)
@@ -339,15 +339,15 @@ Baca PROGRESS.md. Phase 1 ada [24] tasks (1.1 sampai 1.24).
 Kerjakan berurutan.
 
 CONTEXT PHASE INI:
-- Module Warga = beRest-in Warga (warna: ungu #8B5CF6)
+- Module Warga = Apick Warga (warna: ungu #8B5CF6)
 - Fitur: Kas & Iuran, Infaq & Donasi, Pengumuman, Fundraising tracker
 - Provider: pengurus RT/mesjid/pengajian/klub
 - Consumer: anggota/warga/jamaah
-- Consumer web portal: berest.id/rt/[code] dan berest.id/ms/[code]
+- Consumer web portal: apick.id/rt/[code] dan apick.id/ms/[code]
 - Ini module PERTAMA, jadi harus jadi benchmark UX untuk semua module berikutnya
 
 SEBELUM MULAI CODING:
-1. Baca ulang Section 8 "MODULE DETAIL: beRest-in Warga" di product concept
+1. Baca ulang Section 8 "MODULE DETAIL: Apick Warga" di product concept
 2. Baca ulang Section 4 "UI/UX Design Principles" - semua screen HARUS comply
 3. Baca database schema untuk tables: organizations, org_members, org_dues, org_transactions, org_announcements
 
@@ -379,7 +379,7 @@ PHASE 1 FEATURES - Provider:
 [ ] Payment tracking (centang per member per period)
 [ ] Add expense (+ photo bukti)
 [ ] Financial report (income - expense = saldo)
-[ ] Share report via WA (link berest.id/rt/laporan)
+[ ] Share report via WA (link apick.id/rt/laporan)
 [ ] Reminder ke yang belum bayar (push + WA)
 [ ] Announcement (create + share)
 [ ] Infaq/Donasi (mesjid mode)
@@ -391,9 +391,9 @@ PHASE 1 FEATURES - Consumer App:
 [ ] Upload bukti bayar -> push to provider
 
 PHASE 1 FEATURES - Consumer Web Portal:
-[ ] berest.id/rt/[code] - warga status page loads
-[ ] berest.id/rt/laporan - financial report page loads
-[ ] berest.id/ms/laporan - infaq report page loads
+[ ] apick.id/rt/[code] - warga status page loads
+[ ] apick.id/rt/laporan - financial report page loads
+[ ] apick.id/ms/laporan - infaq report page loads
 [ ] Smart banner (download app CTA) shows
 [ ] Portal deployed to Vercel, accessible via URL
 
@@ -421,11 +421,11 @@ PREREQUISITE: Quality Gate 1 PASS.
 Phase 2 ada [11] tasks (2.1 sampai 2.11).
 
 CONTEXT:
-- Module Lapak = beRest-in Lapak (warna: hijau #10B981)
+- Module Lapak = Apick Lapak (warna: hijau #10B981)
 - Mode Pedagang dulu (mode paling simple - 1-tap catat omzet)
 - Provider: pedagang, warung kecil, PKL
 - Consumer: customer (browse katalog)
-- Portal: berest.id/wk/[slug]
+- Portal: apick.id/wk/[slug]
 
 ANTI-REGRESSION:
 - Verify Phase 0 + Phase 1 still work di awal
@@ -449,12 +449,12 @@ PREREQUISITE: Quality Gate 2 PASS.
 Phase 3 ada [17] tasks (3.1 sampai 3.17).
 
 CONTEXT:
-- Module Sewa = beRest-in Sewa (warna: biru #3B82F6)
+- Module Sewa = Apick Sewa (warna: biru #3B82F6)
 - Sub-module Properti dulu (kos, kontrakan)
 - Sub-module Kontrak (AI generate via Gemini 2.5 Flash)
 - Provider: pemilik kos/kontrakan
 - Consumer: penghuni (cek tagihan, lapor masalah, upload bukti bayar)
-- Portal: berest.id/kh/[code]
+- Portal: apick.id/kh/[code]
 - Connection lifecycle: pindah kos = archive connection, history tetap ada
 
 AI INTEGRATION:
@@ -520,14 +520,14 @@ PREREQUISITE: Quality Gate 4 PASS.
 Phase 5 ada [17] tasks (5.1 sampai 5.17).
 
 CONTEXT:
-- Module Hajat = beRest-in Hajat (warna: pink #EC4899)
+- Module Hajat = Apick Hajat (warna: pink #EC4899)
 - Undangan digital, RSVP, amplop tracker
 - Provider: penyelenggara acara (nikah, khitan, aqiqah, ultah, syukuran, duka)
 - Consumer: tamu (RSVP, amplop suggestion)
-- Portal: berest.id/hj/[slug] (invitation page HARUS cantik dan responsive)
+- Portal: apick.id/hj/[slug] (invitation page HARUS cantik dan responsive)
 
 INVITATION PAGE:
-- Ini adalah "wajah" beRest ke publik. Setiap undangan yang dibuka = potential user exposure.
+- Ini adalah "wajah" Apick ke publik. Setiap undangan yang dibuka = potential user exposure.
 - Page harus: fast (< 2 detik), cantik, responsive, shareable.
 - Template-based: 10-15 template per tipe acara. Desain clean, modern, Indonesian aesthetic.
 - AI generate text undangan via Gemini 2.5 Flash (bahasa Indonesia yang sopan sesuai budaya).
@@ -538,7 +538,7 @@ AMPLOP TRACKER:
 - Suggestion algorithm: berdasarkan history (orang ini pernah kasih berapa ke kita).
 
 DEEP LINKING:
-- berest.id/hj/andi-nina -> jika app installed, buka di app. Jika tidak, buka web.
+- apick.id/hj/andi-nina -> jika app installed, buka di app. Jika tidak, buka web.
 - Implementasi: Expo Linking + Universal Links (Android App Links)
 
 Mulai task 5.1.
@@ -634,18 +634,18 @@ SHARED:
 [ ] Offline mode (cached data visible, queue actions)
 
 WEB PORTALS:
-[ ] berest.id/rt/[code] (warga)
-[ ] berest.id/rt/laporan (laporan kas)
-[ ] berest.id/ms/laporan (laporan infaq)
-[ ] berest.id/wk/[slug] (katalog)
-[ ] berest.id/lb/[code] (laundry status)
-[ ] berest.id/gp/[code] (murid portal)
-[ ] berest.id/bb/[slug] (antrian)
-[ ] berest.id/kh/[code] (tenant)
-[ ] berest.id/rn/[code] (rental)
-[ ] berest.id/hj/[slug] (invitation)
-[ ] berest.id/hj/[slug]/[guest] (RSVP)
-[ ] berest.id landing page
+[ ] apick.id/rt/[code] (warga)
+[ ] apick.id/rt/laporan (laporan kas)
+[ ] apick.id/ms/laporan (laporan infaq)
+[ ] apick.id/wk/[slug] (katalog)
+[ ] apick.id/lb/[code] (laundry status)
+[ ] apick.id/gp/[code] (murid portal)
+[ ] apick.id/bb/[slug] (antrian)
+[ ] apick.id/kh/[code] (tenant)
+[ ] apick.id/rn/[code] (rental)
+[ ] apick.id/hj/[slug] (invitation)
+[ ] apick.id/hj/[slug]/[guest] (RSVP)
+[ ] apick.id landing page
 [ ] Smart banner semua pages
 
 PERFORMANCE:

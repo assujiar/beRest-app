@@ -1,7 +1,7 @@
-export const APP_NAME = "beRest";
-export const APP_TAGLINE = "Be at Rest with beRest.";
-export const APP_SCHEME = "berest";
-export const WEB_DOMAIN = "berest.id";
+export const APP_NAME = "Apick";
+export const APP_TAGLINE = "Life, well arranged.";
+export const APP_SCHEME = "apick";
+export const WEB_DOMAIN = "apick.id";
 
 export const MODULE_URL_CODES = {
   lb: "lapak-laundry",

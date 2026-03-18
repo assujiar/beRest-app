@@ -34,6 +34,10 @@ yarn-error.*
 .env
 .env*.local
 
+# Next.js (portal)
+portal/.next/
+portal/next-env.d.ts
+
 # typescript
 *.tsbuildinfo
 

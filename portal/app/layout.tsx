@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "beRest - Be at Rest with beRest",
+  title: "Apick - Life, well arranged",
   description: "Platform pengelolaan warga, usaha, sewa, dan hajatan",
 };
 

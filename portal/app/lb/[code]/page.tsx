@@ -42,7 +42,7 @@ export default async function LaundryStatusPage({ params }: Props) {
           </div>
         ))}
       </div>
-      <p className="text-center text-xs text-gray-400 mt-8">Dibuat dengan beRest</p>
+      <p className="text-center text-xs text-gray-400 mt-8">Dibuat dengan Apick</p>
     </main></>
   );
 }

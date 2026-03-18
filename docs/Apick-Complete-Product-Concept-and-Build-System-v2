@@ -1,8 +1,8 @@
-# beRest - Complete Product Concept & Build System v2.0
+# Apick - Complete Product Concept & Build System v2.0
 
-> “Be at Rest with beRest.”
+> “Life, well arranged.”
 > Dual-sided modular platform: Provider + Consumer
-> 4 Module: beRest-in Lapak, beRest-in Sewa, beRest-in Warga, beRest-in Hajat
+> 4 Module: Apick Lapak, Apick Sewa, Apick Warga, Apick Hajat
 > v2.0 - Maret 2026
 
 -----
@@ -13,17 +13,17 @@
 
 ## 1. VISION
 
-beRest bukan 4 app yang di-staple jadi 1. beRest adalah **personal operations system** untuk kehidupan orang Indonesia - dimana setiap orang secara bersamaan adalah provider DAN consumer di berbagai aspek hidupnya.
+Apick bukan 4 app yang di-staple jadi 1. Apick adalah **personal operations system** untuk kehidupan orang Indonesia - dimana setiap orang secara bersamaan adalah provider DAN consumer di berbagai aspek hidupnya.
 
-Pak Hadi (52, Bekasi) di beRest:
+Pak Hadi (52, Bekasi) di Apick:
 
-- **Provider:** ketua RT (beRest-in Warga), punya kos 8 kamar (beRest-in Sewa)
-- **Consumer:** langganan laundry Bu Ningsih (beRest-in Lapak), bulan depan kondangan anak tetangga (beRest-in Hajat)
+- **Provider:** ketua RT (Apick Warga), punya kos 8 kamar (Apick Sewa)
+- **Consumer:** langganan laundry Bu Ningsih (Apick Lapak), bulan depan kondangan anak tetangga (Apick Hajat)
 
-Bu Ningsih (40, Malang) di beRest:
+Bu Ningsih (40, Malang) di Apick:
 
-- **Provider:** punya laundry kiloan (beRest-in Lapak), bendahara pengajian (beRest-in Warga)
-- **Consumer:** ngekos di tempat Pak Hadi (beRest-in Sewa), bikin undangan khitanan anaknya (beRest-in Hajat)
+- **Provider:** punya laundry kiloan (Apick Lapak), bendahara pengajian (Apick Warga)
+- **Consumer:** ngekos di tempat Pak Hadi (Apick Sewa), bikin undangan khitanan anaknya (Apick Hajat)
 
 **1 app. 2 sisi. 4 module. 1 kehidupan.**
 
@@ -33,25 +33,25 @@ Bu Ningsih (40, Malang) di beRest:
 
 ### App Name
 
-**beRest** - gabungan “beres” (solved, handled, done) + “rest” (istirahat). Lo beresin semua urusan, terus bisa rest. Kapitalisasi “R” di tengah = visual identity.
+**Apick** - gabungan “beres” (solved, handled, done) + “rest” (istirahat). Lo bikin apik semua urusan, terus bisa rest. Kapitalisasi “R” di tengah = visual identity.
 
 ### Module Names
 
 |Module   |Nama Marketing |Tab Label|Bahasa Sehari-hari|
 |---------|---------------|---------|------------------|
-|Usaha    |beRest-in Lapak|Lapak    |“beresin lapak”   |
-|Sewaan   |beRest-in Sewa |Sewa     |“beresin sewa”    |
-|Komunitas|beRest-in Warga|Warga    |“beresin warga”   |
-|Acara    |beRest-in Hajat|Hajat    |“beresin hajat”   |
+|Usaha    |Apick Lapak|Lapak    |“bikin apik lapak”   |
+|Sewaan   |Apick Sewa |Sewa     |“bikin apik sewa”    |
+|Komunitas|Apick Warga|Warga    |“bikin apik warga”   |
+|Acara    |Apick Hajat|Hajat    |“bikin apik hajat”   |
 
 ### Module Colors
 
 |Module                 |Warna|Hex    |
 |-----------------------|-----|-------|
-|beRest-in Lapak        |Hijau|#10B981|
-|beRest-in Sewa         |Biru |#3B82F6|
-|beRest-in Warga        |Ungu |#8B5CF6|
-|beRest-in Hajat        |Pink |#EC4899|
+|Apick Lapak        |Hijau|#10B981|
+|Apick Sewa         |Biru |#3B82F6|
+|Apick Warga        |Ungu |#8B5CF6|
+|Apick Hajat        |Pink |#EC4899|
 |Primary Navy           |-    |#1B3A5C|
 |Primary Orange (accent)|-    |#FF4600|
 |Dark Text              |-    |#1E293B|
@@ -61,19 +61,19 @@ Bu Ningsih (40, Malang) di beRest:
 
 ### Taglines
 
-- Primary: “Be at Rest with beRest.”
-- Alt 1: “Beresin semua. Then rest.”
-- Alt 2: “Satu app, semua beres.”
-- Alt 3: “Hidup banyak urusan? beRest-in aja.”
-- Per-module: “beRest-in Lapak - usahamu, beres.” / “beRest-in Sewa - sewaanmu, beres.” / dst.
+- Primary: “Life, well arranged.”
+- Alt 1: “Semua jadi apik.”
+- Alt 2: “Satu app, semua apik.”
+- Alt 3: “Hidup banyak urusan? Apick-in aja.”
+- Per-module: “Apick Lapak - usahamu, beres.” / “Apick Sewa - sewaanmu, beres.” / dst.
 
 -----
 
 ## 3. POSITIONING
 
-**One-liner:** “Satu app untuk beresin urusan usaha, sewaan, komunitas, dan acara.”
+**One-liner:** “Satu app untuk bikin apik urusan usaha, sewaan, komunitas, dan acara.”
 
-**Positioning statement:** Untuk orang Indonesia yang setiap harinya mengelola usaha kecil, properti sewaan, urusan komunitas, dan acara sosial secara bersamaan menggunakan buku tulis dan WhatsApp - beRest adalah satu-satunya app yang menyatukan semua itu dalam satu tempat, baik lo yang mengelola maupun lo yang dilayani.
+**Positioning statement:** Untuk orang Indonesia yang setiap harinya mengelola usaha kecil, properti sewaan, urusan komunitas, dan acara sosial secara bersamaan menggunakan buku tulis dan WhatsApp - Apick adalah satu-satunya app yang menyatukan semua itu dalam satu tempat, baik lo yang mengelola maupun lo yang dilayani.
 
 -----
 
@@ -81,7 +81,7 @@ Bu Ningsih (40, Malang) di beRest:
 
 ### Target User Reality
 
-User utama beRest BUKAN digital native. Mereka:
+User utama Apick BUKAN digital native. Mereka:
 
 - Ibu kos 55 tahun yang HP-nya cuma buat WA dan TikTok
 - Ketua RT 60 tahun yang masih nulis iuran di buku tulis
@@ -89,7 +89,7 @@ User utama beRest BUKAN digital native. Mereka:
 - Pedagang kaki lima yang ngetik pakai 1 jari
 - Ortu murid les yang takut salah pencet
 
-App ini HARUS bisa dioperasikan oleh orang yang cuma bisa buka WhatsApp. Kalau mereka bisa bales chat WA, mereka harus bisa pakai beRest. Itu benchmark-nya.
+App ini HARUS bisa dioperasikan oleh orang yang cuma bisa buka WhatsApp. Kalau mereka bisa bales chat WA, mereka harus bisa pakai Apick. Itu benchmark-nya.
 
 ### Prinsip 1: Satu Layar, Satu Tugas (Atomic Flow)
 
@@ -145,7 +145,7 @@ Rules:
 
 ### Prinsip 3: Jempol Satu Tangan (Thumb-Zone First)
 
-90% user beRest pakai HP Android 5-6 inch dengan satu tangan. Design for thumb reach.
+90% user Apick pakai HP Android 5-6 inch dengan satu tangan. Design for thumb reach.
 
 Rules:
 
@@ -187,7 +187,7 @@ User harus selalu tau: gue di mana, gue datang dari mana, gue bisa ke mana.
 
 Rules:
 
-- Breadcrumb atau header title yang SELALU visible: “beRest-in Lapak > Laundry > Order #0042”
+- Breadcrumb atau header title yang SELALU visible: “Apick Lapak > Laundry > Order #0042”
 - Back button selalu ke parent screen, bukan random. Predictable.
 - Tab bar selalu visible (kecuali saat full-screen form/camera).
 - Gak boleh ada navigasi depth lebih dari 3 level dari tab. Kalau lebih, re-evaluate information architecture.
@@ -197,7 +197,7 @@ Rules:
 
 ### Prinsip 7: Offline-Tolerant, Bukan Offline-First
 
-Mayoritas user beRest punya internet (4G), tapi kualitasnya fluktuatif. App harus graceful saat koneksi jelek.
+Mayoritas user Apick punya internet (4G), tapi kualitasnya fluktuatif. App harus graceful saat koneksi jelek.
 
 Rules:
 
@@ -318,14 +318,14 @@ Full app install (Android). Dashboard management, input data, kelola order/pengh
 
 **Opsi 1: Via Web (tanpa install - default first touch)**
 
-- Provider share link via WA: berest.id/xx/xx
+- Provider share link via WA: apick.id/xx/xx
 - Consumer buka di browser HP
 - Zero friction, zero install
 - Bisa view semua + limited actions (RSVP, konfirmasi bayar, lapor masalah)
 
-**Opsi 2: Via App (install beRest - full consumer experience)**
+**Opsi 2: Via App (install Apick - full consumer experience)**
 
-- Consumer download beRest dari Play Store
+- Consumer download Apick dari Play Store
 - Register/login
 - App otomatis detect: “Lo terhubung sebagai customer di Laundry Bu Ningsih, penghuni Kos Pak Hadi, warga RT 05, dan tamu undangan Andi.”
 - Semua status dan interaksi dari semua provider yang terhubung ke lo = 1 dashboard
@@ -339,7 +339,7 @@ Web-first untuk first touch: orang gak mau install app cuma buat cek status cuci
 
 App untuk repeat consumers: penghuni kos yang bayar tiap bulan, customer laundry langganan, warga RT yang cek iuran rutin - mereka BUTUH app karena interaksi berulang dan push notification lebih reliable dari WA.
 
-App install juga jadi **bridge dari consumer ke provider**: “Lo udah install beRest buat cek cucian laundry? Oh, lo juga punya usaha sendiri? Aktifin aja module Lapak.”
+App install juga jadi **bridge dari consumer ke provider**: “Lo udah install Apick buat cek cucian laundry? Oh, lo juga punya usaha sendiri? Aktifin aja module Lapak.”
 
 ### Consumer App Dashboard
 
@@ -347,20 +347,20 @@ App install juga jadi **bridge dari consumer ke provider**: “Lo udah install b
 Home (Consumer View):
 ├── "Terhubung dengan 4 provider"
 │
-├── beRest-in Lapak
+├── Apick Lapak
 │   ├── Laundry Bu Ningsih: 2 order aktif
 │   │   ├── Order #L-0042: Sedang disetrika (estimasi ready 3 jam)
 │   │   └── Order #L-0041: Ready, belum diambil
 │   └── Les Piano Kak Dinda: Jadwal besok 16:00
 │       └── Tagihan Maret: Rp800.000 (belum bayar)
 │
-├── beRest-in Sewa
+├── Apick Sewa
 │   ├── Kos Pak Hadi - Kamar 5
 │   │   ├── Tagihan Maret: Rp800.000 (LUNAS)
 │   │   └── Kontrak berakhir: 45 hari lagi
 │   └── Rental Kamera (Studio Jaya): Kembali besok
 │
-├── beRest-in Warga
+├── Apick Warga
 │   ├── RT 05 RW 03 Pekayon
 │   │   ├── Iuran Maret: Belum bayar (Rp50.000)
 │   │   ├── Pengumuman baru: "Gotong royong Minggu..."
@@ -368,7 +368,7 @@ Home (Consumer View):
 │   └── Pengajian Al-Ikhlas
 │       └── Infaq Jumat minggu ini: Rp2.350.000
 │
-├── beRest-in Hajat
+├── Apick Hajat
 │   ├── Undangan masuk: Nikahan Andi (25 Maret)
 │   │   ├── Status RSVP: Hadir (2 orang)
 │   │   └── Suggested amplop: Rp500.000
@@ -386,16 +386,16 @@ Home (Consumer View):
 PROVIDER (di app):
 1. Provider mengelola usaha/sewa/warga/hajat
 2. Provider share link ke consumer via WA:
-   "Kak, cucian kamu sudah ready. Cek: berest.id/lb/0042"
+   "Kak, cucian kamu sudah ready. Cek: apick.id/lb/0042"
 
 CONSUMER (via web - first touch):
 3. Consumer tap link di WA -> buka browser
 4. Lihat: status order, detail, dll
-5. Di halaman web ada banner: "Install beRest untuk notifikasi real-time"
+5. Di halaman web ada banner: "Install Apick untuk notifikasi real-time"
 6. Optional: consumer install app
 
 CONSUMER (via app - repeat):
-7. Consumer install beRest, register
+7. Consumer install Apick, register
 8. Input kode koneksi ATAU scan QR dari provider ATAU auto-link via nomor HP
 9. Provider muncul di dashboard consumer
 10. Semua update = push notification
@@ -554,7 +554,7 @@ Provider Dashboard > Kontak/Anggota:
 
 -----
 
-## 6. MODULE DETAIL: beRest-in Lapak
+## 6. MODULE DETAIL: Apick Lapak
 
 ### 5A. Provider Side - Pemilik Usaha
 
@@ -618,28 +618,28 @@ Fitur inti:
 
 Laundry customer:
 
-- Provider share link: berest.id/lb/0042
+- Provider share link: apick.id/lb/0042
 - Customer buka -> lihat status cucian real-time: “Sedang disetrika, estimasi ready 2 jam lagi”
-- Banner: “Install beRest untuk notifikasi otomatis”
+- Banner: “Install Apick untuk notifikasi otomatis”
 
 Guru/Pelatih murid (ortu):
 
-- Provider share link: berest.id/gp/andi
+- Provider share link: apick.id/gp/andi
 - Ortu buka -> lihat: jadwal les, absensi, tagihan bulan ini, history pembayaran
 
 Jasa (barbershop/bengkel):
 
-- Scan QR di toko -> buka berest.id/bb/antrian
+- Scan QR di toko -> buka apick.id/bb/antrian
 - Lihat: nomor antrian, estimasi waktu tunggu, berapa orang di depan
 - Bisa “pergi dulu” dan pantau dari HP
 
 Pedagang:
 
-- Provider share link katalog: berest.id/wk/katalog
+- Provider share link katalog: apick.id/wk/katalog
 - Customer browse produk + harga + stok
 - Tap “Pesan via WhatsApp” -> auto-formatted message ke WA provider
 
-**Via App (install beRest):**
+**Via App (install Apick):**
 
 Semua fitur web di atas PLUS:
 
@@ -652,7 +652,7 @@ Semua fitur web di atas PLUS:
 
 -----
 
-## 7. MODULE DETAIL: beRest-in Sewa
+## 7. MODULE DETAIL: Apick Sewa
 
 ### 6A. Provider Side - Pemilik Aset Sewa
 
@@ -699,16 +699,16 @@ Fitur inti:
 
 Penghuni kos:
 
-- Provider share link: berest.id/kh/siti
+- Provider share link: apick.id/kh/siti
 - Penghuni buka -> lihat: tagihan bulan ini, history pembayaran, tanggal kontrak berakhir, aturan kos, kontak pemilik kos
 - Lapor masalah: “AC kamar 5 bocor” -> masuk ke dashboard provider (with foto)
 
 Penyewa rental:
 
-- Provider share link: berest.id/rn/0087
+- Provider share link: apick.id/rn/0087
 - Lihat: item yang disewa, tanggal harus kembali, deposit yang ditahan, status deposit
 
-**Via App (install beRest):**
+**Via App (install Apick):**
 
 Semua fitur web PLUS:
 
@@ -720,7 +720,7 @@ Semua fitur web PLUS:
 
 -----
 
-## 8. MODULE DETAIL: beRest-in Warga
+## 8. MODULE DETAIL: Apick Warga
 
 ### 7A. Provider Side - Pengurus Komunitas
 
@@ -775,16 +775,16 @@ Fitur inti:
 
 Warga RT:
 
-- Ketua RT share link: berest.id/rt/siti
+- Ketua RT share link: apick.id/rt/siti
 - Warga buka -> lihat: status iuran, laporan keuangan kas RT, pengumuman terbaru, jadwal ronda
 - Konfirmasi bayar: upload bukti transfer -> status auto-update di dashboard pengurus
 
 Jamaah mesjid:
 
-- DKM share link laporan: berest.id/ms/laporan
+- DKM share link laporan: apick.id/ms/laporan
 - Jamaah lihat: total infaq bulan ini, detail pengeluaran, saldo, progress fundraising
 
-**Via App (install beRest):**
+**Via App (install Apick):**
 
 Semua fitur web PLUS:
 
@@ -796,7 +796,7 @@ Semua fitur web PLUS:
 
 -----
 
-## 9. MODULE DETAIL: beRest-in Hajat
+## 9. MODULE DETAIL: Apick Hajat
 
 ### 8A. Provider Side - Penyelenggara Acara
 
@@ -808,7 +808,7 @@ Fitur inti:
 - Pilih template desain (10-15 template per kategori, clean dan modern)
 - Input detail: nama, tanggal, waktu, lokasi (embed Google Maps link), dresscode, info tambahan
 - AI generate text undangan yang proper (Gemini 2.5 Flash: input nama + acara -> generate wording sopan sesuai budaya)
-- Preview -> publish -> dapat link: berest.id/hj/andi-nina
+- Preview -> publish -> dapat link: apick.id/hj/andi-nina
 - Share per-orang via WA (personalized) atau share ke group
 
 **Sub-module RSVP & Guest Manager**
@@ -839,13 +839,13 @@ Fitur inti:
 
 Tamu undangan:
 
-- Host share link: berest.id/hj/andi-nina (atau personalized: berest.id/hj/andi-nina/siti)
+- Host share link: apick.id/hj/andi-nina (atau personalized: apick.id/hj/andi-nina/siti)
 - Buka -> lihat undangan digital yang cantik (nama acara, foto, detail, maps)
 - RSVP: tap “Hadir” -> input jumlah orang -> “Konfirmasi terkirim!”
 - Info lengkap: lokasi (tap untuk buka Google Maps), waktu, dresscode, parking info
 - Ucapan digital: tulis ucapan selamat
 
-**Via App (install beRest):**
+**Via App (install Apick):**
 
 Semua fitur web PLUS:
 
@@ -865,7 +865,7 @@ Satu database kontak yang shared across semua module. Saat provider input “Bu 
 
 Fields per kontak: nama, no HP, alamat, email (opsional), KTP foto (opsional), tags (penghuni, customer, warga, tamu), notes, history interaksi cross-module.
 
-Dari sisi consumer: 1 akun beRest = terhubung ke semua provider yang kenal nomor HP lo. Gak perlu register ulang per provider.
+Dari sisi consumer: 1 akun Apick = terhubung ke semua provider yang kenal nomor HP lo. Gak perlu register ulang per provider.
 
 ### 9.2 Financial Dashboard
 
@@ -900,28 +900,28 @@ Hari ini (18 Maret 2026):
 
 Contoh output per module:
 
-- Tagihan kos: “Assalamualaikum Bu Siti, berikut tagihan kos bulan Maret: Rp800.000. Detail: berest.id/kh/siti. Terima kasih.”
-- Status cucian: “Kak, cucian kamu sudah siap diambil. Detail: berest.id/lb/0042”
-- Laporan kas: “Laporan keuangan RT 05 bulan Maret sudah tersedia: berest.id/rt/laporan”
-- Undangan: “Bismillah, kami mengundang Bapak/Ibu di acara… berest.id/hj/andi-nina”
+- Tagihan kos: “Assalamualaikum Bu Siti, berikut tagihan kos bulan Maret: Rp800.000. Detail: apick.id/kh/siti. Terima kasih.”
+- Status cucian: “Kak, cucian kamu sudah siap diambil. Detail: apick.id/lb/0042”
+- Laporan kas: “Laporan keuangan RT 05 bulan Maret sudah tersedia: apick.id/rt/laporan”
+- Undangan: “Bismillah, kami mengundang Bapak/Ibu di acara… apick.id/hj/andi-nina”
 
-Semua link: **berest.id/[2-letter-code]/[identifier]**
+Semua link: **apick.id/[2-letter-code]/[identifier]**
 
 ### 9.5 URL Structure
 
-Semua consumer-facing URL menggunakan format pendek: **berest.id/xx/xx**
+Semua consumer-facing URL menggunakan format pendek: **apick.id/xx/xx**
 
 |Code|Module                        |Contoh                |Keterangan     |
 |----|------------------------------|----------------------|---------------|
-|lb  |Lapak - Laundry/Bisnis        |berest.id/lb/0042     |Status order   |
-|gp  |Lapak - Guru/Pelatih          |berest.id/gp/andi     |Portal murid   |
-|bb  |Lapak - Barbershop/Bisnis jasa|berest.id/bb/antrian  |Antrian live   |
-|wk  |Lapak - Warung/Katalog        |berest.id/wk/katalog  |Katalog produk |
-|kh  |Sewa - Kos/Hunian             |berest.id/kh/siti     |Portal penghuni|
-|rn  |Sewa - Rental                 |berest.id/rn/0087     |Status rental  |
-|rt  |Warga - RT/komunitas          |berest.id/rt/siti     |Portal warga   |
-|ms  |Warga - Mesjid                |berest.id/ms/laporan  |Laporan infaq  |
-|hj  |Hajat                         |berest.id/hj/andi-nina|Undangan       |
+|lb  |Lapak - Laundry/Bisnis        |apick.id/lb/0042     |Status order   |
+|gp  |Lapak - Guru/Pelatih          |apick.id/gp/andi     |Portal murid   |
+|bb  |Lapak - Barbershop/Bisnis jasa|apick.id/bb/antrian  |Antrian live   |
+|wk  |Lapak - Warung/Katalog        |apick.id/wk/katalog  |Katalog produk |
+|kh  |Sewa - Kos/Hunian             |apick.id/kh/siti     |Portal penghuni|
+|rn  |Sewa - Rental                 |apick.id/rn/0087     |Status rental  |
+|rt  |Warga - RT/komunitas          |apick.id/rt/siti     |Portal warga   |
+|ms  |Warga - Mesjid                |apick.id/ms/laporan  |Laporan infaq  |
+|hj  |Hajat                         |apick.id/hj/andi-nina|Undangan       |
 
 Slugs setelah code bisa berupa: kode alfanumerik auto-generate (0042), nama pendek (siti, andi-nina), atau deskripsi (laporan, antrian, katalog).
 
@@ -932,11 +932,11 @@ Slugs setelah code bisa berupa: kode alfanumerik auto-generate (0042), nama pend
 ### Provider Onboarding (install app)
 
 ```
-Splash: "beRest - Be at Rest with beRest."
+Splash: "Apick - Life, well arranged."
 
 -> Register: Google 1-tap / No HP + OTP
 
--> "Halo! Kamu mau beRest-in apa?"
+-> "Halo! Kamu mau Apick-in apa?"
    [Checklist - pilih minimal 1:]
    [ ] Lapak (jualan, laundry, les, jasa)
    [ ] Sewa (kos, kontrakan, rental barang)
@@ -969,7 +969,7 @@ Splash: "beRest - Be at Rest with beRest."
 ### Consumer Onboarding (install app)
 
 ```
-Splash: "beRest - Be at Rest with beRest."
+Splash: "Apick - Life, well arranged."
 
 -> Register: Google 1-tap / No HP + OTP
 
@@ -998,12 +998,12 @@ Splash: "beRest - Be at Rest with beRest."
 ### Web-to-App Conversion Flow
 
 ```
-Consumer buka berest.id/lb/0042 di browser (dari link WA)
+Consumer buka apick.id/lb/0042 di browser (dari link WA)
 
 -> Lihat status order (full info, functional)
 
 -> Smart banner (sticky, gak annoying):
-   "Download beRest - notifikasi real-time & semua status di 1 tempat"
+   "Download Apick - notifikasi real-time & semua status di 1 tempat"
    [Install] [Nanti]
 
 -> Jika install:
@@ -1067,7 +1067,7 @@ Consumer buka berest.id/lb/0042 di browser (dari link WA)
 |Auth                            |Supabase Auth                               |Google + Phone OTP                                                                                                                     |
 |Offline                         |AsyncStorage + queue                        |Basic offline support                                                                                                                  |
 |Realtime                        |Supabase Realtime                           |Provider update -> Consumer instant                                                                                                    |
-|Deep Linking                    |Expo Linking + Universal Links              |berest.id/xx/xx -> app if installed                                                                                                    |
+|Deep Linking                    |Expo Linking + Universal Links              |apick.id/xx/xx -> app if installed                                                                                                    |
 
 ### Gemini 2.5 Flash - Why This Model
 
@@ -1141,7 +1141,7 @@ CREATE INDEX idx_connections_status ON consumer_connections(status);
 CREATE INDEX idx_connections_auto_archive ON consumer_connections(auto_archive_at) WHERE auto_archive_at IS NOT NULL AND status = 'active';
 CREATE UNIQUE INDEX idx_connections_unique ON consumer_connections(consumer_id, provider_id, module, reference_id);
 
--- ============ MODULE: LAPAK (beRest-in Lapak) ============
+-- ============ MODULE: LAPAK (Apick Lapak) ============
 
 CREATE TABLE businesses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1221,7 +1221,7 @@ CREATE TABLE queue_tickets (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ============ MODULE: SEWA (beRest-in Sewa) ============
+-- ============ MODULE: SEWA (Apick Sewa) ============
 
 CREATE TABLE properties (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1312,7 +1312,7 @@ CREATE TABLE contracts (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ============ MODULE: WARGA (beRest-in Warga) ============
+-- ============ MODULE: WARGA (Apick Warga) ============
 
 CREATE TABLE organizations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1384,7 +1384,7 @@ CREATE TABLE org_announcements (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ============ MODULE: HAJAT (beRest-in Hajat) ============
+-- ============ MODULE: HAJAT (Apick Hajat) ============
 
 CREATE TABLE events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1483,7 +1483,7 @@ CREATE TABLE notifications (
   body TEXT,
   reference_type TEXT, -- 'order','rent_payment','org_dues','event_guest'
   reference_id UUID,
-  deep_link TEXT, -- berest.id/xx/xx for web fallback
+  deep_link TEXT, -- apick.id/xx/xx for web fallback
   is_read BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -1509,27 +1509,27 @@ CREATE UNIQUE INDEX idx_short_urls ON short_urls(code, slug);
 
 ## 15. CONSUMER WEB PORTAL ROUTES
 
-All routes: **berest.id/[code]/[slug]**
+All routes: **apick.id/[code]/[slug]**
 
 ```
-berest.id/                              -> Landing page + download app
-berest.id/lb/[order_code]              -> Order/laundry status (Lapak)
-berest.id/gp/[student_slug]            -> Student/parent portal (Lapak - Guru)
-berest.id/bb/[biz_slug]               -> Queue/storefront (Lapak - Jasa)
-berest.id/wk/[biz_slug]               -> Product catalog (Lapak - Warung)
-berest.id/kh/[tenant_code]            -> Tenant portal (Sewa - Kos/Hunian)
-berest.id/rn/[rental_code]            -> Rental status (Sewa - Rental)
-berest.id/rt/[member_code]            -> Member portal (Warga - RT)
-berest.id/rt/laporan                   -> Public financial report (Warga)
-berest.id/ms/[code]                    -> Mesjid portal (Warga - Mesjid)
-berest.id/ms/laporan                   -> Public infaq report (Warga)
-berest.id/hj/[event_slug]             -> Invitation page (Hajat)
-berest.id/hj/[event_slug]/[guest_code] -> Personalized RSVP (Hajat)
+apick.id/                              -> Landing page + download app
+apick.id/lb/[order_code]              -> Order/laundry status (Lapak)
+apick.id/gp/[student_slug]            -> Student/parent portal (Lapak - Guru)
+apick.id/bb/[biz_slug]               -> Queue/storefront (Lapak - Jasa)
+apick.id/wk/[biz_slug]               -> Product catalog (Lapak - Warung)
+apick.id/kh/[tenant_code]            -> Tenant portal (Sewa - Kos/Hunian)
+apick.id/rn/[rental_code]            -> Rental status (Sewa - Rental)
+apick.id/rt/[member_code]            -> Member portal (Warga - RT)
+apick.id/rt/laporan                   -> Public financial report (Warga)
+apick.id/ms/[code]                    -> Mesjid portal (Warga - Mesjid)
+apick.id/ms/laporan                   -> Public infaq report (Warga)
+apick.id/hj/[event_slug]             -> Invitation page (Hajat)
+apick.id/hj/[event_slug]/[guest_code] -> Personalized RSVP (Hajat)
 ```
 
 Semua route: static-generated atau server-rendered. Gak perlu install. Gak perlu login untuk view. Actions (RSVP, confirm payment) butuh simple verification (kode + no HP).
 
-Setiap halaman web punya **smart banner**: “Download beRest untuk notifikasi real-time” dengan deep link ke Play Store. Jika app sudah terinstall, deep link buka langsung ke screen yang relevan di app.
+Setiap halaman web punya **smart banner**: “Download Apick untuk notifikasi real-time” dengan deep link ke Play Store. Jika app sudah terinstall, deep link buka langsung ke screen yang relevan di app.
 
 -----
 
@@ -1548,7 +1548,7 @@ Alasan build pertama: paling simple secara teknis, viral coefficient paling ting
 Scope:
 
 - Provider: Kas & Iuran (full CRUD + laporan + share link) + Pengumuman (basic)
-- Consumer web: berest.id/rt/[code] (warga cek status + laporan publik)
+- Consumer web: apick.id/rt/[code] (warga cek status + laporan publik)
 - Consumer app: warga dashboard (iuran status, pengumuman, jadwal), upload bukti bayar, push notification
 - Reminder pembayaran (provider -> consumer via push + WA)
 
@@ -1559,7 +1559,7 @@ Quality gate: bendahara kelola 30 warga, warga cek status via web DAN app, lapor
 Scope:
 
 - Provider: Mode Pedagang (catat penjualan + pengeluaran + profit)
-- Consumer web: berest.id/wk/[slug] (katalog mini)
+- Consumer web: apick.id/wk/[slug] (katalog mini)
 - Consumer app: favorite stores, order history
 - Financial dashboard integration (Warga + Lapak aggregated)
 
@@ -1570,7 +1570,7 @@ Quality gate: pedagang catat penjualan 3 detik/transaksi, consumer browse katalo
 Scope:
 
 - Provider: Kos/kontrakan (unit + penghuni + billing), Kontrak template (Gemini 2.5 Flash)
-- Consumer web: berest.id/kh/[code] (tenant cek tagihan + lapor masalah)
+- Consumer web: apick.id/kh/[code] (tenant cek tagihan + lapor masalah)
 - Consumer app: tenant dashboard (tagihan, kontrak, maintenance request), upload bukti bayar, push notification
 - Payment tracking + reminder
 
@@ -1581,7 +1581,7 @@ Quality gate: pemilik kos kelola 10 kamar, penghuni cek via web DAN app, mainten
 Scope:
 
 - Provider: Mode Laundry (order + status), Mode Guru/Pelatih (murid + jadwal + absensi + tagihan), Mode Jasa Umum (antrian QR)
-- Consumer web: berest.id/lb/[code] (laundry status), berest.id/gp/[code] (murid portal), berest.id/bb/[slug] (antrian)
+- Consumer web: apick.id/lb/[code] (laundry status), apick.id/gp/[code] (murid portal), apick.id/bb/[slug] (antrian)
 - Consumer app: multi-provider tracking (laundry + guru + antrian all in 1 dashboard), real-time status updates via Supabase Realtime, push notifications
 - Customer Database (cross-mode)
 
@@ -1592,7 +1592,7 @@ Quality gate: laundry 20 order/hari, guru 15 murid, barbershop antrian digital, 
 Scope:
 
 - Provider: Undangan digital (templates + Gemini 2.5 Flash generate text), RSVP + guest manager, Amplop tracker
-- Consumer web: berest.id/hj/[slug] (invitation page + RSVP form)
+- Consumer web: apick.id/hj/[slug] (invitation page + RSVP form)
 - Consumer app: incoming invitations dashboard, RSVP via app, amplop suggestion, hajatan calendar
 - Deep linking: undangan link -> app if installed -> direct to invitation screen
 
@@ -1653,7 +1653,7 @@ Channel:
 - Approach 10-20 RT/mesjid di area Jabodetabek secara langsung
 - Offer: “Gratis selamanya. Kami bantu setup.”
 - Setiap RT yang pakai = 30-200 warga terekspos via laporan link -> subset install app sebagai consumer
-- Content: TikTok/Reels “Bendahara RT masih pakai buku tulis? beRest-in Warga, cuma 5 menit.”
+- Content: TikTok/Reels “Bendahara RT masih pakai buku tulis? Apick Warga, cuma 5 menit.”
 
 ### Phase 2 (Lapak launch): Micro-business acquisition
 
@@ -1662,7 +1662,7 @@ Target: pedagang kaki lima, laundry, guru les.
 Channel:
 
 - ASO: “catat penjualan harian”, “aplikasi laundry”, “aplikasi guru les”
-- TikTok: “Berapa omzet lo hari ini? Gak tahu? beRest-in Lapak.”
+- TikTok: “Berapa omzet lo hari ini? Gak tahu? Apick Lapak.”
 - Cross-sell: warga yang sudah install app sbg consumer -> “Lo punya usaha? Aktifin Lapak.”
 
 ### Phase 3 (Sewa + Hajat): Cross-sell + viral events
@@ -1671,7 +1671,7 @@ Target: pemilik kos, penyelenggara acara.
 
 Channel:
 
-- Cross-sell: existing beRest users yang juga punya kos/mau bikin acara
+- Cross-sell: existing Apick users yang juga punya kos/mau bikin acara
 - Wedding season push: undangan digital gratis -> viral per event (100-500 tamu = 100-500 orang exposed)
 - Consumer virality: setiap undangan dikirim = consumer install app untuk RSVP + amplop tracking
 
@@ -1684,12 +1684,12 @@ Channel:
 ## CLAUDE.md
 
 ```markdown
-# beRest - Project Instructions for Claude Code
+# Apick - Project Instructions for Claude Code
 
 ## IDENTITY
-App beRest - "Be at Rest with beRest."
+App Apick - "Life, well arranged."
 Dual-sided modular platform: Provider (Android app) + Consumer (Android app + Web portal).
-4 Modules: beRest-in Lapak, beRest-in Sewa, beRest-in Warga, beRest-in Hajat.
+4 Modules: Apick Lapak, Apick Sewa, Apick Warga, Apick Hajat.
 Indonesia-first.
 
 ## CRITICAL RULES
@@ -1771,13 +1771,13 @@ Inactive modules = zero memory footprint. Only import module code when activated
 
 ### Web portal
 - Next.js 15 on Vercel
-- Routes: berest.id/[code]/[slug]
+- Routes: apick.id/[code]/[slug]
 - Static/SSR pages, gak butuh login untuk view
 - Actions (RSVP, confirm payment) need simple verification
 - Smart banner for app download with deep link
 
 ## FOLDER STRUCTURE
-berest-app/
+apick-app/
 ├── CLAUDE.md
 ├── PROGRESS.md
 ├── app/                           # Expo Router
@@ -1788,10 +1788,10 @@ berest-app/
 │   ├── (provider)/                # Provider view
 │   │   ├── (tabs)/
 │   │   │   ├── index.tsx          # Provider home dashboard
-│   │   │   ├── lapak/             # beRest-in Lapak screens
-│   │   │   ├── sewa/              # beRest-in Sewa screens
-│   │   │   ├── warga/             # beRest-in Warga screens
-│   │   │   ├── hajat/             # beRest-in Hajat screens
+│   │   │   ├── lapak/             # Apick Lapak screens
+│   │   │   ├── sewa/              # Apick Sewa screens
+│   │   │   ├── warga/             # Apick Warga screens
+│   │   │   ├── hajat/             # Apick Hajat screens
 │   │   │   └── profile.tsx
 │   │   └── _layout.tsx
 │   ├── (consumer)/                # Consumer view
@@ -1833,7 +1833,7 @@ berest-app/
 │   │   ├── financial.service.ts
 │   │   ├── reminder.service.ts
 │   │   ├── wa-share.service.ts
-│   │   ├── deep-link.service.ts   # Handle berest.id deep links
+│   │   ├── deep-link.service.ts   # Handle apick.id deep links
 │   │   ├── gemini.service.ts      # Gemini 2.5 Flash
 │   │   ├── lapak.service.ts
 │   │   ├── sewa.service.ts
@@ -1897,10 +1897,10 @@ berest-app/
 ## COLOR PALETTE
 Primary Navy: #1B3A5C
 Primary Orange: #FF4600
-beRest-in Lapak: #10B981 (green)
-beRest-in Sewa: #3B82F6 (blue)
-beRest-in Warga: #8B5CF6 (purple)
-beRest-in Hajat: #EC4899 (pink)
+Apick Lapak: #10B981 (green)
+Apick Sewa: #3B82F6 (blue)
+Apick Warga: #8B5CF6 (purple)
+Apick Hajat: #EC4899 (pink)
 Dark Text: #1E293B
 Grey Text: #64748B
 Light BG: #F8FAFC
@@ -1912,7 +1912,7 @@ Border: #E2E8F0
 ## PROGRESS.md
 
 ```markdown
-# beRest - Build Progress Tracker
+# Apick - Build Progress Tracker
 
 > Last updated: [TIMESTAMP]
 > Current phase: PHASE 0 - NOT STARTED
@@ -1946,7 +1946,7 @@ Border: #E2E8F0
 | 0.19 | Implement notification service (push + in-app) | TODO | - | - |
 | 0.20 | Implement WA share engine | TODO | - | - |
 | 0.21 | Implement reminder service + notification scheduling | TODO | - | - |
-| 0.22 | Implement deep link handler (berest.id/xx/xx -> app screen) | TODO | - | - |
+| 0.22 | Implement deep link handler (apick.id/xx/xx -> app screen) | TODO | - | - |
 | 0.23 | Supabase migration: all tables + RLS policies | TODO | - | - |
 | 0.24 | Setup Supabase Realtime subscriptions (for consumer live updates) | TODO | - | - |
 | 0.25 | Implement connection lifecycle (archive, disconnect, auto-archive scheduler) | TODO | - | Grace periods: sewa 7d, rental 3d, hajat 7d, laundry 90d inactive prompt |
@@ -1970,7 +1970,7 @@ Border: #E2E8F0
 | 1.6 | Provider: Payment Tracking screen (centang per member) | TODO | - | Trigger notification to consumer |
 | 1.7 | Provider: Add Expense screen (+ photo bukti) | TODO | - | - |
 | 1.8 | Provider: Financial Report screen | TODO | - | - |
-| 1.9 | Provider: Share Report (generate link + WA share) | TODO | - | berest.id/rt/laporan |
+| 1.9 | Provider: Share Report (generate link + WA share) | TODO | - | apick.id/rt/laporan |
 | 1.10 | Provider: Reminder to unpaid members | TODO | - | Push + WA |
 | 1.11 | Provider: Announcement (create + share) | TODO | - | - |
 | 1.12 | Provider: Infaq/Donasi sub-module (mesjid mode) | TODO | - | - |
@@ -1979,9 +1979,9 @@ Border: #E2E8F0
 | 1.15 | Consumer app: Upload bukti bayar + push to provider | TODO | - | - |
 | 1.16 | Consumer app: View announcements + read tracking | TODO | - | - |
 | 1.17 | Setup Next.js portal project | TODO | - | - |
-| 1.18 | Portal: berest.id/rt/[code] - warga status page | TODO | - | - |
-| 1.19 | Portal: berest.id/rt/laporan - public financial report | TODO | - | - |
-| 1.20 | Portal: berest.id/ms/laporan - infaq report | TODO | - | - |
+| 1.18 | Portal: apick.id/rt/[code] - warga status page | TODO | - | - |
+| 1.19 | Portal: apick.id/rt/laporan - public financial report | TODO | - | - |
+| 1.20 | Portal: apick.id/ms/laporan - infaq report | TODO | - | - |
 | 1.21 | Portal: Smart banner (download app CTA) | TODO | - | - |
 | 1.22 | Deploy portal to Vercel | TODO | - | - |
 | 1.23 | Integration test: provider create org -> add member -> share link -> consumer web view -> consumer app view -> upload bukti bayar -> provider sees update | TODO | - | Full e2e |
@@ -2002,7 +2002,7 @@ Border: #E2E8F0
 | 2.6 | Provider: Expense logger | TODO | - | - |
 | 2.7 | Provider: Daily Dashboard (omzet, profit, trend) | TODO | - | - |
 | 2.8 | Consumer app: Browse catalog, order history | TODO | - | - |
-| 2.9 | Portal: berest.id/wk/[slug] - mini storefront | TODO | - | - |
+| 2.9 | Portal: apick.id/wk/[slug] - mini storefront | TODO | - | - |
 | 2.10 | Integrate financial dashboard (Warga + Lapak) | TODO | - | - |
 | 2.11 | Verify quality gate | TODO | - | - |
 
@@ -2026,7 +2026,7 @@ Border: #E2E8F0
 | 3.11 | Provider: Vacant Unit sharing | TODO | - | - |
 | 3.12 | Consumer app: Tenant dashboard (tagihan, kontrak, maintenance request) | TODO | - | - |
 | 3.13 | Consumer app: Upload bukti bayar + maintenance request with photo | TODO | - | - |
-| 3.14 | Portal: berest.id/kh/[code] - tenant portal | TODO | - | - |
+| 3.14 | Portal: apick.id/kh/[code] - tenant portal | TODO | - | - |
 | 3.15 | Portal: Maintenance request form | TODO | - | - |
 | 3.16 | Integrate financial dashboard (+Sewa) | TODO | - | - |
 | 3.17 | Verify quality gate | TODO | - | - |
@@ -2040,15 +2040,15 @@ Border: #E2E8F0
 |---|------|--------|-------|-------|
 | 4.1 | Provider: Laundry Mode (order + status + pricing) | TODO | - | - |
 | 4.2 | Consumer app: Laundry tracking (real-time status via Supabase Realtime) | TODO | - | - |
-| 4.3 | Portal: berest.id/lb/[code] - laundry status | TODO | - | - |
+| 4.3 | Portal: apick.id/lb/[code] - laundry status | TODO | - | - |
 | 4.4 | Provider: Guru/Pelatih Mode (students + schedule + attendance) | TODO | - | - |
 | 4.5 | Provider: Auto-generate monthly billing (guru) | TODO | - | - |
 | 4.6 | Consumer app: Student/parent dashboard (jadwal + tagihan) | TODO | - | - |
-| 4.7 | Portal: berest.id/gp/[code] - student portal | TODO | - | - |
+| 4.7 | Portal: apick.id/gp/[code] - student portal | TODO | - | - |
 | 4.8 | Provider: Jasa Umum Mode (queue + orders) | TODO | - | - |
 | 4.9 | Provider: QR code generator for queue | TODO | - | - |
 | 4.10 | Consumer app: Queue tracking (real-time) | TODO | - | - |
-| 4.11 | Portal: berest.id/bb/[slug] - queue portal | TODO | - | - |
+| 4.11 | Portal: apick.id/bb/[slug] - queue portal | TODO | - | - |
 | 4.12 | Provider: Customer Database (cross-mode) | TODO | - | - |
 | 4.13 | Provider: AI scan nota (Gemini 2.5 Flash) | TODO | - | - |
 | 4.14 | Verify quality gate | TODO | - | - |
@@ -2073,8 +2073,8 @@ Border: #E2E8F0
 | 5.11 | Consumer app: Incoming invitations dashboard | TODO | - | - |
 | 5.12 | Consumer app: RSVP via app + amplop suggestion | TODO | - | - |
 | 5.13 | Consumer app: Hajatan calendar + amplop history | TODO | - | - |
-| 5.14 | Portal: berest.id/hj/[slug] - invitation page | TODO | - | - |
-| 5.15 | Portal: berest.id/hj/[slug]/[guest] - RSVP form | TODO | - | - |
+| 5.14 | Portal: apick.id/hj/[slug] - invitation page | TODO | - | - |
+| 5.15 | Portal: apick.id/hj/[slug]/[guest] - RSVP form | TODO | - | - |
 | 5.16 | Deep link: invitation URL -> app if installed | TODO | - | - |
 | 5.17 | Verify quality gate | TODO | - | - |
 
@@ -2088,7 +2088,7 @@ Border: #E2E8F0
 | 6.1 | Provider: Rental Items management | TODO | - | - |
 | 6.2 | Provider: Rental transaction (borrow + return + photo) | TODO | - | - |
 | 6.3 | Consumer: Rental status (app + web) | TODO | - | - |
-| 6.4 | Portal: berest.id/rn/[code] | TODO | - | - |
+| 6.4 | Portal: apick.id/rn/[code] | TODO | - | - |
 | 6.5 | Provider: Warga Jadwal & Giliran sub-module | TODO | - | - |
 | 6.6 | Consumer: Schedule view + swap request | TODO | - | - |
 | 6.7 | Advanced analytics per module | TODO | - | - |
@@ -2100,7 +2100,7 @@ Border: #E2E8F0
 | 6.13 | Full regression test all modules + all consumer flows | TODO | - | - |
 | 6.14 | Build APK/AAB | TODO | - | - |
 | 6.15 | Play Store listing prep | TODO | - | - |
-| 6.16 | Portal: berest.id landing page | TODO | - | - |
+| 6.16 | Portal: apick.id landing page | TODO | - | - |
 
 **Quality Gate 6:** ✅/❌
 
@@ -2117,13 +2117,13 @@ Border: #E2E8F0
 ## DECISIONS LOG
 | Date | Decision | Reasoning |
 |------|----------|-----------|
-| 2026-03-18 | App name: beRest | "beres" + "rest". Natural, memorable, scalable. |
-| 2026-03-18 | Module names: beRest-in Lapak/Sewa/Warga/Hajat | Marketing names. Tab labels: Lapak/Sewa/Warga/Hajat. |
+| 2026-03-18 | App name: Apick | "beres" + "rest". Natural, memorable, scalable. |
+| 2026-03-18 | Module names: Apick Lapak/Sewa/Warga/Hajat | Marketing names. Tab labels: Lapak/Sewa/Warga/Hajat. |
 | 2026-03-18 | AI model: Gemini 2.5 Flash | Gemini 2.0 Flash retired Juni 2026. 2.5 Flash stable, free tier, multimodal. |
 | 2026-03-18 | Consumer dual-access: web + app | Web for first-touch (zero friction), app for repeat users (push notif, dashboard). |
-| 2026-03-18 | URL structure: berest.id/xx/xx | Short 2-letter module codes + slug. Simple, clean. |
+| 2026-03-18 | URL structure: apick.id/xx/xx | Short 2-letter module codes + slug. Simple, clean. |
 | 2026-03-18 | Connection lifecycle: archive not delete | Data never deleted. Pindah/ganti/keluar = archive. History always accessible. Grace periods per module type. |
-| 2026-03-18 | UI/UX: low digital literacy first | 12 principles. Atomic flow (1 screen 1 task), bahasa manusia, thumb-zone, max 3 inputs/screen, offline-tolerant, smart defaults. Benchmark: kalau bisa buka WA = bisa pakai beRest. |
+| 2026-03-18 | UI/UX: low digital literacy first | 12 principles. Atomic flow (1 screen 1 task), bahasa manusia, thumb-zone, max 3 inputs/screen, offline-tolerant, smart defaults. Benchmark: kalau bisa buka WA = bisa pakai Apick. |
 ```
 
 -----
