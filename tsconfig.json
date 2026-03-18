@@ -18,5 +18,5 @@
       "@config/*": ["src/config/*"]
     }
   },
-  "exclude": ["supabase/functions"]
+  "exclude": ["supabase/functions", "portal"]
 }

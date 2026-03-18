@@ -61,3 +61,43 @@ export interface OrgTransaction {
   donor_name: string | null;
   created_at: string;
 }
+
+export interface Announcement {
+  id: string;
+  org_id: string;
+  title: string;
+  body: string;
+  is_pinned: boolean;
+  created_at: string;
+}
+
+export interface AnnouncementRead {
+  id: string;
+  announcement_id: string;
+  member_id: string;
+  read_at: string;
+}
+
+export type FundraisingStatus = "active" | "completed" | "cancelled";
+
+export interface Fundraising {
+  id: string;
+  org_id: string;
+  title: string;
+  description: string | null;
+  target_amount: number;
+  collected_amount: number;
+  status: FundraisingStatus;
+  deadline: string | null;
+  created_at: string;
+}
+
+export interface DuesConfig {
+  id: string;
+  org_id: string;
+  label: string;
+  amount: number;
+  period_type: "monthly" | "yearly" | "custom";
+  is_active: boolean;
+  created_at: string;
+}
