@@ -38,33 +38,44 @@ export async function getLapakAnalytics(
   prevSince.setDate(prevSince.getDate() - days * 2);
   const prevSinceStr = prevSince.toISOString();
 
+  // Get user's businesses first
+  const { data: userBusinesses } = await supabase
+    .from("businesses")
+    .select("id")
+    .eq("user_id", userId);
+
+  const businessIds = (userBusinesses ?? []).map((b) => b.id);
+  if (businessIds.length === 0) {
+    return { module: "lapak", label: "Lapak", metrics: [] };
+  }
+
   // Current period sales
   const { data: currentSales } = await supabase
-    .from("sales")
+    .from("sales_entries")
     .select("total")
-    .eq("user_id", userId)
-    .gte("created_at", sinceStr);
+    .in("business_id", businessIds)
+    .gte("sold_at", sinceStr);
 
   // Previous period sales
   const { data: prevSales } = await supabase
-    .from("sales")
+    .from("sales_entries")
     .select("total")
-    .eq("user_id", userId)
-    .gte("created_at", prevSinceStr)
-    .lt("created_at", sinceStr);
+    .in("business_id", businessIds)
+    .gte("sold_at", prevSinceStr)
+    .lt("sold_at", sinceStr);
 
   // Current expenses
   const { data: currentExpenses } = await supabase
     .from("lapak_expenses")
     .select("amount")
-    .eq("user_id", userId)
+    .in("business_id", businessIds)
     .gte("created_at", sinceStr);
 
   // Active products count
   const { count: productCount } = await supabase
     .from("products")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
+    .in("business_id", businessIds)
     .eq("is_active", true);
 
   const totalSales = (currentSales ?? []).reduce((s, r) => s + (r.total ?? 0), 0);

@@ -225,6 +225,8 @@
 | 2026-03-18 | Rebrand | portal/app/page.tsx | Landing page redesign | Storytelling style, flat vector SVG icons, learn more per module, detailed feature descriptions |
 | 2026-03-18 | Rebrand | portal/app/globals.css | Add animations | fade-up, float animations for landing page |
 | 2026-03-18 | Rebrand | 13+ files | "Apick" → "apick" lowercase | All user-facing text: SmartBanner, footer, WA messages, constants, app config |
+| 2026-03-19 | Fix | supabase/migrations/00002_warga_module.sql | Policy references org_members before table exists | Moved org_members CREATE TABLE before the organizations policy that JOINs it |
+| 2026-03-19 | Fix | src/services/analytics.service.ts | References non-existent "sales" table + wrong column "user_id" | Changed to "sales_entries" + "business_id" to match migration 003 schema |
 
 ## KNOWN ISSUES
 | # | Issue | Phase | Severity | Status |

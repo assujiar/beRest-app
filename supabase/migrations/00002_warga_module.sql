@@ -26,19 +26,8 @@ CREATE POLICY "Owners can manage own orgs"
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
--- Consumer can view orgs they're connected to
-CREATE POLICY "Connected consumers can view org"
-  ON organizations FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM consumer_connections cc
-      JOIN org_members om ON om.org_id = organizations.id AND om.consumer_id = cc.consumer_id
-      WHERE cc.consumer_id = auth.uid() AND cc.status = 'active'
-    )
-  );
-
 -------------------------------------------------------
--- 2. ORG MEMBERS
+-- 2. ORG MEMBERS (must be created before org policy that references it)
 -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS org_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -69,6 +58,17 @@ CREATE POLICY "Org owners can manage members"
 CREATE POLICY "Members can view own membership"
   ON org_members FOR SELECT
   USING (consumer_id = auth.uid());
+
+-- Consumer can view orgs they're connected to (after org_members exists)
+CREATE POLICY "Connected consumers can view org"
+  ON organizations FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM consumer_connections cc
+      JOIN org_members om ON om.org_id = organizations.id AND om.consumer_id = cc.consumer_id
+      WHERE cc.consumer_id = auth.uid() AND cc.status = 'active'
+    )
+  );
 
 -------------------------------------------------------
 -- 3. DUES CONFIG
