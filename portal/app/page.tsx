@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 /* ─── Flat Vector SVG Icons ─── */
 
 function IconLapak({ size = 48 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <rect x="8" y="20" width="48" height="6" rx="3" fill="#10B981" />
       <path d="M8 26 Q14 32 20 26 Q26 32 32 26 Q38 32 44 26 Q50 32 56 26" fill="#10B981" stroke="#059669" strokeWidth="1.5" />
       <rect x="12" y="30" width="40" height="22" rx="2" fill="#D1FAE5" stroke="#10B981" strokeWidth="1.5" />
@@ -21,7 +21,7 @@ function IconLapak({ size = 48 }: { size?: number }) {
 
 function IconSewa({ size = 48 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <path d="M10 28 L32 10 L54 28" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2" strokeLinejoin="round" />
       <rect x="14" y="28" width="36" height="24" rx="2" fill="#EFF6FF" stroke="#3B82F6" strokeWidth="1.5" />
       <circle cx="32" cy="37" r="5" fill="#3B82F6" />
@@ -37,7 +37,7 @@ function IconSewa({ size = 48 }: { size?: number }) {
 
 function IconWarga({ size = 48 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <circle cx="32" cy="20" r="7" fill="#8B5CF6" />
       <path d="M20 44 Q20 33 32 33 Q44 33 44 44" fill="#C4B5FD" stroke="#8B5CF6" strokeWidth="1.5" />
       <circle cx="16" cy="24" r="5" fill="#A78BFA" />
@@ -52,7 +52,7 @@ function IconWarga({ size = 48 }: { size?: number }) {
 
 function IconHajat({ size = 48 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <rect x="8" y="18" width="48" height="32" rx="4" fill="#FCE7F3" stroke="#EC4899" strokeWidth="1.5" />
       <path d="M8 22 L32 38 L56 22" fill="#FBCFE8" stroke="#EC4899" strokeWidth="1.5" strokeLinejoin="round" />
       <path d="M27 28 Q27 24 31 24 Q33 24 33 27 Q33 24 35 24 Q39 24 39 28 Q39 33 33 37 Q27 33 27 28Z" fill="#EC4899" />
@@ -175,6 +175,55 @@ function ModuleEditorial({
 }) {
   const Icon = mod.icon;
   const isReversed = index % 2 !== 0;
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const toggleBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Focus trap + Escape key for modal
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    // Focus the close button on open
+    const closeBtn = dialog.querySelector<HTMLButtonElement>('[data-close-btn]');
+    closeBtn?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onToggle();
+        toggleBtnRef.current?.focus();
+        return;
+      }
+
+      if (e.key === "Tab" && dialog) {
+        const focusable = dialog.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    // Prevent body scroll
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isExpanded, onToggle]);
+
+  const dialogId = `dialog-${mod.id}`;
 
   return (
     <article id={mod.id} className="border-t border-[#E2E8F0]">
@@ -211,6 +260,7 @@ function ModuleEditorial({
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold"
                   style={{ backgroundColor: mod.color }}
+                  aria-hidden="true"
                 >
                   {mod.persona.charAt(0)}
                 </div>
@@ -230,7 +280,7 @@ function ModuleEditorial({
 
             {/* Solution */}
             <div className="mt-6">
-              <div className="editorial-divider mb-4" />
+              <div className="editorial-divider mb-4" aria-hidden="true" />
               <p className="text-[17px] leading-[1.7] text-[#1E293B] font-semibold">
                 {mod.solutionLead}
               </p>
@@ -243,6 +293,7 @@ function ModuleEditorial({
           {/* Icon side */}
           <div className="hidden md:flex flex-shrink-0 w-[280px] h-[280px] rounded-3xl items-center justify-center"
             style={{ backgroundColor: mod.colorMuted }}
+            aria-hidden="true"
           >
             <Icon size={140} />
           </div>
@@ -251,7 +302,10 @@ function ModuleEditorial({
         {/* Learn more */}
         <div className="mt-10">
           <button
+            ref={toggleBtnRef}
             onClick={onToggle}
+            aria-expanded={isExpanded}
+            aria-controls={dialogId}
             className="group flex items-center gap-3 text-sm font-semibold transition-colors"
             style={{ color: mod.color }}
           >
@@ -263,6 +317,7 @@ function ModuleEditorial({
               height="14"
               viewBox="0 0 14 14"
               fill="none"
+              aria-hidden="true"
             >
               <path
                 d="M3 5L7 9L11 5"
@@ -279,10 +334,15 @@ function ModuleEditorial({
         {isExpanded && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Fitur ${mod.name}`}
+            id={dialogId}
+            ref={dialogRef}
             onClick={onToggle}
           >
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
 
             {/* Dialog */}
             <div
@@ -303,10 +363,15 @@ function ModuleEditorial({
                   </span>
                 </div>
                 <button
-                  onClick={onToggle}
+                  data-close-btn
+                  onClick={() => {
+                    onToggle();
+                    toggleBtnRef.current?.focus();
+                  }}
+                  aria-label={`Tutup dialog fitur ${mod.name}`}
                   className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] transition-colors"
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path
                       d="M4 4L12 12M12 4L4 12"
                       stroke="#64748B"
@@ -324,6 +389,7 @@ function ModuleEditorial({
                     <span
                       className="text-[13px] font-bold mt-0.5 shrink-0 w-7"
                       style={{ color: mod.color }}
+                      aria-hidden="true"
                     >
                       {f.num}
                     </span>
@@ -353,6 +419,14 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#1E293B]">
+      {/* Skip to content */}
+      <a
+        href="#content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:bg-[#FF4600] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-bold"
+      >
+        Langsung ke konten
+      </a>
+
       {/* ═══ Masthead ═══ */}
       <header className="bg-[#1B3A5C]">
         <div className="max-w-[960px] mx-auto px-6 py-5 flex items-center justify-between">
@@ -369,7 +443,7 @@ export default function HomePage() {
       </header>
 
       {/* ═══ Hero — editorial style ═══ */}
-      <section className="bg-[#1B3A5C] text-white pb-20 pt-12 md:pt-20">
+      <section id="content" className="bg-[#1B3A5C] text-white pb-20 pt-12 md:pt-20">
         <div className="max-w-[960px] mx-auto px-6">
           {/* Kicker */}
           <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#FF4600] mb-6">
@@ -393,7 +467,7 @@ export default function HomePage() {
               href="https://play.google.com/store/apps/details?id=id.apick.app"
               className="inline-flex items-center gap-2.5 bg-[#FF4600] text-white px-7 py-3.5 rounded-xl text-[15px] font-bold hover:bg-[#E63E00] transition-colors"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M3 20.5V3.5C3 2.91 3.34 2.39 3.84 2.15L13.69 12L3.84 21.85C3.34 21.6 3 21.09 3 20.5Z" fill="white" />
                 <path d="M16.81 15.12L6.05 21.34L14.54 12.85L16.81 15.12Z" fill="white" opacity="0.8" />
                 <path d="M20.16 10.81C20.5 11.08 20.75 11.5 20.75 12C20.75 12.5 20.5 12.92 20.16 13.19L17.89 14.5L15.39 12L17.89 9.5L20.16 10.81Z" fill="white" opacity="0.6" />
@@ -479,7 +553,7 @@ export default function HomePage() {
               },
             ].map((s) => (
               <div key={s.num}>
-                <span className="text-[48px] font-extrabold text-[#E2E8F0] leading-none">
+                <span className="text-[48px] font-extrabold text-[#E2E8F0] leading-none" aria-hidden="true">
                   {s.num}
                 </span>
                 <h3 className="text-[17px] font-bold text-[#1E293B] mt-3">
@@ -495,15 +569,15 @@ export default function HomePage() {
       </section>
 
       {/* ═══ Three pillars ═══ */}
-      <section className="bg-[#F8FAFC] border-t border-[#E2E8F0] py-16 md:py-20">
+      <section className="bg-[#F8FAFC] border-t border-[#E2E8F0] py-16 md:py-20" aria-labelledby="why-apick">
         <div className="max-w-[960px] mx-auto px-6">
-          <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#94A3B8] mb-4">
+          <p id="why-apick" className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#94A3B8] mb-4">
             Kenapa apick
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 mt-8">
             <div>
-              <div className="editorial-divider mb-5" />
+              <div className="editorial-divider mb-5" aria-hidden="true" />
               <h3 className="text-[17px] font-bold text-[#1E293B] mb-2">
                 Gampang banget
               </h3>
@@ -514,7 +588,7 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <div className="editorial-divider mb-5" />
+              <div className="editorial-divider mb-5" aria-hidden="true" />
               <h3 className="text-[17px] font-bold text-[#1E293B] mb-2">
                 Nyambung real-time
               </h3>
@@ -525,7 +599,7 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <div className="editorial-divider mb-5" />
+              <div className="editorial-divider mb-5" aria-hidden="true" />
               <h3 className="text-[17px] font-bold text-[#1E293B] mb-2">
                 Bisa via browser
               </h3>
@@ -575,7 +649,7 @@ export default function HomePage() {
             href="https://play.google.com/store/apps/details?id=id.apick.app"
             className="mt-8 inline-flex items-center gap-2.5 bg-[#FF4600] text-white px-7 py-3.5 rounded-xl text-[15px] font-bold hover:bg-[#E63E00] transition-colors"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M3 20.5V3.5C3 2.91 3.34 2.39 3.84 2.15L13.69 12L3.84 21.85C3.34 21.6 3 21.09 3 20.5Z" fill="white" />
               <path d="M16.81 15.12L6.05 21.34L14.54 12.85L16.81 15.12Z" fill="white" opacity="0.8" />
               <path d="M20.16 10.81C20.5 11.08 20.75 11.5 20.75 12C20.75 12.5 20.5 12.92 20.16 13.19L17.89 14.5L15.39 12L17.89 9.5L20.16 10.81Z" fill="white" opacity="0.6" />
@@ -593,17 +667,19 @@ export default function HomePage() {
             <span className="text-white text-[15px] font-bold">apick</span>
             <span className="text-[13px]">Life, well arranged.</span>
           </div>
-          <div className="flex items-center gap-5 text-[13px]">
-            {modules.map((m) => (
-              <a
-                key={m.id}
-                href={`#${m.id}`}
-                className="hover:text-white/70 transition-colors capitalize"
-              >
-                {m.id}
-              </a>
-            ))}
-          </div>
+          <nav aria-label="Modul">
+            <div className="flex items-center gap-5 text-[13px]">
+              {modules.map((m) => (
+                <a
+                  key={m.id}
+                  href={`#${m.id}`}
+                  className="hover:text-white/70 transition-colors capitalize"
+                >
+                  {m.id}
+                </a>
+              ))}
+            </div>
+          </nav>
         </div>
         <div className="max-w-[960px] mx-auto px-6 mt-6 pt-6 border-t border-white/10">
           <p className="text-[12px] text-white/25">
