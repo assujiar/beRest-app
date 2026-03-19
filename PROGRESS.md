@@ -209,7 +209,7 @@
 | 7.12 | Submit to Play Store | TODO | - | Review 3-7 days |
 | 7.13 | Deploy portal to Vercel | TODO | portal/ | Need Vercel account |
 | 7.14 | Setup custom domain apick.id | TODO | - | DNS config |
-| 7.15 | Redesign portal landing page | TODO | portal/app/page.tsx | User requested |
+| 7.15 | Redesign portal landing page | DONE | portal/app/page.tsx, portal/components/landing/*.tsx | Interactive: scroll animations, sticky nav, phone mockup, tabbed modules, animated counters, testimonials. All a11y compliant. |
 
 ---
 
@@ -250,6 +250,8 @@
 | 2026-03-19 | Fix | src/services/analytics.service.ts | References non-existent "sales" table + wrong column "user_id" | Changed to "sales_entries" + "business_id" to match migration 003 schema |
 | 2026-03-19 | New | google-services.json | Firebase config for Android push notifications | File gitignored, not committed |
 | 2026-03-19 | Fix | .gitignore | Add Firebase credential files | google-services.json + GoogleService-Info.plist |
+| 2026-03-19 | Redesign | portal/app/page.tsx | Landing page interactive redesign | Decomposed into 5 components: ScrollReveal, AnimatedCounter, StickyNav, PhoneMockup, ModuleShowcase |
+| 2026-03-19 | New | portal/components/landing/*.tsx | Landing page components | ScrollReveal (IntersectionObserver), AnimatedCounter, StickyNav (scroll-aware), PhoneMockup (auto-rotate), ModuleShowcase (tabbed) |
 
 ## KNOWN ISSUES
 | # | Issue | Phase | Severity | Status |
