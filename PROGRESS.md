@@ -1,6 +1,6 @@
 # Apick - Build Progress Tracker
 
-> Last updated: 2026-03-19
+> Last updated: 2026-03-21
 > Current phase: PRE-LAUNCH PREP
 > Overall progress: 128/128 tasks (dev) + publishing in progress
 
@@ -200,12 +200,12 @@
 | 7.3 | Register Expo.dev account | DONE | - | Account created |
 | 7.4 | Add google-services.json + GoogleService-Info.plist to .gitignore | DONE | .gitignore | Prevent credential leak |
 | 7.5 | Setup .env with real Supabase + Gemini keys | DONE | .env (gitignored) | Supabase project already running |
-| 7.6 | Bump app.json version to 1.0.0 | TODO | app.json | Currently 0.0.1 |
+| 7.6 | Bump app.json version to 1.0.0 | DONE | app.json | 0.0.1 → 1.0.0 |
 | 7.7 | Run `eas init` to link Expo project | TODO | app.json | Need CLI on laptop/PC |
-| 7.8 | Fix EAS submit track: internal → production | TODO | eas.json | |
+| 7.8 | Fix EAS submit track: internal → production | DONE | eas.json | track: "production" |
 | 7.9 | Build preview APK (`eas build --profile preview`) | TODO | - | Test on real device |
 | 7.10 | Build production AAB (`eas build --profile production`) | TODO | - | For Play Store |
-| 7.11 | Play Store listing (screenshots, description, privacy policy) | TODO | - | |
+| 7.11 | Play Store listing (screenshots, description, privacy policy) | DONE (draft) | STORE_LISTING.md, portal/app/privacy/page.tsx | Privacy policy page created, store listing text drafted |
 | 7.12 | Submit to Play Store | TODO | - | Review 3-7 days |
 | 7.13 | Deploy portal to Vercel | TODO | portal/ | Need Vercel account |
 | 7.14 | Setup custom domain apick.id | TODO | - | DNS config |
@@ -252,6 +252,10 @@
 | 2026-03-19 | Fix | .gitignore | Add Firebase credential files | google-services.json + GoogleService-Info.plist |
 | 2026-03-19 | Redesign | portal/app/page.tsx | Landing page interactive redesign | Decomposed into 5 components: ScrollReveal, AnimatedCounter, StickyNav, PhoneMockup, ModuleShowcase |
 | 2026-03-19 | New | portal/components/landing/*.tsx | Landing page components | ScrollReveal (IntersectionObserver), AnimatedCounter, StickyNav (scroll-aware), PhoneMockup (auto-rotate), ModuleShowcase (tabbed) |
+| 2026-03-21 | Fix | app.json | Version bump for Play Store | 0.0.1 → 1.0.0 |
+| 2026-03-21 | Fix | eas.json | Submit track internal → production | For production release |
+| 2026-03-21 | New | portal/app/privacy/page.tsx | Privacy policy page | Required for Play Store listing |
+| 2026-03-21 | New | STORE_LISTING.md | Store listing draft | Title, descriptions, tags, screenshot suggestions |
 
 ## KNOWN ISSUES
 | # | Issue | Phase | Severity | Status |

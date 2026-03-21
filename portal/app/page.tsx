@@ -406,10 +406,16 @@ export default function HomePage() {
             </div>
           </nav>
         </div>
-        <div className="max-w-[960px] mx-auto px-6 mt-6 pt-6 border-t border-white/10">
+        <div className="max-w-[960px] mx-auto px-6 mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="text-[12px] text-white/25">
             &copy; 2026 apick. Dibuat di Indonesia.
           </p>
+          <a
+            href="/privacy"
+            className="text-[12px] text-white/25 hover:text-white/50 transition-colors"
+          >
+            Kebijakan Privasi
+          </a>
         </div>
       </footer>
     </main>
