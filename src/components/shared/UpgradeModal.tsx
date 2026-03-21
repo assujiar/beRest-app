@@ -20,23 +20,35 @@ interface UpgradeModalProps {
 }
 
 const TIER_FEATURES: Record<SubscriptionTier, string[]> = {
-  free: ["1 modul aktif", "30 anggota/penghuni", "5 unit", "20 produk"],
+  free: [
+    "1 modul aktif",
+    "30 anggota / pelanggan",
+    "5 unit properti",
+    "20 produk",
+    "1 acara hajatan",
+    "100 tamu undangan",
+    "Catat transaksi & iuran",
+    "Share link ke WhatsApp",
+  ],
   starter: [
-    "3 modul aktif",
-    "100 anggota/penghuni",
-    "20 unit",
+    "2 modul aktif",
+    "100 anggota / pelanggan",
+    "20 unit properti",
     "100 produk",
-    "Export PDF",
-    "AI scan nota",
+    "3 acara hajatan",
+    "500 tamu undangan",
+    "Scan nota otomatis (AI)",
+    "Export laporan ke PDF",
   ],
   pro: [
-    "Semua modul",
-    "Unlimited anggota",
-    "Unlimited unit",
-    "Unlimited produk",
-    "Export PDF & CSV",
-    "AI scan nota",
-    "Analitik lanjutan",
+    "Semua 4 modul aktif",
+    "Anggota & pelanggan tanpa batas",
+    "Unit properti tanpa batas",
+    "Produk tanpa batas",
+    "Acara hajatan tanpa batas",
+    "Tamu undangan tanpa batas",
+    "Semua fitur Starter",
+    "Analisa & statistik lengkap",
   ],
 };
 

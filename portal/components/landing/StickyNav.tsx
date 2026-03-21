@@ -64,6 +64,12 @@ export function StickyNav() {
               {m.name}
             </a>
           ))}
+          <a
+            href="#pricing-heading"
+            className="px-3 py-1.5 rounded-full text-[13px] font-semibold text-[#64748B] hover:text-[#FF4600] transition-colors"
+          >
+            Harga
+          </a>
         </div>
         <a
           href="https://play.google.com/store/apps/details?id=id.apick.app"

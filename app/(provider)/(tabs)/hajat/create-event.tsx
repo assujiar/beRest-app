@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
-import { createEvent } from "@services/hajat.service";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
+import { createEvent, getEvents } from "@services/hajat.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useAuthStore } from "@stores/auth.store";
 import { useUIStore } from "@stores/ui.store";
 import type { EventType } from "@app-types/hajat.types";
@@ -19,6 +21,7 @@ const EVENT_TYPES: { key: EventType; label: string; icon: string }[] = [
 export default function CreateEventScreen() {
   const profile = useAuthStore((s) => s.profile);
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [title, setTitle] = useState("");
   const [type, setType] = useState<EventType | null>(null);
   const [date, setDate] = useState("");
@@ -26,12 +29,20 @@ export default function CreateEventScreen() {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [eventCount, setEventCount] = useState(0);
+
+  useEffect(() => {
+    if (profile?.id) {
+      getEvents(profile.id).then((data) => setEventCount(data.length)).catch(() => {});
+    }
+  }, [profile?.id]);
 
   async function handleCreate() {
     if (!title.trim()) { setError("Nama acara wajib diisi"); return; }
     if (!type) { setError("Pilih jenis acara"); return; }
     if (!date.trim()) { setError("Tanggal wajib diisi"); return; }
     if (!profile?.id) return;
+    if (requireUpgrade("maxEvents", "Buat Acara", eventCount)) return;
     setLoading(true);
     try {
       await createEvent(profile.id, { title: title.trim(), type, event_date: date, event_time: time || null, location_name: location.trim() || null, location_address: null, location_maps_url: null, cover_photo: null, custom_message: null });
@@ -65,6 +76,8 @@ export default function CreateEventScreen() {
         {error ? <Text className="text-sm text-red-500 mt-3">{error}</Text> : null}
       </ScrollView>
       <View className="px-4 pb-8 pt-4"><Button title="Buat Acara" onPress={handleCreate} loading={loading} /></View>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

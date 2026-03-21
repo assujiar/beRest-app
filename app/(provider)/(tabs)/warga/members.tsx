@@ -14,11 +14,13 @@ import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
 import { Modal } from "@components/ui/Modal";
 import { EmptyState } from "@components/shared/EmptyState";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
 import {
   getMembers,
   addMember,
   removeMember,
 } from "@services/warga.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import type { OrgMember, MemberRole } from "@app-types/warga.types";
 
@@ -34,6 +36,7 @@ export default function MembersScreen() {
     orgName: string;
   }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [members, setMembers] = useState<OrgMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -54,6 +57,11 @@ export default function MembersScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleOpenAdd() {
+    if (requireUpgrade("maxMembers", "Tambah Anggota", members.length)) return;
+    setShowAdd(true);
   }
 
   async function handleAddMember() {
@@ -114,7 +122,7 @@ export default function MembersScreen() {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => setShowAdd(true)}
+          onPress={handleOpenAdd}
           className="bg-warga rounded-lg px-3 py-2"
         >
           <Text className="text-white text-xs font-bold">+ Tambah</Text>
@@ -128,7 +136,7 @@ export default function MembersScreen() {
             title="Belum ada anggota"
             description="Tambahkan anggota organisasi"
             actionLabel="+ Tambah Anggota"
-            onAction={() => setShowAdd(true)}
+            onAction={handleOpenAdd}
           />
         ) : (
           members.map((m) => (
@@ -196,6 +204,8 @@ export default function MembersScreen() {
           />
         </View>
       </Modal>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

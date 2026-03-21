@@ -114,7 +114,7 @@ export default function ProviderOnboardingScreen() {
         )}
         {tier === "starter" && (
           <Text className="text-xs text-sewa mb-4">
-            Paket Starter: maksimal 3 modul.
+            Paket Starter: maksimal 2 modul.
           </Text>
         )}
 

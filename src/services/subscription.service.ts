@@ -6,6 +6,7 @@ interface SubscriptionLimits {
   maxMembers: number;
   maxUnits: number;
   maxProducts: number;
+  maxEvents: number;
   maxGuests: number;
   canExportPDF: boolean;
   canUseAI: boolean;
@@ -14,15 +15,15 @@ interface SubscriptionLimits {
 
 const TIER_LIMITS: Record<SubscriptionTier, SubscriptionLimits> = {
   free: {
-    maxModules: 1, maxMembers: 30, maxUnits: 5, maxProducts: 20, maxGuests: 100,
+    maxModules: 1, maxMembers: 30, maxUnits: 5, maxProducts: 20, maxEvents: 1, maxGuests: 100,
     canExportPDF: false, canUseAI: false, canUseAdvancedAnalytics: false,
   },
   starter: {
-    maxModules: 3, maxMembers: 100, maxUnits: 20, maxProducts: 100, maxGuests: 500,
+    maxModules: 2, maxMembers: 100, maxUnits: 20, maxProducts: 100, maxEvents: 3, maxGuests: 500,
     canExportPDF: true, canUseAI: true, canUseAdvancedAnalytics: false,
   },
   pro: {
-    maxModules: 4, maxMembers: 999, maxUnits: 999, maxProducts: 999, maxGuests: 9999,
+    maxModules: 4, maxMembers: 999, maxUnits: 999, maxProducts: 999, maxEvents: 999, maxGuests: 9999,
     canExportPDF: true, canUseAI: true, canUseAdvancedAnalytics: true,
   },
 };

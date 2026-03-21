@@ -8,7 +8,9 @@ import { Input } from "@components/ui/Input";
 import { Modal } from "@components/ui/Modal";
 import { CurrencyInput } from "@components/shared/CurrencyInput";
 import { EmptyState } from "@components/shared/EmptyState";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
 import { getProducts, createProduct, deleteProduct } from "@services/lapak.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
 import type { Product } from "@app-types/lapak.types";
@@ -16,6 +18,7 @@ import type { Product } from "@app-types/lapak.types";
 export default function ProductsScreen() {
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -37,6 +40,11 @@ export default function ProductsScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleOpenAdd() {
+    if (requireUpgrade("maxProducts", "Tambah Produk", products.length)) return;
+    setShowAdd(true);
   }
 
   async function handleAdd() {
@@ -87,14 +95,14 @@ export default function ProductsScreen() {
           </TouchableOpacity>
           <Text className="text-lg font-bold text-dark-text ml-3">Produk</Text>
         </View>
-        <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
+        <TouchableOpacity onPress={handleOpenAdd} className="bg-lapak rounded-lg px-3 py-2">
           <Text className="text-white text-xs font-bold">+ Tambah</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView className="flex-1 px-4 pt-3">
         {!loading && products.length === 0 ? (
-          <EmptyState illustration="📦" title="Belum ada produk" description="Tambah produk untuk mulai catat penjualan" actionLabel="+ Tambah Produk" onAction={() => setShowAdd(true)} />
+          <EmptyState illustration="📦" title="Belum ada produk" description="Tambah produk untuk mulai catat penjualan" actionLabel="+ Tambah Produk" onAction={handleOpenAdd} />
         ) : (
           products.map((p) => (
             <TouchableOpacity key={p.id} onLongPress={() => handleDelete(p)} activeOpacity={0.8}>
@@ -124,6 +132,8 @@ export default function ProductsScreen() {
           <Button title="Tambah" onPress={handleAdd} loading={addLoading} />
         </View>
       </Modal>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

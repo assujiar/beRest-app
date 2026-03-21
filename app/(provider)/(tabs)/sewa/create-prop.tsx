@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
-import { createProperty } from "@services/sewa.service";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
+import { createProperty, getProperties } from "@services/sewa.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useAuthStore } from "@stores/auth.store";
 import { useUIStore } from "@stores/ui.store";
 import type { PropertyType } from "@app-types/sewa.types";
@@ -19,16 +21,25 @@ const PROP_TYPES: { key: PropertyType; label: string; icon: string }[] = [
 export default function CreatePropertyScreen() {
   const profile = useAuthStore((s) => s.profile);
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [name, setName] = useState("");
   const [selectedType, setSelectedType] = useState<PropertyType | null>(null);
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [propCount, setPropCount] = useState(0);
+
+  useEffect(() => {
+    if (profile?.id) {
+      getProperties(profile.id).then((data) => setPropCount(data.length)).catch(() => {});
+    }
+  }, [profile?.id]);
 
   async function handleCreate() {
     if (!name.trim()) { setError("Nama properti wajib diisi"); return; }
     if (!selectedType) { setError("Pilih jenis properti"); return; }
     if (!profile?.id) return;
+    if (requireUpgrade("maxUnits", "Tambah Properti", propCount)) return;
     setLoading(true);
     try {
       await createProperty(profile.id, { name: name.trim(), type: selectedType, address: address.trim() || null, total_units: null });
@@ -65,6 +76,8 @@ export default function CreatePropertyScreen() {
       <View className="px-4 pb-8 pt-4">
         <Button title="Buat Properti" onPress={handleCreate} loading={loading} />
       </View>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

@@ -16,6 +16,8 @@ import {
 import { shareViaWhatsApp, generateReportMessage } from "@services/wa-share.service";
 import { generateDeepLink } from "@services/deep-link.service";
 import { exportFinancialReport } from "@services/export.service";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
 import type { OrgTransaction, TransactionType } from "@app-types/warga.types";
@@ -23,6 +25,7 @@ import type { OrgTransaction, TransactionType } from "@app-types/warga.types";
 export default function FinanceScreen() {
   const { orgId, orgName } = useLocalSearchParams<{ orgId: string; orgName: string }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [transactions, setTransactions] = useState<OrgTransaction[]>([]);
   const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, balance: 0 });
   const [_loading, setLoading] = useState(true);
@@ -91,6 +94,7 @@ export default function FinanceScreen() {
   }
 
   async function handleExportPDF() {
+    if (requireUpgrade("canExportPDF", "Export PDF")) return;
     try {
       await exportFinancialReport(orgName ?? "Organisasi", transactions, summary);
       showToast("PDF berhasil dibuat!", "success");
@@ -242,6 +246,8 @@ export default function FinanceScreen() {
           />
         </View>
       </Modal>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }
