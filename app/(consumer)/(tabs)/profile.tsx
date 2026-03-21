@@ -44,7 +44,7 @@ export default function ConsumerProfileScreen() {
             setLoading(true);
             await signOut();
             reset();
-            router.replace("/(auth)/login");
+            router.replace("/(auth)/welcome");
           },
         },
       ]

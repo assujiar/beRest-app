@@ -4,6 +4,8 @@ export type ModuleKey = "lapak" | "sewa" | "warga" | "hajat";
 
 export type SubscriptionTier = "free" | "starter" | "pro";
 
+export type BillingCycle = "monthly" | "annual";
+
 export interface Profile {
   id: string;
   full_name: string | null;
@@ -12,6 +14,7 @@ export interface Profile {
   role: UserRole;
   active_modules: ModuleKey[];
   subscription_tier: SubscriptionTier;
+  billing_cycle: BillingCycle | null;
   subscription_expires_at: string | null;
   created_at: string;
   updated_at: string;

@@ -4,6 +4,27 @@
 > Current phase: PRE-LAUNCH PREP
 > Overall progress: 128/128 tasks (dev) + publishing in progress
 
+## MODIFICATIONS LOG
+| Date | Files Modified | Reason |
+|------|---------------|--------|
+| 2026-03-21 | app/(auth)/welcome.tsx (NEW) | Added welcome/intro screen with app features slideshow |
+| 2026-03-21 | app/(auth)/register.tsx | Converted from post-auth welcome to proper registration form with pricing info |
+| 2026-03-21 | app/(auth)/login.tsx | Added link to register screen |
+| 2026-03-21 | app/(auth)/_layout.tsx | Added welcome screen to auth stack |
+| 2026-03-21 | app/index.tsx | Fixed auth state routing - checks session + profile before redirect |
+| 2026-03-21 | app/_layout.tsx | Added AuthInitializer - listens to auth state, loads profile, syncs stores |
+| 2026-03-21 | app/(onboarding)/provider.tsx | Added subscription limit check on module selection + persist to Supabase |
+| 2026-03-21 | app/(onboarding)/consumer.tsx | Added persist role to Supabase on onboarding complete |
+| 2026-03-21 | app/(provider)/(tabs)/profile.tsx | Wired up Upgrade button with UpgradeModal |
+| 2026-03-21 | app/(consumer)/(tabs)/profile.tsx | Fixed logout redirect to welcome screen |
+| 2026-03-21 | src/hooks/shared/useSubscription.ts (NEW) | Hook for subscription tier checks + paywall trigger |
+| 2026-03-21 | tailwind.config.js | Added darkMode: 'class' to fix NativeWind web mode error |
+| 2026-03-21 | src/types/shared.types.ts | Added BillingCycle type + billing_cycle field to Profile |
+| 2026-03-21 | src/services/subscription.service.ts | Added annual pricing (hemat 2 bln), getMonthlyEquivalent, getAnnualSavings |
+| 2026-03-21 | src/components/shared/UpgradeModal.tsx | Added monthly/annual toggle with savings badge |
+| 2026-03-21 | app/(provider)/(tabs)/profile.tsx | Show billing cycle in subscription card, Ganti Paket for paid tiers |
+| 2026-03-21 | app/(auth)/register.tsx | Updated pricing info to mention annual option |
+
 ## STATUS: TODO / IN_PROGRESS / DONE / BLOCKED / SKIPPED
 
 ---

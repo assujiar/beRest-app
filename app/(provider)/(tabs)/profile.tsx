@@ -5,14 +5,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Badge } from "@components/ui/Badge";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
 import { useAuthStore } from "@stores/auth.store";
 import { useModulesStore } from "@stores/modules.store";
 import { useRoleStore } from "@stores/role.store";
 import { signOut, getProfile } from "@services/auth.service";
-import { getTierLabel, checkSubscription } from "@services/subscription.service";
-import { formatDate } from "@utils/format";
+import { getTierLabel, getTierPrice, checkSubscription } from "@services/subscription.service";
+import { formatDate, formatRupiah } from "@utils/format";
 import { MODULE_LABELS, MODULE_COLORS } from "@utils/colors";
-import type { ModuleKey, SubscriptionTier } from "@app-types/shared.types";
+import type { ModuleKey, SubscriptionTier, BillingCycle } from "@app-types/shared.types";
 
 export default function ProviderProfileScreen() {
   const session = useAuthStore((s) => s.session);
@@ -22,13 +23,16 @@ export default function ProviderProfileScreen() {
   const activeModules = useModulesStore((s) => s.activeModules);
   const role = useRoleStore((s) => s.role);
   const [tier, setTier] = useState<SubscriptionTier>("free");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     if (session?.user.id) {
       checkSubscription(session.user.id).then((sub) => {
         setTier(sub.tier);
+        setBillingCycle(sub.billingCycle);
         setExpiresAt(sub.expiresAt);
       });
     }
@@ -47,7 +51,7 @@ export default function ProviderProfileScreen() {
             setLoading(true);
             await signOut();
             reset();
-            router.replace("/(auth)/login");
+            router.replace("/(auth)/welcome");
           },
         },
       ]
@@ -106,6 +110,12 @@ export default function ProviderProfileScreen() {
               <Text className={`text-lg font-bold ${tierColor}`}>
                 {getTierLabel(tier)}
               </Text>
+              {tier !== "free" && (
+                <Text className="text-xs text-grey-text">
+                  {formatRupiah(getTierPrice(tier, billingCycle ?? "monthly"))}
+                  {billingCycle === "annual" ? "/tahun" : "/bulan"}
+                </Text>
+              )}
               {tier !== "free" && expiresAt && (
                 <Text className="text-xs text-grey-text">
                   Berlaku hingga {formatDate(expiresAt)}
@@ -117,16 +127,14 @@ export default function ProviderProfileScreen() {
                 </Text>
               )}
             </View>
-            {tier === "free" && (
-              <TouchableOpacity
-                className="bg-orange/10 rounded-lg px-3 py-2"
-                onPress={() => {
-                  // Future: navigate to upgrade screen
-                }}
-              >
-                <Text className="text-orange text-xs font-bold">Upgrade</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              className="bg-orange/10 rounded-lg px-3 py-2"
+              onPress={() => setShowUpgrade(true)}
+            >
+              <Text className="text-orange text-xs font-bold">
+                {tier === "free" ? "Upgrade" : "Ganti Paket"}
+              </Text>
+            </TouchableOpacity>
           </View>
         </Card>
 
@@ -184,6 +192,12 @@ export default function ProviderProfileScreen() {
           />
         </View>
       </ScrollView>
+
+      <UpgradeModal
+        visible={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        currentTier={tier}
+      />
     </SafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import type { SubscriptionTier } from "@app-types/shared.types";
+import type { SubscriptionTier, BillingCycle } from "@app-types/shared.types";
 
 interface SubscriptionLimits {
   maxModules: number;
@@ -27,6 +27,20 @@ const TIER_LIMITS: Record<SubscriptionTier, SubscriptionLimits> = {
   },
 };
 
+// Monthly prices in Rupiah
+const MONTHLY_PRICES: Record<SubscriptionTier, number> = {
+  free: 0,
+  starter: 29000,
+  pro: 79000,
+};
+
+// Annual prices in Rupiah (hemat 2 bulan = 10 bulan harga)
+const ANNUAL_PRICES: Record<SubscriptionTier, number> = {
+  free: 0,
+  starter: 290000,  // 29.000 x 10 (hemat Rp 58.000)
+  pro: 790000,      // 79.000 x 10 (hemat Rp 158.000)
+};
+
 export function getLimits(tier: SubscriptionTier): SubscriptionLimits {
   return TIER_LIMITS[tier];
 }
@@ -44,20 +58,41 @@ export function getTierLabel(tier: SubscriptionTier): string {
   return labels[tier];
 }
 
-export function getTierPrice(tier: SubscriptionTier): number {
-  const prices: Record<SubscriptionTier, number> = { free: 0, starter: 29000, pro: 79000 };
-  return prices[tier];
+export function getTierPrice(tier: SubscriptionTier, cycle: BillingCycle = "monthly"): number {
+  return cycle === "annual" ? ANNUAL_PRICES[tier] : MONTHLY_PRICES[tier];
 }
 
-export async function checkSubscription(userId: string): Promise<{ tier: SubscriptionTier; isActive: boolean; expiresAt: string | null }> {
-  const { data } = await supabase.from("profiles").select("subscription_tier, subscription_expires_at").eq("id", userId).single();
-  if (!data) return { tier: "free", isActive: true, expiresAt: null };
+export function getMonthlyEquivalent(tier: SubscriptionTier, cycle: BillingCycle): number {
+  if (cycle === "annual") {
+    return Math.round(ANNUAL_PRICES[tier] / 12);
+  }
+  return MONTHLY_PRICES[tier];
+}
+
+export function getAnnualSavings(tier: SubscriptionTier): number {
+  return (MONTHLY_PRICES[tier] * 12) - ANNUAL_PRICES[tier];
+}
+
+export async function checkSubscription(userId: string): Promise<{
+  tier: SubscriptionTier;
+  billingCycle: BillingCycle | null;
+  isActive: boolean;
+  expiresAt: string | null;
+}> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("subscription_tier, billing_cycle, subscription_expires_at")
+    .eq("id", userId)
+    .single();
+
+  if (!data) return { tier: "free", billingCycle: null, isActive: true, expiresAt: null };
 
   const tier = data.subscription_tier as SubscriptionTier;
-  if (tier === "free") return { tier, isActive: true, expiresAt: null };
+  if (tier === "free") return { tier, billingCycle: null, isActive: true, expiresAt: null };
 
+  const billingCycle = (data.billing_cycle as BillingCycle) ?? "monthly";
   const expiresAt = data.subscription_expires_at;
   const isActive = expiresAt ? new Date(expiresAt) > new Date() : false;
 
-  return { tier: isActive ? tier : "free", isActive, expiresAt };
+  return { tier: isActive ? tier : "free", billingCycle: isActive ? billingCycle : null, isActive, expiresAt };
 }

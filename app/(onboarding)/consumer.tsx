@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
 import { useRoleStore } from "@stores/role.store";
+import { useAuthStore } from "@stores/auth.store";
+import { upsertProfile } from "@services/auth.service";
 
 type Step = "input" | "detected";
 
@@ -20,9 +22,12 @@ export default function ConsumerOnboardingScreen() {
   const [step, _setStep] = useState<Step>("input");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
   const [detected, setDetected] = useState<DetectedConnection[]>([]);
   const setRole = useRoleStore((s) => s.setRole);
   const setActiveView = useRoleStore((s) => s.setActiveView);
+  const session = useAuthStore((s) => s.session);
+  const setProfile = useAuthStore((s) => s.setProfile);
 
   function handleCodeSubmit() {
     if (code.length < 6) {
@@ -48,9 +53,20 @@ export default function ConsumerOnboardingScreen() {
     goToConsumerHome();
   }
 
-  function goToConsumerHome() {
+  async function goToConsumerHome() {
+    setSaving(true);
+
+    // Persist role to Supabase
+    if (session?.user.id) {
+      const { data } = await upsertProfile(session.user.id, {
+        role: "consumer",
+      });
+      if (data) setProfile(data);
+    }
+
     setRole("consumer");
     setActiveView("consumer");
+    setSaving(false);
     router.replace("/(consumer)/(tabs)");
   }
 
@@ -93,7 +109,7 @@ export default function ConsumerOnboardingScreen() {
           </View>
 
           <View className="pb-8">
-            <Button title="Konfirmasi" onPress={handleConfirmDetected} />
+            <Button title="Konfirmasi" onPress={handleConfirmDetected} loading={saving} />
           </View>
         </View>
       </SafeAreaView>
@@ -138,7 +154,7 @@ export default function ConsumerOnboardingScreen() {
         </View>
 
         <View className="pb-8">
-          <Button title="Hubungkan" onPress={handleCodeSubmit} />
+          <Button title="Hubungkan" onPress={handleCodeSubmit} loading={saving} />
           <TouchableOpacity
             onPress={goToConsumerHome}
             className="mt-4 items-center py-2"

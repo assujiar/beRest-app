@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@components/ui/Button";
@@ -95,6 +95,16 @@ export default function LoginScreen() {
             onPress={handleGoogleLogin}
             loading={googleLoading}
           />
+
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/register")}
+            className="mt-4 items-center py-2"
+          >
+            <Text className="text-sm text-grey-text">
+              Belum punya akun?{" "}
+              <Text className="text-navy font-bold">Daftar</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
