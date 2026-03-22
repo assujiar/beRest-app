@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -41,9 +41,10 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Publish OTA Update
+        env:
+          CI: 1
         run: |
           BRANCH_NAME="${GITHUB_REF_NAME//\//-}"
           eas update \
             --branch "$BRANCH_NAME" \
-            --message "${{ github.event.head_commit.message }}" \
-            --non-interactive
+            --message "${{ github.event.head_commit.message }}"
