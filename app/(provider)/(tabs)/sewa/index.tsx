@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -31,7 +32,11 @@ export default function SewaScreen() {
   const [properties, setProperties] = useState<(Property & { summary?: { occupied: number; total: number } })[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { if (profile?.id) loadData(); }, [profile?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (profile?.id) loadData();
+    }, [profile?.id])
+  );
 
   async function loadData() {
     try {

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Pressable,
+  ScrollView,
   type ModalProps as RNModalProps,
 } from 'react-native';
 import { GLASS, RADIUS, TYPO, SPACING } from '@utils/theme';
@@ -90,7 +91,14 @@ export function Modal({
             </View>
           )}
 
-          <View style={{ padding: SPACING.md }}>{children}</View>
+          <ScrollView
+            style={{ flexShrink: 1 }}
+            contentContainerStyle={{ padding: SPACING.md }}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+          >
+            {children}
+          </ScrollView>
         </Pressable>
       </Pressable>
     </RNModal>
