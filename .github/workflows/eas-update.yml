@@ -54,8 +54,11 @@ jobs:
       - name: Publish OTA Update
         env:
           CI: 1
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
+          # Use only first line of commit message to avoid CLI parsing issues
+          MSG=$(echo "$COMMIT_MSG" | head -n 1 | cut -c 1-100)
           eas update \
             --channel "${{ steps.channel.outputs.channel }}" \
             --environment "${{ steps.channel.outputs.environment }}" \
-            --message "${{ github.event.head_commit.message }}"
+            --message "$MSG"
