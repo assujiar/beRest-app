@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@components/ui/Card";
@@ -9,7 +9,10 @@ import { Input } from "@components/ui/Input";
 import { Modal } from "@components/ui/Modal";
 import { CurrencyInput } from "@components/shared/CurrencyInput";
 import { PhotoPicker } from "@components/shared/PhotoPicker";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
 import { assignTenant, removeTenant } from "@services/sewa.service";
+import { scanKTP } from "@services/gemini.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { supabase } from "@services/supabase";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
@@ -18,6 +21,7 @@ import type { PropertyUnit } from "@app-types/sewa.types";
 export default function UnitDetailScreen() {
   const { unitId, unitName } = useLocalSearchParams<{ propId: string; propName: string; unitId: string; unitName: string }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [unit, setUnit] = useState<PropertyUnit | null>(null);
   const [showAddTenant, setShowAddTenant] = useState(false);
   const [tName, setTName] = useState("");
@@ -25,6 +29,7 @@ export default function UnitDetailScreen() {
   const [tKtp, setTKtp] = useState<string | null>(null);
   const [tDeposit, setTDeposit] = useState(0);
   const [actionLoading, setActionLoading] = useState(false);
+  const [ktpScanLoading, setKtpScanLoading] = useState(false);
 
   useEffect(() => { if (unitId) loadUnit(); }, [unitId]);
 
@@ -56,6 +61,21 @@ export default function UnitDetailScreen() {
         catch { showToast("Gagal", "error"); }
       }},
     ]);
+  }
+
+  async function handleScanKTP(uri: string) {
+    if (requireUpgrade("canUseAI", "AI Scan KTP")) return;
+    setKtpScanLoading(true);
+    try {
+      const result = await scanKTP(uri);
+      if (result.name) setTName(result.name);
+      if (result.nik) setTPhone(result.nik); // Store NIK in phone field temporarily or show in UI
+      showToast("KTP berhasil di-scan!", "success");
+    } catch {
+      showToast("Gagal scan KTP", "error");
+    } finally {
+      setKtpScanLoading(false);
+    }
   }
 
   return (
@@ -102,9 +122,22 @@ export default function UnitDetailScreen() {
         <Input label="Nama" placeholder="contoh: Budi Santoso" value={tName} onChangeText={setTName} />
         <View className="mt-3"><Input label="No HP" placeholder="08123456789" value={tPhone} onChangeText={setTPhone} keyboardType="phone-pad" /></View>
         <View className="mt-3"><CurrencyInput label="Deposit" value={tDeposit} onChangeValue={setTDeposit} /></View>
-        <View className="mt-3"><PhotoPicker label="Foto KTP (opsional)" value={tKtp} onChange={setTKtp} /></View>
+        <View className="mt-3">
+          <PhotoPicker label="Foto KTP (opsional)" value={tKtp} onChange={(uri) => {
+            setTKtp(uri);
+            if (uri) handleScanKTP(uri);
+          }} />
+          {ktpScanLoading && (
+            <View className="flex-row items-center mt-2">
+              <ActivityIndicator size="small" color="#3B82F6" />
+              <Text className="text-xs text-sewa ml-2">AI sedang baca KTP...</Text>
+            </View>
+          )}
+        </View>
         <View className="mt-4"><Button title="Simpan" onPress={handleAssignTenant} loading={actionLoading} /></View>
       </Modal>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

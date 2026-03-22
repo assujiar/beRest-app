@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@components/ui/Card";
@@ -9,7 +9,10 @@ import { Modal } from "@components/ui/Modal";
 import { CurrencyInput } from "@components/shared/CurrencyInput";
 import { PhotoPicker } from "@components/shared/PhotoPicker";
 import { EmptyState } from "@components/shared/EmptyState";
+import { UpgradeModal } from "@components/shared/UpgradeModal";
 import { getExpensesToday, addExpense } from "@services/lapak.service";
+import { scanNota } from "@services/gemini.service";
+import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
 import type { LapakExpense } from "@app-types/lapak.types";
@@ -17,6 +20,7 @@ import type { LapakExpense } from "@app-types/lapak.types";
 export default function ExpensesScreen() {
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
   const [expenses, setExpenses] = useState<LapakExpense[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -24,6 +28,12 @@ export default function ExpensesScreen() {
   const [amount, setAmount] = useState(0);
   const [photo, setPhoto] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
+  const [scanLoading, setScanLoading] = useState(false);
+  const [showScanPicker, setShowScanPicker] = useState(false);
+  const [scanPhoto, setScanPhoto] = useState<string | null>(null);
+  const [showScanResult, setShowScanResult] = useState(false);
+  const [scanItems, setScanItems] = useState<{ name: string; quantity: number; price: number; total: number }[]>([]);
+  const [scanTotal, setScanTotal] = useState(0);
 
   useEffect(() => {
     if (bizId) loadData();
@@ -61,6 +71,51 @@ export default function ExpensesScreen() {
     }
   }
 
+  async function handleScanNota(uri: string) {
+    if (requireUpgrade("canUseAI", "AI Scan Nota")) return;
+    setScanPhoto(uri);
+    setScanLoading(true);
+    try {
+      const result = await scanNota(uri);
+      if (result.items.length === 0) {
+        showToast("Nota tidak terbaca, coba foto ulang", "error");
+        setScanLoading(false);
+        return;
+      }
+      setScanItems(result.items);
+      setScanTotal(result.grandTotal);
+      setShowScanResult(true);
+    } catch {
+      showToast("Gagal scan nota", "error");
+    } finally {
+      setScanLoading(false);
+    }
+  }
+
+  async function handleSaveFromScan() {
+    setAddLoading(true);
+    try {
+      for (const item of scanItems) {
+        await addExpense(bizId!, {
+          description: `${item.name} ×${item.quantity}`,
+          amount: item.total,
+          category: null,
+          proof_photo: scanPhoto,
+        });
+      }
+      showToast(`${scanItems.length} item dicatat dari nota!`, "success");
+      setScanItems([]);
+      setScanTotal(0);
+      setScanPhoto(null);
+      setShowScanResult(false);
+      loadData();
+    } catch {
+      showToast("Gagal menyimpan", "error");
+    } finally {
+      setAddLoading(false);
+    }
+  }
+
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   return (
@@ -72,9 +127,17 @@ export default function ExpensesScreen() {
           </TouchableOpacity>
           <Text className="text-lg font-bold text-dark-text ml-3">Pengeluaran</Text>
         </View>
-        <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
-          <Text className="text-white text-xs font-bold">+ Catat</Text>
-        </TouchableOpacity>
+        <View className="flex-row items-center gap-2">
+          <TouchableOpacity onPress={() => {
+            if (requireUpgrade("canUseAI", "AI Scan Nota")) return;
+            setShowScanPicker(true);
+          }} className="bg-navy rounded-lg px-3 py-2 flex-row items-center">
+            <Text className="text-white text-xs font-bold">📸 Scan Nota</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
+            <Text className="text-white text-xs font-bold">+ Catat</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView className="flex-1 px-4 pt-3">
@@ -111,6 +174,47 @@ export default function ExpensesScreen() {
           <Button title="Simpan" onPress={handleAdd} loading={addLoading} />
         </View>
       </Modal>
+
+      {/* Scan Nota: photo picker modal */}
+      <Modal visible={showScanPicker} onClose={() => setShowScanPicker(false)} title="Scan Nota / Struk">
+        <Text className="text-sm text-grey-text mb-3">
+          Foto nota belanja, AI akan baca dan catat otomatis.
+        </Text>
+        {scanLoading ? (
+          <View className="items-center py-8">
+            <ActivityIndicator size="large" color="#10B981" />
+            <Text className="text-sm font-bold text-dark-text mt-3">AI sedang membaca nota...</Text>
+            <Text className="text-xs text-grey-text mt-1">Tunggu sebentar</Text>
+          </View>
+        ) : (
+          <PhotoPicker label="Foto Nota" value={scanPhoto} onChange={(uri) => { if (uri) handleScanNota(uri); }} />
+        )}
+      </Modal>
+
+      {/* Scan result */}
+      <Modal visible={showScanResult} onClose={() => setShowScanResult(false)} title="Hasil Scan Nota">
+        <Text className="text-xs text-grey-text mb-3">
+          AI menemukan {scanItems.length} item dari nota:
+        </Text>
+        {scanItems.map((item, i) => (
+          <View key={i} className="flex-row items-center justify-between py-2 border-b border-border-color">
+            <View className="flex-1">
+              <Text className="text-sm text-dark-text">{item.name}</Text>
+              <Text className="text-xs text-grey-text">×{item.quantity}</Text>
+            </View>
+            <Text className="text-sm font-bold text-red-500">{formatRupiah(item.total)}</Text>
+          </View>
+        ))}
+        <View className="flex-row items-center justify-between py-3 mt-1">
+          <Text className="text-sm font-bold text-dark-text">Total</Text>
+          <Text className="text-lg font-bold text-red-500">{formatRupiah(scanTotal)}</Text>
+        </View>
+        <View className="mt-3">
+          <Button title={`Simpan ${scanItems.length} Item`} onPress={handleSaveFromScan} loading={addLoading} />
+        </View>
+      </Modal>
+
+      <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
     </SafeAreaView>
   );
 }

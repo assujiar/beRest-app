@@ -15,6 +15,8 @@ import {
   generateDuesForPeriod,
   updateDuesStatus,
 } from "@services/warga.service";
+import { ReminderSheet } from "@components/warga/ReminderSheet";
+import { useAuthStore } from "@stores/auth.store";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
 import type { OrgDues, DuesConfig, DuesStatus } from "@app-types/warga.types";
@@ -32,8 +34,10 @@ function getCurrentPeriod(): string {
 }
 
 export default function DuesScreen() {
-  const { orgId } = useLocalSearchParams<{ orgId: string; orgName: string }>();
+  const { orgId, orgName } = useLocalSearchParams<{ orgId: string; orgName: string }>();
+  const profile = useAuthStore((s) => s.profile);
   const showToast = useUIStore((s) => s.showToast);
+  const [showReminder, setShowReminder] = useState(false);
   const [config, setConfig] = useState<DuesConfig | null>(null);
   const [dues, setDues] = useState<OrgDues[]>([]);
   const [period] = useState(getCurrentPeriod());
@@ -162,6 +166,13 @@ export default function DuesScreen() {
           </Card>
         )}
 
+        {/* Reminder button for unpaid */}
+        {dues.filter((d) => d.status !== "paid").length > 0 && (
+          <TouchableOpacity onPress={() => setShowReminder(true)} className="bg-warga/10 rounded-xl px-4 py-3 mb-3 flex-row items-center justify-center">
+            <Text className="text-sm font-bold text-warga">🔔 Kirim Pengingat ({dues.filter((d) => d.status !== "paid").length} belum bayar)</Text>
+          </TouchableOpacity>
+        )}
+
         {/* Generate button */}
         {config && dues.length === 0 && !loading && (
           <Button
@@ -235,6 +246,15 @@ export default function DuesScreen() {
           />
         </View>
       </Modal>
+
+      <ReminderSheet
+        visible={showReminder}
+        onClose={() => setShowReminder(false)}
+        orgName={orgName ?? "Organisasi"}
+        providerId={profile?.id ?? ""}
+        unpaidMembers={dues.filter((d) => d.status !== "paid") as (OrgDues & { org_members?: { name: string; phone: string | null } })[]}
+        period={period}
+      />
     </SafeAreaView>
   );
 }

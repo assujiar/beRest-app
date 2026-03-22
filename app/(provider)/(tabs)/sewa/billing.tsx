@@ -6,6 +6,8 @@ import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
 import { generateMonthlyBilling, getBillingByPeriod, updateBillingStatus } from "@services/sewa.service";
+import { Modal } from "@components/ui/Modal";
+import { useReminders } from "@hooks/shared/useReminders";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
 import type { RentBilling, RentPaymentStatus } from "@app-types/sewa.types";
@@ -20,9 +22,12 @@ function getCurrentPeriod() { const d = new Date(); return `${d.getFullYear()}-$
 export default function BillingScreen() {
   const { propId } = useLocalSearchParams<{ propId: string }>();
   const showToast = useUIStore((s) => s.showToast);
+  const { scheduleMonthly } = useReminders();
   const [billings, setBillings] = useState<RentBilling[]>([]);
   const [period] = useState(getCurrentPeriod());
   const [loading, setLoading] = useState(true);
+  const [showReminder, setShowReminder] = useState(false);
+  const [reminderDay, setReminderDay] = useState(1);
 
   useEffect(() => { if (propId) loadData(); }, [propId]);
 
@@ -42,6 +47,22 @@ export default function BillingScreen() {
     catch { showToast("Gagal update", "error"); }
   }
 
+  async function handleSetReminder() {
+    try {
+      await scheduleMonthly({
+        title: "Tagihan Sewa",
+        body: `Saatnya generate dan cek tagihan sewa bulan ini.`,
+        day: reminderDay,
+        hour: 8,
+        data: { type: "sewa_billing", propId },
+      });
+      showToast(`Pengingat diset setiap tanggal ${reminderDay}`, "success");
+      setShowReminder(false);
+    } catch {
+      showToast("Gagal set pengingat", "error");
+    }
+  }
+
   const paidCount = billings.filter((b) => b.status === "paid").length;
   const totalCollected = billings.filter((b) => b.status === "paid").reduce((s, b) => s + b.amount, 0);
 
@@ -50,6 +71,10 @@ export default function BillingScreen() {
       <View className="flex-row items-center px-4 py-3 border-b border-border-color bg-white">
         <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
         <Text className="text-lg font-bold text-dark-text ml-3">Tagihan {period}</Text>
+        <View className="flex-1" />
+        <TouchableOpacity onPress={() => setShowReminder(true)} className="bg-sewa/10 rounded-lg px-3 py-2">
+          <Text className="text-xs font-bold text-sewa">🔔 Pengingat</Text>
+        </TouchableOpacity>
       </View>
       <ScrollView className="flex-1 px-4 pt-3">
         {billings.length > 0 && (
@@ -79,6 +104,21 @@ export default function BillingScreen() {
           );
         })}
       </ScrollView>
+
+      <Modal visible={showReminder} onClose={() => setShowReminder(false)} title="Set Pengingat Bulanan">
+        <Text className="text-sm text-grey-text mb-4">
+          Apick akan mengirim notifikasi setiap bulan untuk mengingatkan kamu cek tagihan sewa.
+        </Text>
+        <Text className="text-sm font-medium text-dark-text mb-2">Ingatkan setiap tanggal:</Text>
+        <View className="flex-row flex-wrap mb-4">
+          {[1, 5, 10, 15, 20, 25].map((d) => (
+            <TouchableOpacity key={d} onPress={() => setReminderDay(d)} className={`px-4 py-2 rounded-lg mr-2 mb-2 ${reminderDay === d ? "bg-sewa" : "bg-gray-100"}`}>
+              <Text className={`text-sm font-bold ${reminderDay === d ? "text-white" : "text-grey-text"}`}>{d}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Button title={`Set Pengingat Tanggal ${reminderDay}`} onPress={handleSetReminder} />
+      </Modal>
     </SafeAreaView>
   );
 }

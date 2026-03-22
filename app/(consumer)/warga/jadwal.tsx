@@ -4,8 +4,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
+import { Button } from "@components/ui/Button";
+import { Input } from "@components/ui/Input";
+import { Modal } from "@components/ui/Modal";
 import { useAuthStore } from "@stores/auth.store";
-import { getMySchedules } from "@services/warga-jadwal.service";
+import { useUIStore } from "@stores/ui.store";
+import { getMySchedules, requestSwap } from "@services/warga-jadwal.service";
 import { formatDate } from "@utils/format";
 import type { WargaSchedule, ScheduleType } from "@app-types/sewa.types";
 
@@ -27,7 +31,12 @@ export default function ConsumerJadwalScreen() {
   const { orgId, orgName } = useLocalSearchParams<{ orgId: string; orgName: string }>();
   const profile = useAuthStore((s) => s.profile);
   const [schedules, setSchedules] = useState<WargaSchedule[]>([]);
+  const showToast = useUIStore((s) => s.showToast);
   const [refreshing, setRefreshing] = useState(false);
+  const [showSwap, setShowSwap] = useState(false);
+  const [swapSchedule, setSwapSchedule] = useState<WargaSchedule | null>(null);
+  const [swapName, setSwapName] = useState("");
+  const [swapLoading, setSwapLoading] = useState(false);
 
   const loadSchedules = useCallback(async () => {
     if (!orgId || !profile?.id) return;
@@ -47,6 +56,27 @@ export default function ConsumerJadwalScreen() {
     setRefreshing(true);
     await loadSchedules();
     setRefreshing(false);
+  }
+
+  function handleOpenSwap(schedule: WargaSchedule) {
+    setSwapSchedule(schedule);
+    setSwapName("");
+    setShowSwap(true);
+  }
+
+  async function handleSwap() {
+    if (!swapSchedule || !swapName.trim()) return;
+    setSwapLoading(true);
+    try {
+      await requestSwap(swapSchedule.id, profile?.id ?? "", swapName.trim());
+      showToast("Tukar jadwal berhasil!", "success");
+      setShowSwap(false);
+      loadSchedules();
+    } catch {
+      showToast("Gagal tukar jadwal", "error");
+    } finally {
+      setSwapLoading(false);
+    }
   }
 
   const upcoming = schedules.filter((s) => new Date(s.date) >= new Date());
@@ -105,6 +135,11 @@ export default function ConsumerJadwalScreen() {
                           </Text>
                         )}
                       </View>
+                      {!s.is_swapped && (
+                        <TouchableOpacity onPress={() => handleOpenSwap(s)} className="bg-warga/10 rounded-lg px-2 py-1 mr-2">
+                          <Text className="text-xs font-bold text-warga">Tukar</Text>
+                        </TouchableOpacity>
+                      )}
                       <Badge
                         label={TYPE_LABELS[s.type]}
                         variant="info"
@@ -146,6 +181,29 @@ export default function ConsumerJadwalScreen() {
           </>
         )}
       </ScrollView>
+
+      {/* Swap Modal */}
+      <Modal visible={showSwap} onClose={() => setShowSwap(false)} title="Tukar Jadwal">
+        {swapSchedule && (
+          <>
+            <Text className="text-sm text-grey-text mb-1">
+              Jadwal: <Text className="font-bold text-dark-text">{swapSchedule.title}</Text>
+            </Text>
+            <Text className="text-sm text-grey-text mb-4">
+              Tanggal: <Text className="font-bold text-dark-text">{formatDate(swapSchedule.date)}</Text>
+            </Text>
+            <Input
+              label="Nama yang menggantikan"
+              placeholder="contoh: Pak Budi"
+              value={swapName}
+              onChangeText={setSwapName}
+            />
+            <View className="mt-4">
+              <Button title="Ajukan Tukar" onPress={handleSwap} loading={swapLoading} />
+            </View>
+          </>
+        )}
+      </Modal>
     </SafeAreaView>
   );
 }

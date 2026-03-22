@@ -9,10 +9,10 @@ import { Input } from "@components/ui/Input";
 import { Modal } from "@components/ui/Modal";
 import { CurrencyInput } from "@components/shared/CurrencyInput";
 import { EmptyState } from "@components/shared/EmptyState";
-import { createLaundryOrder, getLaundryOrders, updateLaundryStatus } from "@services/lapak-advanced.service";
+import { createLaundryOrder, getLaundryOrders, updateLaundryStatus, getLaundryPricing, upsertLaundryPricing } from "@services/lapak-advanced.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatRelativeTime } from "@utils/format";
-import type { LaundryOrder, LaundryStatus } from "@app-types/lapak.types";
+import type { LaundryOrder, LaundryStatus, LaundryPricing } from "@app-types/lapak.types";
 
 const STATUS_FLOW: LaundryStatus[] = ["received", "washing", "drying", "ironing", "ready", "picked_up"];
 const STATUS_LABELS: Record<LaundryStatus, string> = {
@@ -34,11 +34,32 @@ export default function LaundryScreen() {
   const [custPhone, setCustPhone] = useState("");
   const [total, setTotal] = useState(0);
   const [createLoading, setCreateLoading] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
+  const [pricing, setPricing] = useState<LaundryPricing[]>([]);
+  const [pName, setPName] = useState("");
+  const [pKg, setPKg] = useState(0);
+  const [pPiece, setPPiece] = useState(0);
+  const [pricingLoading, setPricingLoading] = useState(false);
 
   useEffect(() => { if (bizId) loadData(); }, [bizId]);
 
   async function loadData() {
-    try { setOrders(await getLaundryOrders(bizId!)); } catch {} finally { setLoading(false); }
+    try {
+      const [o, p] = await Promise.all([getLaundryOrders(bizId!), getLaundryPricing(bizId!)]);
+      setOrders(o);
+      setPricing(p);
+    } catch {} finally { setLoading(false); }
+  }
+
+  async function handleSavePricing() {
+    if (!pName.trim() || (pKg <= 0 && pPiece <= 0)) return;
+    setPricingLoading(true);
+    try {
+      await upsertLaundryPricing(bizId!, { name: pName.trim(), price_per_kg: pKg > 0 ? pKg : null, price_per_piece: pPiece > 0 ? pPiece : null });
+      showToast("Harga disimpan!", "success");
+      setPName(""); setPKg(0); setPPiece(0);
+      loadData();
+    } catch { showToast("Gagal menyimpan", "error"); } finally { setPricingLoading(false); }
   }
 
   async function handleCreate() {
@@ -66,9 +87,14 @@ export default function LaundryScreen() {
           <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
           <Text className="text-lg font-bold text-dark-text ml-3">Laundry</Text>
         </View>
-        <TouchableOpacity onPress={() => setShowCreate(true)} className="bg-lapak rounded-lg px-3 py-2">
-          <Text className="text-white text-xs font-bold">+ Order</Text>
-        </TouchableOpacity>
+        <View className="flex-row items-center gap-2">
+          <TouchableOpacity onPress={() => setShowPricing(true)} className="bg-navy rounded-lg px-3 py-2">
+            <Text className="text-white text-xs font-bold">💰 Harga</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowCreate(true)} className="bg-lapak rounded-lg px-3 py-2">
+            <Text className="text-white text-xs font-bold">+ Order</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <ScrollView className="flex-1 px-4 pt-3">
         {!loading && orders.length === 0 ? (
@@ -101,6 +127,28 @@ export default function LaundryScreen() {
         <View className="mt-3"><Input label="No HP (opsional)" placeholder="08123456789" value={custPhone} onChangeText={setCustPhone} keyboardType="phone-pad" /></View>
         <View className="mt-3"><CurrencyInput label="Total" value={total} onChangeValue={setTotal} /></View>
         <View className="mt-4"><Button title="Buat Order" onPress={handleCreate} loading={createLoading} /></View>
+      </Modal>
+
+      {/* Pricing Modal */}
+      <Modal visible={showPricing} onClose={() => setShowPricing(false)} title="Daftar Harga Laundry">
+        {pricing.length > 0 && (
+          <View className="mb-4">
+            {pricing.map((p) => (
+              <View key={p.id} className="flex-row items-center justify-between py-2 border-b border-border-color">
+                <Text className="text-sm font-bold text-dark-text">{p.name}</Text>
+                <View>
+                  {p.price_per_kg && <Text className="text-xs text-grey-text text-right">{formatRupiah(p.price_per_kg)}/kg</Text>}
+                  {p.price_per_piece && <Text className="text-xs text-grey-text text-right">{formatRupiah(p.price_per_piece)}/pcs</Text>}
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+        <Text className="text-xs text-grey-text mb-2">Tambah / Update Harga:</Text>
+        <Input label="Jenis Cucian" placeholder="contoh: Reguler, Express, Bed Cover" value={pName} onChangeText={setPName} />
+        <View className="mt-3"><CurrencyInput label="Harga per Kg (opsional)" value={pKg} onChangeValue={setPKg} /></View>
+        <View className="mt-3"><CurrencyInput label="Harga per Potong (opsional)" value={pPiece} onChangeValue={setPPiece} /></View>
+        <View className="mt-4"><Button title="Simpan Harga" onPress={handleSavePricing} loading={pricingLoading} /></View>
       </Modal>
     </SafeAreaView>
   );
