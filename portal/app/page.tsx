@@ -189,20 +189,18 @@ export default function HomePage() {
                   id="story-heading"
                   className="text-[28px] md:text-[36px] font-extrabold leading-[1.15] text-[#1E293B] mb-5"
                 >
-                  Berawal dari buku catatan yang sering hilang.
+                  App mahal, ribet, dan bukan buat kita.
                 </h2>
               </ScrollReveal>
               <ScrollReveal delay={1}>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Pedagang yang lupa omzet kemarin. Ibu kos yang pusing nagih satu-satu.
-                  Bendahara RT yang dicurigai warga karena laporan keuangan ga jelas.
-                  Calon pengantin yang habis ratusan ribu cuma buat undangan digital.
+                  Kebanyakan app pengelolaan dibuat buat perusahaan besar. Bahasa Inggris, fitur bertumpuk, langganan mahal. Orang-orang di sekitar kita — yang usahanya jalan tiap hari — malah masih pakai cara manual.
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Mereka semua punya masalah yang sama: <span className="text-[#1E293B] font-semibold">catatan berantakan, hidup jadi ribet.</span>
+                  Bukan karena mereka ga mau pakai teknologi. <span className="text-[#1E293B] font-semibold">Tapi belum ada yang bikin teknologi untuk mereka.</span>
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B]">
-                  apick dibuat supaya orang-orang biasa — yang belum tentu paham teknologi — bisa ngatur hal-hal penting dalam hidup mereka. Sesimpel buka WhatsApp. Segratis mungkin. Selengkap yang dibutuhkan.
+                  apick lahir dari keyakinan sederhana: kalau seseorang bisa pakai WhatsApp, dia harusnya bisa pakai app untuk ngatur hidupnya. Tanpa pelatihan. Tanpa biaya besar. Tanpa baca manual 50 halaman. Cukup buka, pakai, beres.
                 </p>
               </ScrollReveal>
             </div>
