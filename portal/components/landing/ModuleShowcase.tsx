@@ -214,6 +214,17 @@ export function ModuleShowcase() {
     toggleBtnRef.current?.focus();
   }, []);
 
+  // Listen for module switch from StickyNav
+  useEffect(() => {
+    function handleSwitch(e: Event) {
+      const moduleId = (e as CustomEvent).detail;
+      const idx = modules.findIndex((m) => m.id === moduleId);
+      if (idx !== -1) setActiveTab(idx);
+    }
+    window.addEventListener("apick:switch-module", handleSwitch);
+    return () => window.removeEventListener("apick:switch-module", handleSwitch);
+  }, []);
+
   // Focus trap + Escape for modal
   useEffect(() => {
     if (!showFeatures) return;

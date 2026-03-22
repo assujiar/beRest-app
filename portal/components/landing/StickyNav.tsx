@@ -50,7 +50,16 @@ export function StickyNav() {
           {modules.map((m) => (
             <a
               key={m.id}
-              href={`#${m.id}`}
+              href="#modules-heading"
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(
+                  new CustomEvent("apick:switch-module", { detail: m.id })
+                );
+                document
+                  .getElementById("modules-heading")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
               className="px-3 py-1.5 rounded-full text-[13px] font-semibold transition-all duration-200"
               style={{
                 color: activeSection === m.id ? "white" : m.color,
