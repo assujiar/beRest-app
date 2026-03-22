@@ -67,7 +67,9 @@ export async function signInWithPhone(phone: string) {
     } else if (msg.includes("invalid") && msg.includes("phone")) {
       error.message = "Format nomor HP tidak valid. Coba pakai format 08xx.";
     } else if (msg.includes("not authorized") || msg.includes("unverified")) {
-      error.message = "Nomor ini belum bisa menerima SMS. Hubungi admin.";
+      error.message = "Nomor ini belum bisa menerima OTP. Hubungi admin.";
+    } else if (msg.includes("whatsapp") || msg.includes("twilio")) {
+      error.message = "Gagal kirim OTP via WhatsApp. Pastikan nomor terdaftar di WhatsApp.";
     }
   }
   return { data, error };

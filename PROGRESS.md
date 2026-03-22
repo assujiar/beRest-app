@@ -6,6 +6,10 @@
 
 ## MODIFICATIONS LOG
 | Date | Files Modified | Reason |
+| 2026-03-22 | supabase/functions/send-otp-whatsapp/index.ts (NEW) | Custom SMS Hook - send OTP via Twilio WhatsApp instead of SMS |
+| 2026-03-22 | src/services/auth.service.ts | Added WhatsApp-specific error message handling |
+| 2026-03-22 | app/(auth)/otp.tsx | Updated UI text to reference WhatsApp instead of SMS |
+| 2026-03-22 | portal/app/layout.tsx | Added Google site verification meta tag for apick.id |
 |------|---------------|--------|
 | 2026-03-22 | app/_layout.tsx, src/services/supabase.ts, src/config/supabase.config.ts | Fix Android APK force close - ErrorBoundary, safe Supabase init, auth try-catch |
 | 2026-03-22 | portal/app/page.tsx | Redesigned landing page hero with logo-centric layout, added logo showcase section |

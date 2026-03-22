@@ -60,7 +60,7 @@ export default function OtpScreen() {
   async function handleResend() {
     if (resendCooldown > 0) return;
     await signInWithPhone(phone ?? "");
-    showToast("Kode OTP baru sudah dikirim!", "success");
+    showToast("Kode OTP baru dikirim via WhatsApp!", "success");
     setResendCooldown(60);
     const interval = setInterval(() => {
       setResendCooldown((c) => {
@@ -82,7 +82,7 @@ export default function OtpScreen() {
             Masukkan Kode OTP
           </Text>
           <Text className="text-sm text-grey-text mt-2">
-            Kode 6 digit sudah dikirim ke {phone}
+            Kode 6 digit sudah dikirim via WhatsApp ke {phone}
           </Text>
 
           {/* OTP inputs */}
