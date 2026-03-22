@@ -44,7 +44,7 @@ export function StickyNav() {
     >
       <div className="max-w-[960px] mx-auto px-6 py-3 flex items-center justify-between">
         <a href="#content">
-          <img src="/logos/apick-logo-full.svg" alt="apick" className="h-7" />
+          <img src="/logos/apick-logo-full.svg" alt="apick" className="h-8" />
         </a>
         <div className="hidden sm:flex items-center gap-1">
           {modules.map((m) => (

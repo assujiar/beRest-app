@@ -103,6 +103,63 @@ body {
   opacity: 0;
 }
 
+/* ─── Logo entrance animation ─── */
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(20px);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  80% {
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+.logo-entrance {
+  animation: logoEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.logo-entrance-delay {
+  animation: logoEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  opacity: 0;
+}
+
+/* ─── Logo subtle glow ─── */
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(44, 118, 149, 0)); }
+  50% { filter: drop-shadow(0 0 20px rgba(44, 118, 149, 0.3)); }
+}
+.logo-glow {
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+/* ─── Logo shimmer ─── */
+@keyframes logoShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.logo-shimmer-bg {
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 55%, transparent 70%);
+  background-size: 200% 100%;
+  animation: logoShimmer 4s ease-in-out infinite;
+}
+
+/* ─── Logo showcase card flip ─── */
+.logo-card {
+  transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+}
+.logo-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
 /* ─── Floating animation for phone mockup ─── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }

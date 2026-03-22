@@ -72,10 +72,10 @@ export default function HomePage() {
 
       {/* ═══ Masthead ═══ */}
       <header className="bg-[#2C7695]">
-        <div className="max-w-[960px] mx-auto px-6 py-5 flex items-center justify-between">
-          <h1 className="hero-reveal">
-            <img src="/logos/apick-logo-white.svg" alt="apick" className="h-8" />
-          </h1>
+        <div className="max-w-[960px] mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="hero-reveal">
+            <img src="/logos/apick-logo-white.svg" alt="apick" className="h-7 opacity-80" />
+          </div>
           <a
             href="https://play.google.com/store/apps/details?id=id.apick.app"
             className="text-white/70 text-[13px] font-medium hover:text-white transition-colors"
@@ -85,77 +85,190 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ═══ Hero ═══ */}
-      <section id="content" className="bg-[#2C7695] text-white pb-20 pt-12 md:pt-20 overflow-hidden">
-        <div className="max-w-[960px] mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-center md:gap-12">
-            {/* Text side */}
-            <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#156064] mb-6 hero-reveal">
-                Satu app, empat solusi
-              </p>
-              <h2 className="text-[36px] leading-[1.1] md:text-[56px] md:leading-[1.08] font-extrabold tracking-tight max-w-[540px] hero-reveal-2">
-                Semua tercatat rapi, hidup jadi tenang.
-              </h2>
-              <p className="mt-6 text-[17px] md:text-[19px] leading-[1.6] text-white/60 max-w-[460px] hero-reveal-3">
-                Pedagang kaki lima. Ibu kos. Bendahara RT. Calon pengantin.
-                Satu app simpel yang bantu ngatur semuanya.
-              </p>
+      {/* ═══ Hero — Logo-centric ═══ */}
+      <section id="content" className="bg-[#2C7695] text-white pb-20 pt-10 md:pt-16 overflow-hidden relative">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 logo-shimmer-bg pointer-events-none" aria-hidden="true" />
 
-              {/* CTA */}
-              <div className="mt-10 flex flex-col sm:flex-row items-start gap-4 hero-reveal-4">
-                <a
-                  href="https://play.google.com/store/apps/details?id=id.apick.app"
-                  className="pulse-glow inline-flex items-center gap-2.5 bg-[#156064] text-white px-7 py-3.5 rounded-xl text-[15px] font-bold hover:bg-[#0E4A4D] transition-colors"
-                >
-                  <PlayStoreIcon />
-                  Download Gratis
-                </a>
-                <a
-                  href="#modules-heading"
-                  className="text-white/40 text-[14px] hover:text-white/70 transition-colors py-3.5"
-                >
-                  Baca dulu &#8595;
-                </a>
-              </div>
+        <div className="max-w-[960px] mx-auto px-6 relative">
+          {/* Centered logo hero */}
+          <div className="flex flex-col items-center text-center">
+            {/* Big logo — the star of the show */}
+            <div className="logo-entrance logo-glow mb-8">
+              <img
+                src="/logos/apick-logo-white.svg"
+                alt="apick — Life, well arranged"
+                className="h-20 md:h-28"
+              />
             </div>
 
-            {/* Phone mockup */}
-            <div className="hidden md:flex justify-center mt-12 md:mt-0 hero-reveal-4">
-              <PhoneMockup />
+            <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-white/40 mb-5 hero-reveal">
+              Satu app, empat solusi
+            </p>
+            <h1 className="text-[36px] leading-[1.1] md:text-[56px] md:leading-[1.08] font-extrabold tracking-tight max-w-[600px] hero-reveal-2">
+              Semua tercatat rapi, hidup jadi tenang.
+            </h1>
+            <p className="mt-6 text-[17px] md:text-[19px] leading-[1.6] text-white/50 max-w-[480px] hero-reveal-3">
+              Pedagang kaki lima. Ibu kos. Bendahara RT. Calon pengantin.
+              Satu app simpel yang bantu ngatur semuanya.
+            </p>
+
+            {/* CTA */}
+            <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 hero-reveal-4">
+              <a
+                href="https://play.google.com/store/apps/details?id=id.apick.app"
+                className="pulse-glow inline-flex items-center gap-2.5 bg-[#156064] text-white px-7 py-3.5 rounded-xl text-[15px] font-bold hover:bg-[#0E4A4D] transition-colors"
+              >
+                <PlayStoreIcon />
+                Download Gratis
+              </a>
+              <a
+                href="#modules-heading"
+                className="text-white/40 text-[14px] hover:text-white/70 transition-colors py-3.5"
+              >
+                Baca dulu &#8595;
+              </a>
             </div>
           </div>
 
-          {/* Module pills */}
-          <div className="mt-14 flex flex-wrap gap-2 hero-reveal-4">
-            {[
-              { id: "lapak", name: "Lapak", color: "#50BFC3" },
-              { id: "sewa", name: "Sewa", color: "#00C49A" },
-              { id: "warga", name: "Warga", color: "#FB8F67" },
-              { id: "hajat", name: "Hajat", color: "#D95877" },
-            ].map((m) => (
-              <a
-                key={m.id}
-                href="#modules-heading"
-                onClick={() => {
-                  // Scroll handled by href
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium transition-all duration-200 bg-white/10 text-white/80 hover:bg-white/20 hover:scale-105"
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: m.color }}
-                  aria-hidden="true"
-                />
-                {m.name}
-              </a>
-            ))}
+          {/* Module pills + Phone mockup row */}
+          <div className="mt-14 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+            {/* Module pills */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 hero-reveal-4">
+              {[
+                { id: "lapak", name: "Lapak", color: "#50BFC3" },
+                { id: "sewa", name: "Sewa", color: "#00C49A" },
+                { id: "warga", name: "Warga", color: "#FB8F67" },
+                { id: "hajat", name: "Hajat", color: "#D95877" },
+              ].map((m) => (
+                <a
+                  key={m.id}
+                  href="#modules-heading"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium transition-all duration-200 bg-white/10 text-white/80 hover:bg-white/20 hover:scale-105"
+                >
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: m.color }}
+                    aria-hidden="true"
+                  />
+                  {m.name}
+                </a>
+              ))}
+            </div>
+
+            {/* Phone mockup */}
+            <div className="hidden md:flex justify-center hero-reveal-4">
+              <PhoneMockup />
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ═══ Logo Showcase — Full Color & White ═══ */}
+      <section className="py-16 md:py-24 border-b border-[#E2E8F0]" aria-labelledby="brand-heading">
+        <div className="max-w-[960px] mx-auto px-6">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#94A3B8] mb-4">
+                Brand Kami
+              </p>
+              <h2
+                id="brand-heading"
+                className="text-[28px] md:text-[36px] font-extrabold leading-[1.1] text-[#1E293B] mb-3"
+              >
+                apick
+              </h2>
+              <p className="text-[15px] text-[#64748B] editorial-serif">
+                Life, well arranged.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Full color logo on light background */}
+            <ScrollReveal delay={1}>
+              <div className="logo-card bg-white rounded-2xl border border-[#E2E8F0] p-10 md:p-14 flex flex-col items-center justify-center min-h-[240px]">
+                <img
+                  src="/logos/apick-logo-full.svg"
+                  alt="apick logo — full color"
+                  className="h-14 md:h-20 mb-6"
+                />
+                <div className="flex items-center gap-3 mb-3">
+                  <img
+                    src="/logos/apick-app-icon.svg"
+                    alt=""
+                    className="w-10 h-10 rounded-xl shadow-md"
+                    aria-hidden="true"
+                  />
+                  <div className="text-left">
+                    <p className="text-[13px] font-bold text-[#1E293B]">apick</p>
+                    <p className="text-[11px] text-[#94A3B8]">Life, well arranged.</p>
+                  </div>
+                </div>
+                <p className="text-[12px] text-[#94A3B8] mt-2 tracking-wide uppercase font-medium">
+                  Full Color
+                </p>
+              </div>
+            </ScrollReveal>
+
+            {/* White logo on dark background */}
+            <ScrollReveal delay={2}>
+              <div className="logo-card bg-[#2C7695] rounded-2xl p-10 md:p-14 flex flex-col items-center justify-center min-h-[240px] relative overflow-hidden">
+                <div className="absolute inset-0 logo-shimmer-bg pointer-events-none" aria-hidden="true" />
+                <div className="relative">
+                  <img
+                    src="/logos/apick-logo-white.svg"
+                    alt="apick logo — white"
+                    className="h-14 md:h-20 mb-6 logo-glow"
+                  />
+                  <div className="flex items-center gap-3 mb-3 justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center" aria-hidden="true">
+                      <img
+                        src="/logos/apick-app-icon.svg"
+                        alt=""
+                        className="w-8 h-8 rounded-lg brightness-0 invert"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[13px] font-bold text-white">apick</p>
+                      <p className="text-[11px] text-white/50">Life, well arranged.</p>
+                    </div>
+                  </div>
+                  <p className="text-[12px] text-white/40 mt-2 tracking-wide uppercase font-medium text-center">
+                    White
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Module color strip */}
+          <ScrollReveal delay={3}>
+            <div className="mt-8 flex items-center justify-center gap-3">
+              {[
+                { name: "Lapak", color: "#50BFC3" },
+                { name: "Sewa", color: "#00C49A" },
+                { name: "Warga", color: "#FB8F67" },
+                { name: "Hajat", color: "#D95877" },
+              ].map((m) => (
+                <div key={m.name} className="flex items-center gap-1.5">
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: m.color }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[12px] font-semibold" style={{ color: m.color }}>
+                    {m.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ═══ Pull quote ═══ */}
-      <section className="border-t border-b border-[#E2E8F0] py-14 md:py-20">
+      <section className="border-b border-[#E2E8F0] py-14 md:py-20">
         <div className="max-w-[960px] mx-auto px-6 text-center">
           <ScrollReveal>
             <p className="editorial-serif text-[22px] md:text-[28px] leading-[1.5] text-[#64748B] max-w-[640px] mx-auto">
@@ -594,13 +707,20 @@ export default function HomePage() {
       </section>
 
       {/* ═══ Final CTA ═══ */}
-      <section className="bg-[#2C7695] py-20 md:py-24">
-        <div className="max-w-[960px] mx-auto px-6 text-center md:text-left">
+      <section className="bg-[#2C7695] py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 logo-shimmer-bg pointer-events-none" aria-hidden="true" />
+        <div className="max-w-[960px] mx-auto px-6 text-center relative">
           <ScrollReveal>
-            <h2 className="text-[32px] md:text-[44px] font-extrabold text-white leading-[1.1] max-w-[480px] mx-auto md:mx-0">
+            <img
+              src="/logos/apick-logo-white.svg"
+              alt=""
+              className="h-16 md:h-24 mx-auto mb-8 logo-glow"
+              aria-hidden="true"
+            />
+            <h2 className="text-[32px] md:text-[44px] font-extrabold text-white leading-[1.1] max-w-[480px] mx-auto">
               Mulai dari yang gratis dulu.
             </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-white/50 max-w-[400px] mx-auto md:mx-0">
+            <p className="mt-4 text-[16px] leading-[1.6] text-white/50 max-w-[400px] mx-auto">
               Paket Gratis sudah cukup buat mulai. Nanti kalau butuh lebih, tinggal upgrade kapan aja.
             </p>
             <a
@@ -615,11 +735,12 @@ export default function HomePage() {
       </section>
 
       {/* ═══ Footer ═══ */}
-      <footer className="bg-[#1E5A6F] text-white/40 py-10">
-        <div className="max-w-[960px] mx-auto px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <img src="/logos/apick-logo-white.svg" alt="apick" className="h-6" />
-            <span className="text-[13px]">Life, well arranged.</span>
+      <footer className="bg-[#1E5A6F] text-white/40 py-12">
+        <div className="max-w-[960px] mx-auto px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <img src="/logos/apick-logo-white.svg" alt="apick" className="h-9" />
+            <div className="w-px h-6 bg-white/15" aria-hidden="true" />
+            <span className="text-[13px] editorial-serif text-white/35">Life, well arranged.</span>
           </div>
           <nav aria-label="Navigasi">
             <div className="flex items-center gap-5 text-[13px]">

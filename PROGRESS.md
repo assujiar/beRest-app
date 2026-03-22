@@ -1,12 +1,15 @@
 # Apick - Build Progress Tracker
 
-> Last updated: 2026-03-21
+> Last updated: 2026-03-22
 > Current phase: PRE-LAUNCH PREP
 > Overall progress: 128/128 tasks (dev) + publishing in progress
 
 ## MODIFICATIONS LOG
 | Date | Files Modified | Reason |
 |------|---------------|--------|
+| 2026-03-22 | portal/app/page.tsx | Redesigned landing page hero with logo-centric layout, added logo showcase section |
+| 2026-03-22 | portal/app/globals.css | Added logo animations (entrance, glow, shimmer, card hover) |
+| 2026-03-22 | portal/components/landing/StickyNav.tsx | Increased sticky nav logo size |
 | 2026-03-21 | app/(auth)/welcome.tsx (NEW) | Added welcome/intro screen with app features slideshow |
 | 2026-03-21 | app/(auth)/register.tsx | Converted from post-auth welcome to proper registration form with pricing info |
 | 2026-03-21 | app/(auth)/login.tsx | Added link to register screen |
