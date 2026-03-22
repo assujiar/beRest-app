@@ -6,6 +6,8 @@
 
 ## MODIFICATIONS LOG
 | Date | Files Modified | Reason |
+| 2026-03-22 | supabase/migrations/00009_fix_handle_new_user_trigger.sql (NEW) | Fix "Database error saving new user" - add email field, ON CONFLICT, error handling |
+| 2026-03-22 | app/(auth)/register.tsx | Improved error message for database signup errors |
 | 2026-03-22 | supabase/functions/send-otp-whatsapp/index.ts (NEW) | Custom SMS Hook - send OTP via Twilio WhatsApp instead of SMS |
 | 2026-03-22 | src/services/auth.service.ts | Added WhatsApp-specific error message handling |
 | 2026-03-22 | app/(auth)/otp.tsx | Updated UI text to reference WhatsApp instead of SMS |

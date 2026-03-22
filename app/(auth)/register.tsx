@@ -66,7 +66,12 @@ export default function RegisterScreen() {
     setLoading(false);
 
     if (authError) {
-      setError(authError.message ?? "Gagal kirim kode OTP ke email. Coba lagi ya.");
+      const msg = authError.message?.toLowerCase() ?? "";
+      if (msg.includes("database error") || msg.includes("saving new user")) {
+        setError("Gagal membuat akun baru. Pastikan email valid dan coba lagi ya.");
+      } else {
+        setError(authError.message ?? "Gagal kirim kode OTP ke email. Coba lagi ya.");
+      }
       return;
     }
 
