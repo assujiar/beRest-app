@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@components/ui/Button";
@@ -19,6 +19,9 @@ export default function OtpScreen() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [otpFailCount, setOtpFailCount] = useState(0);
+  const [magicLinkMode, setMagicLinkMode] = useState(false);
+  const [magicLinkSending, setMagicLinkSending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const inputs = useRef<(TextInput | null)[]>([]);
   const showToast = useUIStore((s) => s.showToast);
@@ -62,11 +65,27 @@ export default function OtpScreen() {
     setLoading(false);
 
     if (authError) {
+      const newFailCount = otpFailCount + 1;
+      setOtpFailCount(newFailCount);
       setError(authError.message ?? "Kode OTP salah. Cek lagi ya.");
       return;
     }
 
     // Auth state change will handle navigation
+  }
+
+  async function handleMagicLink() {
+    setMagicLinkSending(true);
+    const { error: sendError } = await signInWithEmail(email ?? "");
+    setMagicLinkSending(false);
+
+    if (sendError) {
+      setError(sendError.message ?? "Gagal kirim link. Coba lagi ya.");
+      return;
+    }
+
+    setMagicLinkMode(true);
+    showToast("Link masuk sudah dikirim ke email!", "success");
   }
 
   async function handleResend() {
@@ -94,6 +113,52 @@ export default function OtpScreen() {
 
   const channelText = isEmail ? "email" : "WhatsApp";
 
+  // Show magic link waiting screen
+  if (magicLinkMode && isEmail) {
+    return (
+      <SafeAreaView className="flex-1 bg-light-bg">
+        <View className="flex-1 px-6 justify-between">
+          <View className="pt-16">
+            <Text className="text-2xl font-bold text-dark-text">
+              Cek Email Kamu
+            </Text>
+            <Text className="text-sm text-grey-text mt-3 leading-5">
+              Link masuk sudah dikirim ke{"\n"}
+              <Text className="font-bold text-dark-text">{destination}</Text>
+            </Text>
+
+            <View className="bg-white rounded-xl p-4 mt-6 border border-border-color">
+              <Text className="text-sm text-dark-text leading-5">
+                1. Buka email dari Apick{"\n"}
+                2. Klik tombol "Login" atau link di email{"\n"}
+                3. Otomatis masuk ke aplikasi
+              </Text>
+            </View>
+
+            <Text className="text-xs text-grey-text mt-4">
+              Gak dapat email? Cek folder Spam atau Promosi.
+            </Text>
+          </View>
+
+          <View className="pb-8">
+            <TouchableOpacity
+              onPress={() => {
+                setMagicLinkMode(false);
+                setError("");
+                setOtpFailCount(0);
+              }}
+              className="items-center py-3"
+            >
+              <Text className="text-sm text-navy font-bold">
+                Kembali ke kode OTP
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-light-bg">
       <View className="flex-1 px-6 justify-between">
@@ -103,9 +168,7 @@ export default function OtpScreen() {
             Masukkan Kode OTP
           </Text>
           <Text className="text-sm text-grey-text mt-2">
-            {isEmail
-              ? `Cek email ${destination} — klik link yang dikirim, atau masukkan kode 6 digit di bawah.`
-              : `Kode 6 digit sudah dikirim via ${channelText} ke ${destination}`}
+            Kode 6 digit sudah dikirim via {channelText} ke {destination}
           </Text>
 
           {/* OTP inputs */}
@@ -131,6 +194,24 @@ export default function OtpScreen() {
 
           {error ? (
             <Text className="text-sm text-red-500 mt-3">{error}</Text>
+          ) : null}
+
+          {/* Magic link fallback - show after 1 failed OTP attempt (email only) */}
+          {isEmail && otpFailCount >= 1 ? (
+            <TouchableOpacity
+              onPress={handleMagicLink}
+              disabled={magicLinkSending}
+              className="bg-white rounded-xl p-4 mt-4 border border-border-color"
+            >
+              <Text className="text-sm font-bold text-dark-text">
+                Kode OTP bermasalah?
+              </Text>
+              <Text className="text-xs text-grey-text mt-1">
+                {magicLinkSending
+                  ? "Mengirim link ke email..."
+                  : "Ketuk di sini untuk masuk lewat link di email."}
+              </Text>
+            </TouchableOpacity>
           ) : null}
 
           <Text
