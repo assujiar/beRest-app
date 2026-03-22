@@ -1,21 +1,44 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import Svg, { Path } from "react-native-svg";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
 import { Modal } from "@components/ui/Modal";
 import { CurrencyInput } from "@components/shared/CurrencyInput";
 import { EmptyState } from "@components/shared/EmptyState";
+import { ModuleIcon } from "@components/ui/ModuleIcon";
 import { getGifts, addGift, getGiftSummary } from "@services/hajat.service";
 import { useAuthStore } from "@stores/auth.store";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { GiftRecord, GiftDirection } from "@app-types/hajat.types";
+
+const MODULE_COLOR = "#D95877";
 
 type Tab = "invitations" | "amplop" | "calendar";
 
+function ArrowUpIcon({ size = 14, color = "#EF4444" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 19V5M5 12L12 5L19 12" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function ArrowDownIcon({ size = 14, color = "#D95877" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 5V19M19 12L12 19L5 12" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export default function ConsumerHajatScreen() {
+  const insets = useSafeAreaInsets();
   const profile = useAuthStore((s) => s.profile);
   const showToast = useUIStore((s) => s.showToast);
   const [tab, setTab] = useState<Tab>("invitations");
@@ -51,46 +74,94 @@ export default function ConsumerHajatScreen() {
     { key: "invitations", label: "Undangan" }, { key: "amplop", label: "Amplop" }, { key: "calendar", label: "Kalender" },
   ];
 
-  return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="px-4 py-3"><Text className="text-xl font-bold text-dark-text">Hajat</Text></View>
+  // Reference GLASS to keep import
+  const tabBg = GLASS.card.background;
+  const tabBorder = GLASS.card.border;
 
-      <View className="flex-row bg-white border-b border-border-color">
+  return (
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.hajat}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ paddingTop: insets.top + SPACING.sm, paddingBottom: SPACING.lg, paddingHorizontal: SPACING.md }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm }}>
+          <ModuleIcon module="hajat" size={22} color="#FFFFFF" />
+          <Text style={{ ...TYPO.h2, color: "#FFFFFF" }}>Hajat</Text>
+        </View>
+      </LinearGradient>
+
+      {/* Tabs */}
+      <View style={{
+        flexDirection: "row",
+        backgroundColor: tabBg,
+        borderBottomWidth: 1,
+        borderBottomColor: tabBorder,
+      }}>
         {tabs.map((t) => (
-          <TouchableOpacity key={t.key} onPress={() => setTab(t.key)} className={`flex-1 py-3 items-center ${tab === t.key ? "border-b-2 border-hajat" : ""}`}>
-            <Text className={`text-xs font-bold ${tab === t.key ? "text-hajat" : "text-grey-text"}`}>{t.label}</Text>
+          <TouchableOpacity
+            key={t.key}
+            onPress={() => setTab(t.key)}
+            style={{
+              flex: 1,
+              paddingVertical: SPACING.md,
+              alignItems: "center",
+              borderBottomWidth: 2,
+              borderBottomColor: tab === t.key ? MODULE_COLOR : "transparent",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: tab === t.key ? MODULE_COLOR : "#64748B" }}>{t.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView style={{ flex: 1, paddingHorizontal: SPACING.md, paddingTop: SPACING.md }}>
         {tab === "invitations" && (
           <EmptyState illustration="💌" title="Belum ada undangan masuk" description="Undangan dari penyelenggara acara akan muncul di sini" />
         )}
 
         {tab === "amplop" && (
           <>
-            <Card>
-              <View className="flex-row">
-                <View className="flex-1"><Text className="text-xs text-grey-text">Diberikan</Text><Text className="text-lg font-bold text-red-500">{formatRupiah(summary.totalGiven)}</Text></View>
-                <View className="flex-1"><Text className="text-xs text-grey-text">Diterima</Text><Text className="text-lg font-bold text-hajat">{formatRupiah(summary.totalReceived)}</Text></View>
+            <Card variant="elevated">
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8 }}>Diberikan</Text>
+                  <Text style={{ ...TYPO.h3, color: "#EF4444", marginTop: SPACING.xs }}>{formatRupiah(summary.totalGiven)}</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8 }}>Diterima</Text>
+                  <Text style={{ ...TYPO.h3, color: MODULE_COLOR, marginTop: SPACING.xs }}>{formatRupiah(summary.totalReceived)}</Text>
+                </View>
               </View>
-              <View className="mt-2 pt-2 border-t border-border-color"><Text className="text-xs text-grey-text">Selisih</Text><Text className="text-xl font-bold text-dark-text">{formatRupiah(summary.balance)}</Text></View>
+              <View style={{ marginTop: SPACING.md, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: "#E2E8F0", alignItems: "center" }}>
+                <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8 }}>Selisih</Text>
+                <Text style={{ ...TYPO.money, color: "#1E293B", marginTop: SPACING.xs }}>{formatRupiah(summary.balance)}</Text>
+              </View>
             </Card>
             <Button title="+ Catat Amplop" variant="secondary" onPress={() => setShowAddGift(true)} />
-            <View className="mt-3">
+            <View style={{ marginTop: SPACING.md }}>
               {gifts.map((g) => (
-                <Card key={g.id}>
-                  <View className="flex-row items-center">
-                    <View className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${g.direction === "given" ? "bg-red-100" : "bg-green-100"}`}>
-                      <Text className="text-sm">{g.direction === "given" ? "↑" : "↓"}</Text>
+                <Card key={g.id} variant="glass">
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: RADIUS.full,
+                      backgroundColor: g.direction === "given" ? "rgba(239,68,68,0.1)" : "rgba(217,88,119,0.1)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: SPACING.md,
+                    }}>
+                      {g.direction === "given" ? <ArrowUpIcon size={16} color="#EF4444" /> : <ArrowDownIcon size={16} color={MODULE_COLOR} />}
                     </View>
-                    <View className="flex-1">
-                      <Text className="text-base font-bold text-dark-text">{g.person_name}</Text>
-                      {g.event_description && <Text className="text-xs text-grey-text">{g.event_description}</Text>}
-                      {g.event_date && <Text className="text-xs text-grey-text">{formatDate(g.event_date)}</Text>}
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{g.person_name}</Text>
+                      {g.event_description && <Text style={{ ...TYPO.caption, color: "#64748B" }}>{g.event_description}</Text>}
+                      {g.event_date && <Text style={{ ...TYPO.caption, color: "#94A3B8" }}>{formatDate(g.event_date)}</Text>}
                     </View>
-                    <Text className={`text-base font-bold ${g.direction === "given" ? "text-red-500" : "text-hajat"}`}>
+                    <Text style={{ ...TYPO.bodyBold, color: g.direction === "given" ? "#EF4444" : MODULE_COLOR }}>
                       {g.direction === "given" ? "-" : "+"}{formatRupiah(g.amount ?? 0)}
                     </Text>
                   </View>
@@ -104,21 +175,39 @@ export default function ConsumerHajatScreen() {
         {tab === "calendar" && (
           <EmptyState illustration="📅" title="Kalender Hajatan" description="Acara yang kamu diundang akan muncul di kalender" />
         )}
+
+        <View style={{ height: SPACING.xxl }} />
       </ScrollView>
 
       <Modal visible={showAddGift} onClose={() => setShowAddGift(false)} title="Catat Amplop">
-        <View className="flex-row mb-3">
+        <View style={{ flexDirection: "row", marginBottom: SPACING.md, gap: SPACING.sm }}>
           {(["given", "received"] as GiftDirection[]).map((d) => (
-            <TouchableOpacity key={d} onPress={() => setGiftDir(d)} className={`flex-1 py-2 rounded-lg mr-1 items-center ${giftDir === d ? "bg-hajat" : "bg-gray-100"}`}>
-              <Text className={`text-xs font-bold ${giftDir === d ? "text-white" : "text-grey-text"}`}>{d === "given" ? "Kasih" : "Terima"}</Text>
+            <TouchableOpacity
+              key={d}
+              onPress={() => setGiftDir(d)}
+              style={{
+                flex: 1,
+                paddingVertical: SPACING.sm,
+                borderRadius: RADIUS.md,
+                alignItems: "center",
+                backgroundColor: giftDir === d ? MODULE_COLOR : "#F1F5F9",
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: giftDir === d ? "#FFFFFF" : "#64748B" }}>{d === "given" ? "Kasih" : "Terima"}</Text>
             </TouchableOpacity>
           ))}
         </View>
         <Input label={giftDir === "given" ? "Untuk siapa" : "Dari siapa"} placeholder="contoh: Pak Andi" value={giftName} onChangeText={setGiftName} />
-        <View className="mt-3"><CurrencyInput label="Jumlah" value={giftAmount} onChangeValue={setGiftAmount} /></View>
-        <View className="mt-3"><Input label="Acara (opsional)" placeholder="contoh: Nikahan Budi" value={giftEventDesc} onChangeText={setGiftEventDesc} /></View>
-        <View className="mt-4"><Button title="Simpan" onPress={handleAddGift} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <CurrencyInput label="Jumlah" value={giftAmount} onChangeValue={setGiftAmount} />
+        </View>
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="Acara (opsional)" placeholder="contoh: Nikahan Budi" value={giftEventDesc} onChangeText={setGiftEventDesc} />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Simpan" onPress={handleAddGift} loading={actionLoading} />
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

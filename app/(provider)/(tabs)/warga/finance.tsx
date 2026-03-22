@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -20,9 +21,13 @@ import { UpgradeModal } from "@components/shared/UpgradeModal";
 import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import { COLORS } from "@utils/colors";
 import type { OrgTransaction, TransactionType } from "@app-types/warga.types";
+import Svg, { Path } from "react-native-svg";
 
 export default function FinanceScreen() {
+  const insets = useSafeAreaInsets();
   const { orgId, orgName } = useLocalSearchParams<{ orgId: string; orgName: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
@@ -104,54 +109,109 @@ export default function FinanceScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
-          </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">
-            Keuangan
-          </Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.lightBg }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.warga}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              hitSlop={12}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: RADIUS.full,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M15 18L9 12L15 6" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>
+              Keuangan
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: SPACING.md }}>
+            <TouchableOpacity
+              onPress={handleExportPDF}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.2)",
+                borderRadius: RADIUS.md,
+                paddingHorizontal: SPACING.sm,
+                paddingVertical: SPACING.xs,
+                borderWidth: 1,
+                borderColor: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>PDF</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleShareReport}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.2)",
+                borderRadius: RADIUS.md,
+                paddingHorizontal: SPACING.sm,
+                paddingVertical: SPACING.xs,
+                borderWidth: 1,
+                borderColor: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Bagikan</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={handleExportPDF} className="mr-4">
-            <Text className="text-sm text-dark-text font-bold">PDF</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleShareReport}>
-            <Text className="text-sm text-warga font-bold">Bagikan</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingBottom: SPACING.xxl }}
+      >
         {/* Summary cards */}
-        <Card>
-          <View className="flex-row">
-            <View className="flex-1">
-              <Text className="text-xs text-grey-text">Pemasukan</Text>
-              <Text className="text-lg font-bold text-green-600">
+        <Card variant="glass">
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>Pemasukan</Text>
+              <Text style={{ ...TYPO.h3, color: COLORS.green, marginTop: SPACING.xs }}>
                 {formatRupiah(summary.totalIncome)}
               </Text>
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-grey-text">Pengeluaran</Text>
-              <Text className="text-lg font-bold text-red-500">
+            <View style={{ flex: 1 }}>
+              <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>Pengeluaran</Text>
+              <Text style={{ ...TYPO.h3, color: COLORS.red, marginTop: SPACING.xs }}>
                 {formatRupiah(summary.totalExpense)}
               </Text>
             </View>
           </View>
-          <View className="mt-3 pt-3 border-t border-border-color">
-            <Text className="text-xs text-grey-text">Saldo</Text>
-            <Text className="text-2xl font-bold text-dark-text">
+          <View
+            style={{
+              marginTop: SPACING.md,
+              paddingTop: SPACING.md,
+              borderTopWidth: 1,
+              borderTopColor: COLORS.border,
+            }}
+          >
+            <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>Saldo</Text>
+            <Text style={{ ...TYPO.money, color: COLORS.darkText, marginTop: SPACING.xs }}>
               {formatRupiah(summary.balance)}
             </Text>
           </View>
         </Card>
 
-        {/* Add button */}
-        <View className="flex-row mb-3">
-          <View className="flex-1 mr-2">
+        {/* Add buttons */}
+        <View style={{ flexDirection: "row", marginBottom: SPACING.md, gap: SPACING.sm }}>
+          <View style={{ flex: 1 }}>
             <Button
               title="+ Pemasukan"
               variant="secondary"
@@ -161,7 +221,7 @@ export default function FinanceScreen() {
               }}
             />
           </View>
-          <View className="flex-1 ml-2">
+          <View style={{ flex: 1 }}>
             <Button
               title="+ Pengeluaran"
               variant="secondary"
@@ -173,31 +233,57 @@ export default function FinanceScreen() {
           </View>
         </View>
 
+        {/* Section header */}
+        {transactions.length > 0 && (
+          <Text
+            style={{
+              ...TYPO.small,
+              color: "#94A3B8",
+              textTransform: "uppercase",
+              letterSpacing: 0.8,
+              marginBottom: SPACING.sm,
+            }}
+          >
+            RIWAYAT TRANSAKSI
+          </Text>
+        )}
+
         {/* Transaction list */}
         {transactions.map((tx) => (
-          <Card key={tx.id}>
-            <View className="flex-row items-center">
+          <Card key={tx.id} variant="glass">
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
-                className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${
-                  tx.type === "income" ? "bg-green-100" : "bg-red-100"
-                }`}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: RADIUS.full,
+                  backgroundColor: tx.type === "income" ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: SPACING.md,
+                }}
               >
-                <Text className="text-sm">
-                  {tx.type === "income" ? "↓" : "↑"}
-                </Text>
+                <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+                  {tx.type === "income" ? (
+                    <Path d="M12 19V5M5 12L12 5L19 12" stroke={COLORS.green} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                  ) : (
+                    <Path d="M12 5V19M19 12L12 19L5 12" stroke={COLORS.red} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                  )}
+                </Svg>
               </View>
-              <View className="flex-1">
-                <Text className="text-sm font-bold text-dark-text">
+              <View style={{ flex: 1 }}>
+                <Text style={{ ...TYPO.bodyBold, color: COLORS.darkText }}>
                   {tx.description}
                 </Text>
-                <Text className="text-xs text-grey-text">
+                <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>
                   {formatDate(tx.transaction_date)}
                 </Text>
               </View>
               <Text
-                className={`text-base font-bold ${
-                  tx.type === "income" ? "text-green-600" : "text-red-500"
-                }`}
+                style={{
+                  ...TYPO.bodyBold,
+                  color: tx.type === "income" ? COLORS.green : COLORS.red,
+                }}
               >
                 {tx.type === "income" ? "+" : "-"}
                 {formatRupiah(tx.amount)}
@@ -224,21 +310,21 @@ export default function FinanceScreen() {
           value={txDesc}
           onChangeText={setTxDesc}
         />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput
             label="Jumlah"
             value={txAmount}
             onChangeValue={setTxAmount}
           />
         </View>
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <PhotoPicker
             label="Bukti (opsional)"
             value={txPhoto}
             onChange={setTxPhoto}
           />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.md }}>
           <Button
             title="Simpan"
             onPress={handleAddTransaction}
@@ -248,6 +334,6 @@ export default function FinanceScreen() {
       </Modal>
 
       <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
-    </SafeAreaView>
+    </View>
   );
 }

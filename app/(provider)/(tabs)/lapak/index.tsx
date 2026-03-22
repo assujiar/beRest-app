@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { EmptyState } from "@components/shared/EmptyState";
+import { ModuleIcon } from "@components/ui/ModuleIcon";
 import { getBusinesses } from "@services/lapak.service";
 import { useAuthStore } from "@stores/auth.store";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { Business, BusinessType } from "@app-types/lapak.types";
 
 const TYPE_LABELS: Record<BusinessType, string> = {
@@ -17,6 +20,7 @@ const TYPE_LABELS: Record<BusinessType, string> = {
 };
 
 export default function LapakScreen() {
+  const insets = useSafeAreaInsets();
   const profile = useAuthStore((s) => s.profile);
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +42,7 @@ export default function LapakScreen() {
 
   if (!loading && businesses.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
+      <View style={{ flex: 1, backgroundColor: "#F8FAFC", paddingTop: insets.top }}>
         <EmptyState
           illustration="🏪"
           title="Belum ada usaha"
@@ -46,23 +50,54 @@ export default function LapakScreen() {
           actionLabel="+ Tambah Usaha"
           onAction={() => router.push("/(provider)/(tabs)/lapak/create-biz")}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3">
-        <Text className="text-xl font-bold text-dark-text">Lapak</Text>
-        <TouchableOpacity
-          onPress={() => router.push("/(provider)/(tabs)/lapak/create-biz")}
-          className="bg-lapak rounded-lg px-4 py-2"
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          <Text className="text-white text-sm font-bold">+ Tambah</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm }}>
+            <ModuleIcon module="lapak" size={22} color="#FFFFFF" />
+            <Text style={{ ...TYPO.h2, color: "#FFFFFF" }}>Lapak</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => router.push("/(provider)/(tabs)/lapak/create-biz")}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.25)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.35)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Tambah</Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
         {businesses.map((biz) => (
           <TouchableOpacity
             key={biz.id}
@@ -74,16 +109,38 @@ export default function LapakScreen() {
             }
             activeOpacity={0.7}
           >
-            <Card>
-              <View className="flex-row items-center">
-                <View className="w-12 h-12 rounded-full bg-lapak/10 items-center justify-center mr-3">
-                  <Text className="text-xl">🏪</Text>
+            <Card variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: RADIUS.lg,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: SPACING.md,
+                    overflow: "hidden",
+                  }}
+                >
+                  <LinearGradient
+                    colors={[...GRADIENTS.lapakLight]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ModuleIcon module="lapak" size={24} />
+                  </LinearGradient>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-base font-bold text-dark-text">
+                <View style={{ flex: 1 }}>
+                  <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>
                     {biz.name}
                   </Text>
-                  <Text className="text-xs text-grey-text mt-0.5">
+                  <Text style={{ ...TYPO.caption, color: "#64748B", marginTop: 2 }}>
                     {TYPE_LABELS[biz.type]}
                   </Text>
                 </View>
@@ -93,6 +150,6 @@ export default function LapakScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

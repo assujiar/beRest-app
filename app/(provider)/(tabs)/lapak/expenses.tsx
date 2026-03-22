@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -15,9 +16,29 @@ import { scanNota } from "@services/gemini.service";
 import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import Svg, { Path } from "react-native-svg";
 import type { LapakExpense } from "@app-types/lapak.types";
 
+function ArrowLeftIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M19 12H5M5 12L12 19M5 12L12 5" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function CameraIcon({ size = 14, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M12 17a4 4 0 100-8 4 4 0 000 8z" stroke={color} strokeWidth={2} />
+    </Svg>
+  );
+}
+
 export default function ExpensesScreen() {
+  const insets = useSafeAreaInsets();
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
@@ -119,43 +140,89 @@ export default function ExpensesScreen() {
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
-          </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">Pengeluaran</Text>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+              <ArrowLeftIcon size={22} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Pengeluaran</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm }}>
+            <TouchableOpacity
+              onPress={() => {
+                if (requireUpgrade("canUseAI", "AI Scan Nota")) return;
+                setShowScanPicker(true);
+              }}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.15)",
+                borderRadius: RADIUS.md,
+                paddingHorizontal: SPACING.md,
+                paddingVertical: SPACING.sm,
+                borderWidth: 1,
+                borderColor: "rgba(255,255,255,0.25)",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: SPACING.xs,
+              }}
+            >
+              <CameraIcon size={14} color="#FFFFFF" />
+              <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Scan Nota</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowAdd(true)}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.25)",
+                borderRadius: RADIUS.md,
+                paddingHorizontal: SPACING.md,
+                paddingVertical: SPACING.sm,
+                borderWidth: 1,
+                borderColor: "rgba(255,255,255,0.35)",
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Catat</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={() => {
-            if (requireUpgrade("canUseAI", "AI Scan Nota")) return;
-            setShowScanPicker(true);
-          }} className="bg-navy rounded-lg px-3 py-2 flex-row items-center">
-            <Text className="text-white text-xs font-bold">📸 Scan Nota</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
-            <Text className="text-white text-xs font-bold">+ Catat</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
-        <Card>
-          <Text className="text-xs text-grey-text">Total hari ini</Text>
-          <Text className="text-xl font-bold text-red-500">{formatRupiah(total)}</Text>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
+        <Card variant="glass">
+          <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8 }}>
+            Total hari ini
+          </Text>
+          <Text style={{ ...TYPO.money, color: "#EF4444" }}>{formatRupiah(total)}</Text>
         </Card>
 
         {!loading && expenses.length === 0 ? (
-          <EmptyState illustration="💸" title="Belum ada pengeluaran hari ini" actionLabel="+ Catat Pengeluaran" onAction={() => setShowAdd(true)} />
+          <EmptyState
+            illustration="💸"
+            title="Belum ada pengeluaran hari ini"
+            actionLabel="+ Catat Pengeluaran"
+            onAction={() => setShowAdd(true)}
+          />
         ) : (
           expenses.map((e) => (
-            <Card key={e.id}>
-              <View className="flex-row items-center">
-                <View className="flex-1">
-                  <Text className="text-sm font-bold text-dark-text">{e.description}</Text>
+            <Card key={e.id} variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{e.description}</Text>
                 </View>
-                <Text className="text-base font-bold text-red-500">-{formatRupiah(e.amount)}</Text>
+                <Text style={{ ...TYPO.money, color: "#EF4444" }}>-{formatRupiah(e.amount)}</Text>
               </View>
             </Card>
           ))
@@ -164,27 +231,31 @@ export default function ExpensesScreen() {
 
       <Modal visible={showAdd} onClose={() => setShowAdd(false)} title="Catat Pengeluaran">
         <Input label="Keterangan" placeholder="contoh: Beli minyak goreng" value={desc} onChangeText={setDesc} />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput label="Jumlah" value={amount} onChangeValue={setAmount} />
         </View>
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <PhotoPicker label="Bukti (opsional)" value={photo} onChange={setPhoto} />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.lg }}>
           <Button title="Simpan" onPress={handleAdd} loading={addLoading} />
         </View>
       </Modal>
 
       {/* Scan Nota: photo picker modal */}
       <Modal visible={showScanPicker} onClose={() => setShowScanPicker(false)} title="Scan Nota / Struk">
-        <Text className="text-sm text-grey-text mb-3">
+        <Text style={{ ...TYPO.body, color: "#64748B", marginBottom: SPACING.md }}>
           Foto nota belanja, AI akan baca dan catat otomatis.
         </Text>
         {scanLoading ? (
-          <View className="items-center py-8">
+          <View style={{ alignItems: "center", paddingVertical: SPACING.xxl }}>
             <ActivityIndicator size="large" color="#50BFC3" />
-            <Text className="text-sm font-bold text-dark-text mt-3">AI sedang membaca nota...</Text>
-            <Text className="text-xs text-grey-text mt-1">Tunggu sebentar</Text>
+            <Text style={{ ...TYPO.bodyBold, color: "#1E293B", marginTop: SPACING.md }}>
+              AI sedang membaca nota...
+            </Text>
+            <Text style={{ ...TYPO.caption, color: "#64748B", marginTop: SPACING.xs }}>
+              Tunggu sebentar
+            </Text>
           </View>
         ) : (
           <PhotoPicker label="Foto Nota" value={scanPhoto} onChange={(uri) => { if (uri) handleScanNota(uri); }} />
@@ -193,28 +264,46 @@ export default function ExpensesScreen() {
 
       {/* Scan result */}
       <Modal visible={showScanResult} onClose={() => setShowScanResult(false)} title="Hasil Scan Nota">
-        <Text className="text-xs text-grey-text mb-3">
+        <Text style={{ ...TYPO.caption, color: "#64748B", marginBottom: SPACING.md }}>
           AI menemukan {scanItems.length} item dari nota:
         </Text>
         {scanItems.map((item, i) => (
-          <View key={i} className="flex-row items-center justify-between py-2 border-b border-border-color">
-            <View className="flex-1">
-              <Text className="text-sm text-dark-text">{item.name}</Text>
-              <Text className="text-xs text-grey-text">×{item.quantity}</Text>
+          <View
+            key={i}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingVertical: SPACING.sm,
+              borderBottomWidth: 1,
+              borderBottomColor: GLASS.card.border,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={{ ...TYPO.body, color: "#1E293B" }}>{item.name}</Text>
+              <Text style={{ ...TYPO.caption, color: "#64748B" }}>{"\u00D7"}{item.quantity}</Text>
             </View>
-            <Text className="text-sm font-bold text-red-500">{formatRupiah(item.total)}</Text>
+            <Text style={{ ...TYPO.bodyBold, color: "#EF4444" }}>{formatRupiah(item.total)}</Text>
           </View>
         ))}
-        <View className="flex-row items-center justify-between py-3 mt-1">
-          <Text className="text-sm font-bold text-dark-text">Total</Text>
-          <Text className="text-lg font-bold text-red-500">{formatRupiah(scanTotal)}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingVertical: SPACING.md,
+            marginTop: SPACING.xs,
+          }}
+        >
+          <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>Total</Text>
+          <Text style={{ ...TYPO.money, color: "#EF4444" }}>{formatRupiah(scanTotal)}</Text>
         </View>
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <Button title={`Simpan ${scanItems.length} Item`} onPress={handleSaveFromScan} loading={addLoading} />
         </View>
       </Modal>
 
       <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
-    </SafeAreaView>
+    </View>
   );
 }

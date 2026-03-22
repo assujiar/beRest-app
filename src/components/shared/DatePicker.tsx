@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { Modal } from "@components/ui/Modal";
+import { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Modal } from '@components/ui/Modal';
+import { GLASS, RADIUS, TYPO, SPACING } from '@utils/theme';
+import Svg, { Path } from 'react-native-svg';
 
 interface DatePickerProps {
   label?: string;
@@ -11,125 +13,100 @@ interface DatePickerProps {
 }
 
 function formatDateDisplay(date: Date): string {
-  return date.toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "Asia/Jakarta",
-  });
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' });
 }
 
-const MONTHS = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-];
+const MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-export function DatePicker({
-  label,
-  value,
-  onChange,
-  placeholder = "Pilih tanggal",
-  error,
-}: DatePickerProps) {
+export function DatePicker({ label, value, onChange, placeholder = 'Pilih tanggal', error }: DatePickerProps) {
   const [showModal, setShowModal] = useState(false);
   const now = new Date();
-  const [selectedYear, setSelectedYear] = useState(
-    value?.getFullYear() ?? now.getFullYear()
-  );
-  const [selectedMonth, setSelectedMonth] = useState(
-    value?.getMonth() ?? now.getMonth()
-  );
+  const [selectedYear, setSelectedYear] = useState(value?.getFullYear() ?? now.getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(value?.getMonth() ?? now.getMonth());
 
   const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   function handleSelectDay(day: number) {
-    const date = new Date(selectedYear, selectedMonth, day);
-    onChange(date);
+    onChange(new Date(selectedYear, selectedMonth, day));
     setShowModal(false);
   }
 
   return (
-    <View className="w-full">
+    <View style={{ width: '100%' }}>
       {label && (
-        <Text className="text-sm font-medium text-dark-text mb-1.5">
+        <Text style={{ ...TYPO.captionBold, color: '#64748B', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
           {label}
         </Text>
       )}
       <TouchableOpacity
-        className={`
-          h-[52px] rounded-lg border px-4 justify-center
-          ${error ? "border-red-500" : "border-border-color"}
-        `}
+        style={{
+          height: 52,
+          borderRadius: RADIUS.lg,
+          borderWidth: 1.5,
+          borderColor: error ? '#EF4444' : GLASS.card.border,
+          backgroundColor: GLASS.card.background,
+          paddingHorizontal: 16,
+          justifyContent: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
         onPress={() => setShowModal(true)}
       >
-        <Text
-          className={value ? "text-base text-dark-text" : "text-sm text-[#94A3B8]"}
-        >
+        <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" style={{ marginRight: 10 }}>
+          <Path d="M19 4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4Z" stroke="#94A3B8" strokeWidth={1.8} />
+          <Path d="M16 2V6M8 2V6M3 10H21" stroke="#94A3B8" strokeWidth={1.8} strokeLinecap="round" />
+        </Svg>
+        <Text style={value ? { ...TYPO.body, color: '#1E293B', flex: 1 } : { ...TYPO.body, color: '#94A3B8', flex: 1 }}>
           {value ? formatDateDisplay(value) : placeholder}
         </Text>
       </TouchableOpacity>
-      {error && (
-        <Text className="text-xs text-red-500 mt-1">{error}</Text>
-      )}
+      {error && <Text style={{ ...TYPO.caption, color: '#EF4444', marginTop: 4 }}>{error}</Text>}
 
-      <Modal
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        title="Pilih Tanggal"
-      >
-        {/* Month/Year navigation */}
-        <View className="flex-row items-center justify-between mb-4">
+      <Modal visible={showModal} onClose={() => setShowModal(false)} title="Pilih Tanggal">
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: SPACING.md }}>
           <TouchableOpacity
             onPress={() => {
-              if (selectedMonth === 0) {
-                setSelectedMonth(11);
-                setSelectedYear((y) => y - 1);
-              } else {
-                setSelectedMonth((m) => m - 1);
-              }
+              if (selectedMonth === 0) { setSelectedMonth(11); setSelectedYear((y) => y - 1); }
+              else setSelectedMonth((m) => m - 1);
             }}
             hitSlop={12}
+            style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F1F5F9', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Text className="text-2xl text-navy">‹</Text>
+            <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
+              <Path d="M15 18L9 12L15 6" stroke="#64748B" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
           </TouchableOpacity>
-          <Text className="text-base font-bold text-dark-text">
-            {MONTHS[selectedMonth]} {selectedYear}
-          </Text>
+          <Text style={{ ...TYPO.bodyBold, color: '#1E293B' }}>{MONTHS[selectedMonth]} {selectedYear}</Text>
           <TouchableOpacity
             onPress={() => {
-              if (selectedMonth === 11) {
-                setSelectedMonth(0);
-                setSelectedYear((y) => y + 1);
-              } else {
-                setSelectedMonth((m) => m + 1);
-              }
+              if (selectedMonth === 11) { setSelectedMonth(0); setSelectedYear((y) => y + 1); }
+              else setSelectedMonth((m) => m + 1);
             }}
             hitSlop={12}
+            style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F1F5F9', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Text className="text-2xl text-navy">›</Text>
+            <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
+              <Path d="M9 18L15 12L9 6" stroke="#64748B" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
           </TouchableOpacity>
         </View>
 
-        {/* Day grid */}
-        <View className="flex-row flex-wrap">
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {days.map((day) => {
-            const isSelected =
-              value?.getDate() === day &&
-              value?.getMonth() === selectedMonth &&
-              value?.getFullYear() === selectedYear;
+            const isSelected = value?.getDate() === day && value?.getMonth() === selectedMonth && value?.getFullYear() === selectedYear;
             return (
               <TouchableOpacity
                 key={day}
                 onPress={() => handleSelectDay(day)}
-                className={`
-                  w-[14.28%] items-center py-2
-                  ${isSelected ? "bg-orange rounded-full" : ""}
-                `}
+                style={{
+                  width: '14.28%',
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                  ...(isSelected ? { backgroundColor: '#2C7695', borderRadius: RADIUS.full } : {}),
+                }}
               >
-                <Text
-                  className={`text-base ${isSelected ? "text-white font-bold" : "text-dark-text"}`}
-                >
+                <Text style={{ ...TYPO.body, color: isSelected ? '#FFFFFF' : '#1E293B', fontWeight: isSelected ? '700' : '400' }}>
                   {day}
                 </Text>
               </TouchableOpacity>

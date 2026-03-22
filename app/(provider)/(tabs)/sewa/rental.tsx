@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
@@ -13,15 +15,25 @@ import { createRentalItem, getRentalItems, createRentalTransaction, getRentalTra
 import { useAuthStore } from "@stores/auth.store";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { RentalItem, RentalTransaction, RentalStatus } from "@app-types/sewa.types";
 
 const STATUS_MAP: Record<RentalStatus, { label: string; variant: "info" | "success" | "error" }> = {
   active: { label: "Dipinjam", variant: "info" }, returned: { label: "Dikembalikan", variant: "success" }, overdue: { label: "Terlambat", variant: "error" },
 };
 
+function BackIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M15 18L9 12L15 6" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 type Tab = "items" | "active" | "history";
 
 export default function RentalScreen() {
+  const insets = useSafeAreaInsets();
   const profile = useAuthStore((s) => s.profile);
   const showToast = useUIStore((s) => s.showToast);
   const [tab, setTab] = useState<Tab>("items");
@@ -75,32 +87,127 @@ export default function RentalScreen() {
   const tabs: { key: Tab; label: string }[] = [{ key: "items", label: "Barang" }, { key: "active", label: "Aktif" }, { key: "history", label: "Riwayat" }];
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center px-4 py-3 border-b border-border-color bg-white">
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-        <Text className="text-lg font-bold text-dark-text ml-3">Rental</Text>
-      </View>
-      <View className="flex-row bg-white border-b border-border-color">
-        {tabs.map((t) => (<TouchableOpacity key={t.key} onPress={() => setTab(t.key)} className={`flex-1 py-3 items-center ${tab === t.key ? "border-b-2 border-sewa" : ""}`}><Text className={`text-xs font-bold ${tab === t.key ? "text-sewa" : "text-grey-text"}`}>{t.label}</Text></TouchableOpacity>))}
-      </View>
-      <ScrollView className="flex-1 px-4 pt-3">
-        {tab === "items" && (<>
-          <Button title="+ Tambah Barang" variant="secondary" onPress={() => setShowAddItem(true)} />
-          <View className="mt-3">{items.map((item) => (
-            <Card key={item.id}><View className="flex-row items-center">
-              <View className="flex-1"><Text className="text-base font-bold text-dark-text">{item.name}</Text><Text className="text-xs text-grey-text">{formatRupiah(item.daily_rate)}/hari • Stok: {item.available_stock}/{item.total_stock}</Text></View>
-              {item.available_stock > 0 && <TouchableOpacity onPress={() => setShowBorrow(item)} className="bg-sewa rounded-lg px-3 py-1.5"><Text className="text-white text-xs font-bold">Pinjamkan</Text></TouchableOpacity>}
-            </View></Card>
-          ))}{items.length === 0 && <EmptyState illustration="📦" title="Belum ada barang rental" />}</View>
-        </>)}
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.sewa}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: 0,
+          paddingHorizontal: SPACING.lg,
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: SPACING.md }}>
+          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <BackIcon />
+          </TouchableOpacity>
+          <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Rental</Text>
+        </View>
+
+        {/* Tab Bar inside gradient */}
+        <View style={{ flexDirection: "row", marginBottom: -1 }}>
+          {tabs.map((t) => (
+            <TouchableOpacity
+              key={t.key}
+              onPress={() => setTab(t.key)}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                paddingVertical: SPACING.md,
+                borderBottomWidth: 2,
+                borderBottomColor: tab === t.key ? "#FFFFFF" : "transparent",
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: tab === t.key ? "#FFFFFF" : "rgba(255,255,255,0.6)" }}>{t.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </LinearGradient>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.lg, paddingTop: SPACING.md }}
+      >
+        {tab === "items" && (
+          <>
+            <TouchableOpacity
+              onPress={() => setShowAddItem(true)}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: SPACING.sm,
+                backgroundColor: GLASS.card.background,
+                borderWidth: 1,
+                borderColor: GLASS.card.border,
+                borderRadius: RADIUS.lg,
+                paddingVertical: SPACING.md,
+                marginBottom: SPACING.md,
+                borderStyle: "dashed",
+                ...GLASS.shadow.sm,
+              }}
+            >
+              <Text style={{ ...TYPO.captionBold, color: "#00C49A" }}>+ Tambah Barang</Text>
+            </TouchableOpacity>
+            {items.map((item) => (
+              <Card key={item.id} variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{item.name}</Text>
+                    <Text style={{ ...TYPO.caption, color: "#64748B" }}>{formatRupiah(item.daily_rate)}/hari {"\u2022"} Stok: {item.available_stock}/{item.total_stock}</Text>
+                  </View>
+                  {item.available_stock > 0 && (
+                    <TouchableOpacity
+                      onPress={() => setShowBorrow(item)}
+                      style={{
+                        backgroundColor: "#00C49A",
+                        borderRadius: RADIUS.md,
+                        paddingHorizontal: SPACING.md,
+                        paddingVertical: SPACING.sm,
+                      }}
+                    >
+                      <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Pinjamkan</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </Card>
+            ))}
+            {items.length === 0 && <EmptyState illustration="📦" title="Belum ada barang rental" />}
+          </>
+        )}
+
         {(tab === "active" || tab === "history") && activeTx.map((tx) => {
           const s = STATUS_MAP[tx.status]; const txData = tx as RentalTransaction & { rental_items?: { name: string } };
           return (
-            <Card key={tx.id}><View className="flex-row items-center justify-between mb-1"><Text className="text-xs text-grey-text font-mono">{tx.rental_code}</Text><Badge label={s.label} variant={s.variant} /></View>
-              <Text className="text-base font-bold text-dark-text">{tx.borrower_name}</Text>
-              <Text className="text-xs text-grey-text">{txData.rental_items?.name} • {formatDate(tx.start_date)}</Text>
-              {tx.total_cost != null && <Text className="text-sm font-bold text-sewa mt-1">{formatRupiah(tx.total_cost)}</Text>}
-              {tx.status === "active" && <TouchableOpacity onPress={() => handleReturn(tx)} className="bg-green-50 rounded-lg px-3 py-1.5 mt-2 self-start"><Text className="text-xs font-bold text-green-600">Dikembalikan</Text></TouchableOpacity>}
+            <Card key={tx.id} variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: SPACING.xs }}>
+                <Text style={{ ...TYPO.caption, color: "#94A3B8", fontFamily: "monospace" }}>{tx.rental_code}</Text>
+                <Badge label={s.label} variant={s.variant} />
+              </View>
+              <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{tx.borrower_name}</Text>
+              <Text style={{ ...TYPO.caption, color: "#64748B" }}>{txData.rental_items?.name} {"\u2022"} {formatDate(tx.start_date)}</Text>
+              {tx.total_cost != null && (
+                <Text style={{ ...TYPO.bodyBold, color: "#00C49A", marginTop: SPACING.xs }}>{formatRupiah(tx.total_cost)}</Text>
+              )}
+              {tx.status === "active" && (
+                <TouchableOpacity
+                  onPress={() => handleReturn(tx)}
+                  style={{
+                    backgroundColor: "rgba(34,197,94,0.08)",
+                    borderRadius: RADIUS.md,
+                    paddingHorizontal: SPACING.md,
+                    paddingVertical: SPACING.sm,
+                    marginTop: SPACING.sm,
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  <Text style={{ ...TYPO.captionBold, color: "#16A34A" }}>Dikembalikan</Text>
+                </TouchableOpacity>
+              )}
             </Card>
           );
         })}
@@ -108,16 +215,26 @@ export default function RentalScreen() {
 
       <Modal visible={showAddItem} onClose={() => setShowAddItem(false)} title="Tambah Barang Rental">
         <Input label="Nama Barang" placeholder="contoh: Tenda Camping" value={iName} onChangeText={setIName} />
-        <View className="mt-3"><CurrencyInput label="Harga Sewa/Hari" value={iRate} onChangeValue={setIRate} /></View>
-        <View className="mt-3"><Input label="Jumlah Stok" placeholder="1" value={String(iStock)} onChangeText={(t) => setIStock(parseInt(t) || 1)} keyboardType="numeric" /></View>
-        <View className="mt-4"><Button title="Tambah" onPress={handleAddItem} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <CurrencyInput label="Harga Sewa/Hari" value={iRate} onChangeValue={setIRate} />
+        </View>
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="Jumlah Stok" placeholder="1" value={String(iStock)} onChangeText={(t) => setIStock(parseInt(t) || 1)} keyboardType="numeric" />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Tambah" onPress={handleAddItem} loading={actionLoading} />
+        </View>
       </Modal>
 
       <Modal visible={!!showBorrow} onClose={() => setShowBorrow(null)} title="Pinjamkan Barang">
         <Input label="Nama Peminjam" placeholder="contoh: Pak Andi" value={bName} onChangeText={setBName} />
-        <View className="mt-3"><Input label="No HP (opsional)" placeholder="08123456789" value={bPhone} onChangeText={setBPhone} keyboardType="phone-pad" /></View>
-        <View className="mt-4"><Button title="Catat Pinjaman" onPress={handleBorrow} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="No HP (opsional)" placeholder="08123456789" value={bPhone} onChangeText={setBPhone} keyboardType="phone-pad" />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Catat Pinjaman" onPress={handleBorrow} loading={actionLoading} />
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

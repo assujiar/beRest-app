@@ -1,19 +1,32 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
+import { ModuleIcon } from "@components/ui/ModuleIcon";
 import { EmptyState } from "@components/shared/EmptyState";
 import { getProperties, getPropertySummary } from "@services/sewa.service";
 import { useAuthStore } from "@stores/auth.store";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { Property, PropertyType } from "@app-types/sewa.types";
 
 const TYPE_LABELS: Record<PropertyType, string> = {
   kos: "Kos", kontrakan: "Kontrakan", rumah_sewa: "Rumah Sewa", apartment: "Apartment",
 };
 
+function PlusIcon({ size = 16, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 5V19M5 12H19" stroke={color} strokeWidth={2.2} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export default function SewaScreen() {
+  const insets = useSafeAreaInsets();
   const profile = useAuthStore((s) => s.profile);
   const [properties, setProperties] = useState<(Property & { summary?: { occupied: number; total: number } })[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,31 +46,73 @@ export default function SewaScreen() {
 
   if (!loading && properties.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
+      <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+        <LinearGradient
+          colors={GRADIENTS.sewa}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            paddingTop: insets.top + SPACING.sm,
+            paddingBottom: SPACING.xl,
+            paddingHorizontal: SPACING.lg,
+            borderBottomLeftRadius: RADIUS.xxl,
+            borderBottomRightRadius: RADIUS.xxl,
+          }}
+        >
+          <Text style={{ ...TYPO.h2, color: "#FFFFFF" }}>Sewa</Text>
+        </LinearGradient>
         <EmptyState illustration="🏠" title="Belum ada properti" description="Tambah kos atau properti sewa pertamamu" actionLabel="+ Tambah Properti" onAction={() => router.push("/(provider)/(tabs)/sewa/create-prop")} />
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3">
-        <Text className="text-xl font-bold text-dark-text">Sewa</Text>
-        <TouchableOpacity onPress={() => router.push("/(provider)/(tabs)/sewa/create-prop")} className="bg-sewa rounded-lg px-4 py-2">
-          <Text className="text-white text-sm font-bold">+ Tambah</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView className="flex-1 px-4">
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.sewa}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.xl,
+          paddingHorizontal: SPACING.lg,
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <Text style={{ ...TYPO.h2, color: "#FFFFFF" }}>Sewa</Text>
+          <TouchableOpacity
+            onPress={() => router.push("/(provider)/(tabs)/sewa/create-prop")}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "rgba(255,255,255,0.2)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              gap: SPACING.xs,
+            }}
+          >
+            <PlusIcon size={14} />
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Tambah</Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.lg, paddingTop: SPACING.md }}
+      >
         {properties.map((p) => (
           <TouchableOpacity key={p.id} onPress={() => router.push({ pathname: "/(provider)/(tabs)/sewa/prop-detail", params: { propId: p.id, propName: p.name } })} activeOpacity={0.7}>
-            <Card>
-              <View className="flex-row items-center">
-                <View className="w-12 h-12 rounded-full bg-sewa/10 items-center justify-center mr-3">
-                  <Text className="text-xl">🏠</Text>
-                </View>
-                <View className="flex-1">
-                  <Text className="text-base font-bold text-dark-text">{p.name}</Text>
-                  <Text className="text-xs text-grey-text">{TYPE_LABELS[p.type]} • {p.summary?.occupied ?? 0}/{p.summary?.total ?? 0} terisi</Text>
+            <Card variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <ModuleIcon module="sewa" size={24} withBackground />
+                <View style={{ flex: 1, marginLeft: SPACING.md }}>
+                  <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{p.name}</Text>
+                  <Text style={{ ...TYPO.caption, color: "#64748B", marginTop: 2 }}>{TYPE_LABELS[p.type]} {"\u2022"} {p.summary?.occupied ?? 0}/{p.summary?.total ?? 0} terisi</Text>
                 </View>
                 <Badge label="Aktif" variant="success" />
               </View>
@@ -65,6 +120,6 @@ export default function SewaScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

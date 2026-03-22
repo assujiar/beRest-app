@@ -1,23 +1,24 @@
-import { useEffect, useRef } from "react";
-import { Animated, View, type ViewProps } from "react-native";
+import React, { useEffect, useRef } from 'react';
+import { Animated, View, type ViewProps } from 'react-native';
+import { RADIUS } from '@utils/theme';
 
 interface SkeletonProps extends ViewProps {
-  width?: number;
+  width?: number | string;
   height?: number;
-  rounded?: "sm" | "md" | "lg" | "full";
+  rounded?: 'sm' | 'md' | 'lg' | 'full';
 }
 
 const roundedMap = {
-  sm: "rounded",
-  md: "rounded-lg",
-  lg: "rounded-xl",
-  full: "rounded-full",
+  sm: RADIUS.sm,
+  md: RADIUS.md,
+  lg: RADIUS.lg,
+  full: RADIUS.full,
 };
 
 export function Skeleton({
   width,
   height = 20,
-  rounded = "md",
+  rounded = 'md',
   style,
   ...props
 }: SkeletonProps) {
@@ -28,12 +29,12 @@ export function Skeleton({
       Animated.sequence([
         Animated.timing(shimmer, {
           toValue: 1,
-          duration: 1000,
+          duration: 800,
           useNativeDriver: true,
         }),
         Animated.timing(shimmer, {
           toValue: 0,
-          duration: 1000,
+          duration: 800,
           useNativeDriver: true,
         }),
       ])
@@ -44,18 +45,29 @@ export function Skeleton({
 
   const opacity = shimmer.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.3, 0.7],
+    outputRange: [0.4, 0.8],
   });
 
   return (
     <View
-      className={`${roundedMap[rounded]} overflow-hidden`}
-      style={[{ width, height }, style]}
+      style={[
+        {
+          width: width as number | undefined,
+          height,
+          borderRadius: roundedMap[rounded],
+          overflow: 'hidden',
+          backgroundColor: '#E2E8F0',
+        },
+        style,
+      ]}
       {...props}
     >
       <Animated.View
-        className="flex-1 bg-[#F1F5F9]"
-        style={{ opacity }}
+        style={{
+          flex: 1,
+          backgroundColor: '#F1F5F9',
+          opacity,
+        }}
       />
     </View>
   );

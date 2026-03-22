@@ -1,18 +1,22 @@
-import { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Card } from "@components/ui/Card";
-import { Button } from "@components/ui/Button";
-import { Badge } from "@components/ui/Badge";
-import { useAuthStore } from "@stores/auth.store";
-import { useRoleStore } from "@stores/role.store";
-import { useConnectionsStore } from "@stores/connections.store";
-import { signOut, getProfile } from "@services/auth.service";
-import { getConsumerConnections } from "@services/connection.service";
-import { formatDate } from "@utils/format";
+import { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Card } from '@components/ui/Card';
+import { Button } from '@components/ui/Button';
+import { Badge } from '@components/ui/Badge';
+import { useAuthStore } from '@stores/auth.store';
+import { useRoleStore } from '@stores/role.store';
+import { useConnectionsStore } from '@stores/connections.store';
+import { signOut, getProfile } from '@services/auth.service';
+import { getConsumerConnections } from '@services/connection.service';
+import { formatDate } from '@utils/format';
+import { RADIUS, TYPO, SPACING } from '@utils/theme';
+import Svg, { Path } from 'react-native-svg';
 
 export default function ConsumerProfileScreen() {
+  const insets = useSafeAreaInsets();
   const session = useAuthStore((s) => s.session);
   const profile = useAuthStore((s) => s.profile);
   const setProfile = useAuthStore((s) => s.setProfile);
@@ -24,142 +28,135 @@ export default function ConsumerProfileScreen() {
 
   useEffect(() => {
     if (session?.user.id) {
-      getProfile(session.user.id).then((p) => {
-        if (p) setProfile(p);
-      });
+      getProfile(session.user.id).then((p) => { if (p) setProfile(p); });
       getConsumerConnections(session.user.id).then(setConnections);
     }
   }, [session?.user.id]);
 
   function handleLogout() {
-    Alert.alert(
-      "Keluar",
-      "Yakin ingin keluar dari akun?",
-      [
-        { text: "Batal", style: "cancel" },
-        {
-          text: "Keluar",
-          style: "destructive",
-          onPress: async () => {
-            setLoading(true);
-            await signOut();
-            reset();
-            router.replace("/(auth)/welcome");
-          },
+    Alert.alert('Keluar', 'Yakin ingin keluar dari akun?', [
+      { text: 'Batal', style: 'cancel' },
+      {
+        text: 'Keluar',
+        style: 'destructive',
+        onPress: async () => {
+          setLoading(true);
+          await signOut();
+          reset();
+          router.replace('/(auth)/welcome');
         },
-      ]
-    );
+      },
+    ]);
   }
 
-  const activeCount = connections.filter((c) => c.status === "active").length;
+  const activeCount = connections.filter((c) => c.status === 'active').length;
+  const initial = (profile?.full_name ?? '?')[0].toUpperCase();
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="px-4 py-3 border-b border-border-color bg-white">
-        <Text className="text-lg font-bold text-dark-text">Profil</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: '#F8FAFC' }}>
+      {/* Profile header */}
+      <LinearGradient
+        colors={['#156064', '#2C7695']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.md,
+          paddingBottom: SPACING.xxl,
+          paddingHorizontal: SPACING.lg,
+          alignItems: 'center',
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderWidth: 3,
+            borderColor: 'rgba(255,255,255,0.4)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: SPACING.sm,
+          }}
+        >
+          <Text style={{ fontSize: 32, fontWeight: '700', color: '#FFFFFF' }}>{initial}</Text>
+        </View>
+        <Text style={{ ...TYPO.h2, color: '#FFFFFF' }}>{profile?.full_name ?? 'Pengguna Apick'}</Text>
+        {profile?.phone && <Text style={{ ...TYPO.caption, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>{profile.phone}</Text>}
+        {profile?.email && <Text style={{ ...TYPO.caption, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>{profile.email}</Text>}
+        <View style={{ marginTop: SPACING.sm }}>
+          <Badge label={role === 'both' ? 'Pengelola & Pengguna' : 'Pengguna'} variant="info" />
+        </View>
+        <TouchableOpacity
+          onPress={() => router.push('/edit-profile')}
+          style={{
+            marginTop: SPACING.md,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: RADIUS.md,
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.3)',
+          }}
+        >
+          <Text style={{ ...TYPO.captionBold, color: '#FFFFFF' }}>Edit Profil</Text>
+        </TouchableOpacity>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
-        {/* Profile info */}
-        <Card>
-          <View className="items-center py-2">
-            <View className="w-16 h-16 rounded-full bg-orange items-center justify-center mb-3">
-              <Text className="text-2xl text-white font-bold">
-                {(profile?.full_name ?? "?")[0].toUpperCase()}
-              </Text>
-            </View>
-            <Text className="text-lg font-bold text-dark-text">
-              {profile?.full_name ?? "Pengguna Apick"}
-            </Text>
-            {profile?.phone && (
-              <Text className="text-sm text-grey-text mt-1">
-                {profile.phone}
-              </Text>
-            )}
-            {profile?.email && (
-              <Text className="text-sm text-grey-text mt-0.5">
-                {profile.email}
-              </Text>
-            )}
-            <View className="flex-row mt-2">
-              <Badge
-                label={role === "both" ? "Pengelola & Pengguna" : "Pengguna"}
-                variant="info"
-              />
-            </View>
-            <TouchableOpacity
-              className="mt-3 bg-orange/10 rounded-lg px-4 py-2"
-              onPress={() => router.push("/edit-profile")}
-            >
-              <Text className="text-orange text-sm font-bold">Edit Profil</Text>
-            </TouchableOpacity>
-          </View>
-        </Card>
-
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: SPACING.lg, paddingTop: SPACING.md }}>
         {/* Connections summary */}
-        <Card>
-          <Text className="text-xs text-grey-text mb-2">KONEKSI</Text>
-          <View className="flex-row">
-            <View className="flex-1 items-center">
-              <Text className="text-2xl font-bold text-dark-text">
-                {activeCount}
-              </Text>
-              <Text className="text-xs text-grey-text">Terhubung</Text>
+        <Card variant="elevated">
+          <Text style={{ ...TYPO.small, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10 }}>Koneksi</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={{ ...TYPO.money, color: '#1E293B' }}>{activeCount}</Text>
+              <Text style={{ ...TYPO.small, color: '#94A3B8' }}>Terhubung</Text>
             </View>
-            <View className="flex-1 items-center">
-              <Text className="text-2xl font-bold text-dark-text">
-                {connections.length - activeCount}
-              </Text>
-              <Text className="text-xs text-grey-text">Diarsipkan</Text>
+            <View style={{ width: 1, backgroundColor: '#E2E8F0', marginHorizontal: SPACING.md }} />
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={{ ...TYPO.money, color: '#1E293B' }}>{connections.length - activeCount}</Text>
+              <Text style={{ ...TYPO.small, color: '#94A3B8' }}>Diarsipkan</Text>
             </View>
           </View>
         </Card>
 
         {/* Account info */}
-        <Card>
-          <Text className="text-xs text-grey-text mb-2">AKUN</Text>
+        <Card variant="glass">
+          <Text style={{ ...TYPO.small, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10 }}>Akun</Text>
           {profile?.created_at && (
-            <View className="flex-row justify-between mb-2">
-              <Text className="text-sm text-grey-text">Bergabung</Text>
-              <Text className="text-sm text-dark-text">
-                {formatDate(profile.created_at)}
-              </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+              <Text style={{ ...TYPO.caption, color: '#64748B' }}>Bergabung</Text>
+              <Text style={{ ...TYPO.captionBold, color: '#1E293B' }}>{formatDate(profile.created_at)}</Text>
             </View>
           )}
-          <View className="flex-row justify-between">
-            <Text className="text-sm text-grey-text">User ID</Text>
-            <Text className="text-xs text-grey-text font-mono">
-              {session?.user.id.slice(0, 8)}...
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ ...TYPO.caption, color: '#64748B' }}>User ID</Text>
+            <Text style={{ ...TYPO.caption, color: '#94A3B8' }}>{session?.user.id.slice(0, 8)}...</Text>
           </View>
         </Card>
 
-        {/* Linked auth methods */}
-        <Card>
-          <TouchableOpacity
-            className="flex-row items-center justify-between"
-            onPress={() => router.push("/linked-accounts")}
-          >
-            <View>
-              <Text className="text-sm font-bold text-dark-text">Metode Login</Text>
-              <Text className="text-xs text-grey-text mt-0.5">
-                Kelola cara masuk ke akun kamu
-              </Text>
+        {/* Linked accounts */}
+        <TouchableOpacity onPress={() => router.push('/linked-accounts')}>
+          <Card variant="glass">
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View>
+                <Text style={{ ...TYPO.bodyBold, color: '#1E293B' }}>Metode Login</Text>
+                <Text style={{ ...TYPO.caption, color: '#64748B', marginTop: 2 }}>Kelola cara masuk ke akun kamu</Text>
+              </View>
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M9 18L15 12L9 6" stroke="#94A3B8" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
             </View>
-            <Text className="text-grey-text text-lg">{">"}</Text>
-          </TouchableOpacity>
-        </Card>
+          </Card>
+        </TouchableOpacity>
 
         {/* Logout */}
-        <View className="mt-2 mb-8">
-          <Button
-            title="Keluar"
-            variant="destructive"
-            onPress={handleLogout}
-            loading={loading}
-          />
+        <View style={{ marginTop: SPACING.sm, marginBottom: SPACING.xl }}>
+          <Button title="Keluar" variant="destructive" onPress={handleLogout} loading={loading} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

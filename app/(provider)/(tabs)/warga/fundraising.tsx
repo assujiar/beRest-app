@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
@@ -16,7 +17,10 @@ import {
 } from "@services/warga.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import { COLORS } from "@utils/colors";
 import type { Fundraising, FundraisingStatus } from "@app-types/warga.types";
+import Svg, { Path } from "react-native-svg";
 
 const STATUS_MAP: Record<FundraisingStatus, { label: string; variant: "success" | "info" | "neutral" }> = {
   active: { label: "Berjalan", variant: "info" },
@@ -25,6 +29,7 @@ const STATUS_MAP: Record<FundraisingStatus, { label: string; variant: "success" 
 };
 
 export default function FundraisingScreen() {
+  const insets = useSafeAreaInsets();
   const { orgId } = useLocalSearchParams<{ orgId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const [items, setItems] = useState<Fundraising[]>([]);
@@ -98,25 +103,60 @@ export default function FundraisingScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.lightBg }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.warga}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              hitSlop={12}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: RADIUS.full,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M15 18L9 12L15 6" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>
+              Penggalangan Dana
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowCreate(true)}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.3)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Buat</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">
-            Penggalangan Dana
-          </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => setShowCreate(true)}
-          className="bg-warga rounded-lg px-3 py-2"
-        >
-          <Text className="text-white text-xs font-bold">+ Buat</Text>
-        </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingBottom: SPACING.xxl }}
+      >
         {!loading && items.length === 0 ? (
           <EmptyState
             illustration="🎯"
@@ -134,27 +174,39 @@ export default function FundraisingScreen() {
             const s = STATUS_MAP[fund.status];
 
             return (
-              <Card key={fund.id}>
-                <View className="flex-row items-center justify-between mb-2">
-                  <Text className="text-base font-bold text-dark-text flex-1">
+              <Card key={fund.id} variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: SPACING.sm }}>
+                  <Text style={{ ...TYPO.bodyBold, color: COLORS.darkText, flex: 1 }}>
                     {fund.title}
                   </Text>
                   <Badge label={s.label} variant={s.variant} />
                 </View>
 
                 {/* Progress bar */}
-                <View className="h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
+                <View
+                  style={{
+                    height: 8,
+                    backgroundColor: COLORS.border,
+                    borderRadius: RADIUS.full,
+                    overflow: "hidden",
+                    marginBottom: SPACING.sm,
+                  }}
+                >
                   <View
-                    className="h-full bg-warga rounded-full"
-                    style={{ width: `${progress}%` }}
+                    style={{
+                      height: "100%",
+                      backgroundColor: COLORS.warga,
+                      borderRadius: RADIUS.full,
+                      width: `${progress}%`,
+                    }}
                   />
                 </View>
 
-                <View className="flex-row justify-between mb-3">
-                  <Text className="text-sm font-bold text-warga">
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: SPACING.md }}>
+                  <Text style={{ ...TYPO.captionBold, color: COLORS.warga }}>
                     {formatRupiah(fund.collected_amount)}
                   </Text>
-                  <Text className="text-sm text-grey-text">
+                  <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>
                     dari {formatRupiah(fund.target_amount)}
                   </Text>
                 </View>
@@ -184,14 +236,14 @@ export default function FundraisingScreen() {
           value={newTitle}
           onChangeText={setNewTitle}
         />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput
             label="Target Dana"
             value={newTarget}
             onChangeValue={setNewTarget}
           />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.md }}>
           <Button title="Buat" onPress={handleCreate} loading={actionLoading} />
         </View>
       </Modal>
@@ -208,17 +260,17 @@ export default function FundraisingScreen() {
           value={donorName}
           onChangeText={setDonorName}
         />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput
             label="Jumlah"
             value={donateAmount}
             onChangeValue={setDonateAmount}
           />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.md }}>
           <Button title="Simpan" onPress={handleDonate} loading={actionLoading} />
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
@@ -16,9 +18,28 @@ import { useSubscription } from "@hooks/shared/useSubscription";
 import { supabase } from "@services/supabase";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { PropertyUnit } from "@app-types/sewa.types";
 
+function BackIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M15 18L9 12L15 6" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function UserIcon({ size = 20, color = "#00C49A" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M12 11a4 4 0 100-8 4 4 0 000 8z" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export default function UnitDetailScreen() {
+  const insets = useSafeAreaInsets();
   const { unitId, unitName } = useLocalSearchParams<{ propId: string; propName: string; unitId: string; unitName: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
@@ -69,7 +90,7 @@ export default function UnitDetailScreen() {
     try {
       const result = await scanKTP(uri);
       if (result.name) setTName(result.name);
-      if (result.nik) setTPhone(result.nik); // Store NIK in phone field temporarily or show in UI
+      if (result.nik) setTPhone(result.nik);
       showToast("KTP berhasil di-scan!", "success");
     } catch {
       showToast("Gagal scan KTP", "error");
@@ -79,38 +100,79 @@ export default function UnitDetailScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center px-4 py-3 border-b border-border-color bg-white">
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-        <Text className="text-lg font-bold text-dark-text ml-3">{unitName}</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.sewa}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.lg,
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <BackIcon />
+          </TouchableOpacity>
+          <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>{unitName}</Text>
+        </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.lg, paddingTop: SPACING.md }}
+      >
         {unit && (
           <>
-            <Card>
-              <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-xs text-grey-text">Status</Text>
+            {/* Status & Rent Card */}
+            <Card variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: SPACING.sm }}>
+                <Text style={{ ...TYPO.caption, color: "#64748B" }}>Status</Text>
                 <Badge label={unit.status === "occupied" ? "Terisi" : unit.status === "vacant" ? "Kosong" : "Perbaikan"} variant={unit.status === "occupied" ? "success" : "warning"} />
               </View>
-              <Text className="text-xs text-grey-text">Sewa/Bulan</Text>
-              <Text className="text-2xl font-bold text-dark-text">{formatRupiah(unit.monthly_rent)}</Text>
+              <Text style={{ ...TYPO.caption, color: "#64748B" }}>Sewa/Bulan</Text>
+              <Text style={{ ...TYPO.money, color: "#1E293B", fontSize: 26 }}>{formatRupiah(unit.monthly_rent)}</Text>
             </Card>
 
             {unit.status === "occupied" && unit.tenant_name ? (
-              <Card>
-                <Text className="text-sm font-bold text-grey-text mb-2">PENGHUNI</Text>
-                <Text className="text-base font-bold text-dark-text">{unit.tenant_name}</Text>
-                {unit.tenant_phone && <Text className="text-xs text-grey-text">{unit.tenant_phone}</Text>}
-                {unit.tenant_start_date && <Text className="text-xs text-grey-text mt-1">Masuk: {formatDate(unit.tenant_start_date)}</Text>}
-                {unit.deposit_amount > 0 && <Text className="text-xs text-grey-text">Deposit: {formatRupiah(unit.deposit_amount)}</Text>}
-                <View className="mt-3">
+              <Card variant="glass">
+                <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: SPACING.sm }}>
+                  PENGHUNI
+                </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginBottom: SPACING.sm }}>
+                  <View style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: RADIUS.full,
+                    backgroundColor: "rgba(0,196,154,0.1)",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: SPACING.md,
+                  }}>
+                    <UserIcon size={20} color="#00C49A" />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{unit.tenant_name}</Text>
+                    {unit.tenant_phone && <Text style={{ ...TYPO.caption, color: "#64748B" }}>{unit.tenant_phone}</Text>}
+                  </View>
+                </View>
+                {unit.tenant_start_date && (
+                  <Text style={{ ...TYPO.caption, color: "#64748B", marginTop: SPACING.xs }}>Masuk: {formatDate(unit.tenant_start_date)}</Text>
+                )}
+                {unit.deposit_amount > 0 && (
+                  <Text style={{ ...TYPO.caption, color: "#64748B" }}>Deposit: {formatRupiah(unit.deposit_amount)}</Text>
+                )}
+                <View style={{ marginTop: SPACING.md }}>
                   <Button title="Tandai Keluar" variant="destructive" onPress={handleRemoveTenant} />
                 </View>
               </Card>
             ) : (
-              <Card>
-                <Text className="text-sm text-grey-text text-center mb-3">Belum ada penghuni</Text>
+              <Card variant="glass">
+                <Text style={{ ...TYPO.body, color: "#64748B", textAlign: "center", marginBottom: SPACING.md }}>Belum ada penghuni</Text>
                 <Button title="+ Tambah Penghuni" onPress={() => setShowAddTenant(true)} />
               </Card>
             )}
@@ -120,24 +182,30 @@ export default function UnitDetailScreen() {
 
       <Modal visible={showAddTenant} onClose={() => setShowAddTenant(false)} title="Tambah Penghuni">
         <Input label="Nama" placeholder="contoh: Budi Santoso" value={tName} onChangeText={setTName} />
-        <View className="mt-3"><Input label="No HP" placeholder="08123456789" value={tPhone} onChangeText={setTPhone} keyboardType="phone-pad" /></View>
-        <View className="mt-3"><CurrencyInput label="Deposit" value={tDeposit} onChangeValue={setTDeposit} /></View>
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="No HP" placeholder="08123456789" value={tPhone} onChangeText={setTPhone} keyboardType="phone-pad" />
+        </View>
+        <View style={{ marginTop: SPACING.md }}>
+          <CurrencyInput label="Deposit" value={tDeposit} onChangeValue={setTDeposit} />
+        </View>
+        <View style={{ marginTop: SPACING.md }}>
           <PhotoPicker label="Foto KTP (opsional)" value={tKtp} onChange={(uri) => {
             setTKtp(uri);
             if (uri) handleScanKTP(uri);
           }} />
           {ktpScanLoading && (
-            <View className="flex-row items-center mt-2">
+            <View style={{ flexDirection: "row", alignItems: "center", marginTop: SPACING.sm }}>
               <ActivityIndicator size="small" color="#00C49A" />
-              <Text className="text-xs text-sewa ml-2">AI sedang baca KTP...</Text>
+              <Text style={{ ...TYPO.caption, color: "#00C49A", marginLeft: SPACING.sm }}>AI sedang baca KTP...</Text>
             </View>
           )}
         </View>
-        <View className="mt-4"><Button title="Simpan" onPress={handleAssignTenant} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Simpan" onPress={handleAssignTenant} loading={actionLoading} />
+        </View>
       </Modal>
 
       <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
-    </SafeAreaView>
+    </View>
   );
 }

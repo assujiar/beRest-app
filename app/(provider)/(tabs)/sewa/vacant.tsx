@@ -1,16 +1,35 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 import { Card } from "@components/ui/Card";
-import { Button } from "@components/ui/Button";
 import { EmptyState } from "@components/shared/EmptyState";
 import { getVacantUnits } from "@services/sewa.service";
 import { shareViaWhatsApp } from "@services/wa-share.service";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from "@utils/theme";
 import type { PropertyUnit } from "@app-types/sewa.types";
 
+function BackIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M15 18L9 12L15 6" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function ShareIcon({ size = 14, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export default function VacantScreen() {
+  const insets = useSafeAreaInsets();
   const { propId, propName } = useLocalSearchParams<{ propId: string; propName: string }>();
   const [units, setUnits] = useState<PropertyUnit[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,35 +52,83 @@ export default function VacantScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center px-4 py-3 border-b border-border-color bg-white">
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-        <Text className="text-lg font-bold text-dark-text ml-3">Unit Kosong</Text>
-      </View>
-      <ScrollView className="flex-1 px-4 pt-3">
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.sewa}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.lg,
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <BackIcon />
+          </TouchableOpacity>
+          <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Unit Kosong</Text>
+        </View>
+      </LinearGradient>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.lg, paddingTop: SPACING.md }}
+      >
         {!loading && units.length === 0 ? (
           <EmptyState illustration="🎉" title="Semua unit terisi!" description="Tidak ada unit kosong saat ini" />
         ) : (
           <>
-            {units.length > 1 && <Button title="📤 Bagikan Semua via WA" variant="whatsapp" onPress={handleShareAll} />}
-            <View className="mt-3">
-              {units.map((u) => (
-                <Card key={u.id}>
-                  <View className="flex-row items-center">
-                    <View className="flex-1">
-                      <Text className="text-base font-bold text-dark-text">{u.unit_name}</Text>
-                      <Text className="text-sm font-bold text-sewa">{formatRupiah(u.monthly_rent)}/bln</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => handleShare(u)} className="bg-[#25D366] rounded-lg px-3 py-2">
-                      <Text className="text-white text-xs font-bold">📤 WA</Text>
-                    </TouchableOpacity>
+            {units.length > 1 && (
+              <TouchableOpacity
+                onPress={handleShareAll}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: SPACING.sm,
+                  backgroundColor: "#25D366",
+                  borderRadius: RADIUS.lg,
+                  paddingVertical: SPACING.md,
+                  marginBottom: SPACING.md,
+                  ...GLASS.shadow.sm,
+                }}
+              >
+                <ShareIcon size={16} color="#FFFFFF" />
+                <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Bagikan Semua via WA</Text>
+              </TouchableOpacity>
+            )}
+            {units.map((u) => (
+              <Card key={u.id} variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{u.unit_name}</Text>
+                    <Text style={{ ...TYPO.bodyBold, color: "#00C49A", marginTop: 2 }}>{formatRupiah(u.monthly_rent)}/bln</Text>
                   </View>
-                </Card>
-              ))}
-            </View>
+                  <TouchableOpacity
+                    onPress={() => handleShare(u)}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#25D366",
+                      borderRadius: RADIUS.md,
+                      paddingHorizontal: SPACING.md,
+                      paddingVertical: SPACING.sm,
+                      gap: SPACING.xs,
+                    }}
+                  >
+                    <ShareIcon size={12} color="#FFFFFF" />
+                    <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>WA</Text>
+                  </TouchableOpacity>
+                </View>
+              </Card>
+            ))}
           </>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -13,9 +14,20 @@ import { getProducts, createProduct, deleteProduct } from "@services/lapak.servi
 import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import Svg, { Path } from "react-native-svg";
 import type { Product } from "@app-types/lapak.types";
 
+function ArrowLeftIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M19 12H5M5 12L12 19M5 12L12 5" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export default function ProductsScreen() {
+  const insets = useSafeAreaInsets();
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const { tier, requireUpgrade, showUpgrade, setShowUpgrade, upgradeFeature } = useSubscription();
@@ -87,32 +99,65 @@ export default function ProductsScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+              <ArrowLeftIcon size={22} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Produk</Text>
+          </View>
+          <TouchableOpacity
+            onPress={handleOpenAdd}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.25)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.35)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Tambah</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">Produk</Text>
         </View>
-        <TouchableOpacity onPress={handleOpenAdd} className="bg-lapak rounded-lg px-3 py-2">
-          <Text className="text-white text-xs font-bold">+ Tambah</Text>
-        </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
         {!loading && products.length === 0 ? (
-          <EmptyState illustration="📦" title="Belum ada produk" description="Tambah produk untuk mulai catat penjualan" actionLabel="+ Tambah Produk" onAction={handleOpenAdd} />
+          <EmptyState
+            illustration="📦"
+            title="Belum ada produk"
+            description="Tambah produk untuk mulai catat penjualan"
+            actionLabel="+ Tambah Produk"
+            onAction={handleOpenAdd}
+          />
         ) : (
           products.map((p) => (
             <TouchableOpacity key={p.id} onLongPress={() => handleDelete(p)} activeOpacity={0.8}>
-              <Card>
-                <View className="flex-row items-center">
-                  <View className="flex-1">
-                    <Text className="text-base font-bold text-dark-text">{p.name}</Text>
-                    {p.category && <Text className="text-xs text-grey-text">{p.category}</Text>}
+              <Card variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{p.name}</Text>
+                    {p.category && (
+                      <Text style={{ ...TYPO.caption, color: "#64748B" }}>{p.category}</Text>
+                    )}
                   </View>
-                  <Text className="text-base font-bold text-lapak">{formatRupiah(p.price)}</Text>
+                  <Text style={{ ...TYPO.money, color: "#50BFC3" }}>{formatRupiah(p.price)}</Text>
                 </View>
               </Card>
             </TouchableOpacity>
@@ -122,18 +167,18 @@ export default function ProductsScreen() {
 
       <Modal visible={showAdd} onClose={() => setShowAdd(false)} title="Tambah Produk">
         <Input label="Nama Produk" placeholder="contoh: Nasi Goreng" value={newName} onChangeText={setNewName} />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput label="Harga" value={newPrice} onChangeValue={setNewPrice} />
         </View>
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <Input label="Kategori (opsional)" placeholder="contoh: Makanan" value={newCategory} onChangeText={setNewCategory} />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.lg }}>
           <Button title="Tambah" onPress={handleAdd} loading={addLoading} />
         </View>
       </Modal>
 
       <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
-    </SafeAreaView>
+    </View>
   );
 }

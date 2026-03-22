@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Modal as RNModal,
   View,
@@ -5,9 +6,10 @@ import {
   TouchableOpacity,
   Pressable,
   type ModalProps as RNModalProps,
-} from "react-native";
+} from 'react-native';
+import { GLASS, RADIUS, TYPO, SPACING } from '@utils/theme';
 
-interface ModalProps extends Omit<RNModalProps, "children"> {
+interface ModalProps extends Omit<RNModalProps, 'children'> {
   title?: string;
   children: React.ReactNode;
   onClose: () => void;
@@ -29,30 +31,66 @@ export function Modal({
       {...props}
     >
       <Pressable
-        className="flex-1 justify-end bg-black/40"
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          backgroundColor: 'rgba(15, 23, 42, 0.5)',
+        }}
         onPress={onClose}
       >
         <Pressable
-          className="bg-white rounded-t-2xl max-h-[60%]"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.97)',
+            borderTopLeftRadius: RADIUS.xxl,
+            borderTopRightRadius: RADIUS.xxl,
+            maxHeight: '65%',
+            ...GLASS.shadow.lg,
+          }}
           onPress={() => {}}
         >
           {/* Drag handle */}
-          <View className="items-center pt-3 pb-2">
-            <View className="w-10 h-1 rounded-full bg-gray-300" />
+          <View style={{ alignItems: 'center', paddingTop: 12, paddingBottom: 8 }}>
+            <View
+              style={{
+                width: 40,
+                height: 4,
+                borderRadius: 2,
+                backgroundColor: '#CBD5E1',
+              }}
+            />
           </View>
 
           {title && (
-            <View className="flex-row items-center justify-between px-4 pb-3 border-b border-border-color">
-              <Text className="text-lg font-bold text-dark-text">
-                {title}
-              </Text>
-              <TouchableOpacity onPress={onClose} hitSlop={12}>
-                <Text className="text-grey-text text-base">Tutup</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: SPACING.md,
+                paddingBottom: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: '#F1F5F9',
+              }}
+            >
+              <Text style={{ ...TYPO.h3, color: '#1E293B' }}>{title}</Text>
+              <TouchableOpacity
+                onPress={onClose}
+                hitSlop={12}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: '#F1F5F9',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text style={{ color: '#64748B', fontSize: 16, fontWeight: '600' }}>✕</Text>
               </TouchableOpacity>
             </View>
           )}
 
-          <View className="p-4">{children}</View>
+          <View style={{ padding: SPACING.md }}>{children}</View>
         </Pressable>
       </Pressable>
     </RNModal>

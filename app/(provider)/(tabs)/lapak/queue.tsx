@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
@@ -11,7 +12,25 @@ import { EmptyState } from "@components/shared/EmptyState";
 import { createQueueEntry, getQueueToday, updateQueueStatus, getCurrentServing } from "@services/lapak-advanced.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRelativeTime } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import Svg, { Path } from "react-native-svg";
 import type { QueueEntry, QueueStatus } from "@app-types/lapak.types";
+
+function ArrowLeftIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M19 12H5M5 12L12 19M5 12L12 5" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function CheckIcon({ size = 14, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M20 6L9 17L4 12" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
 
 const STATUS_MAP: Record<QueueStatus, { label: string; variant: "info" | "warning" | "success" | "neutral" }> = {
   waiting: { label: "Menunggu", variant: "info" }, serving: { label: "Dilayani", variant: "warning" },
@@ -19,6 +38,7 @@ const STATUS_MAP: Record<QueueStatus, { label: string; variant: "info" | "warnin
 };
 
 export default function QueueScreen() {
+  const insets = useSafeAreaInsets();
   const { bizId } = useLocalSearchParams<{ bizId: string; bizName: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
@@ -61,26 +81,72 @@ export default function QueueScreen() {
   const waitingCount = queue.filter((q) => q.status === "waiting").length;
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">Antrian</Text>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+              <ArrowLeftIcon size={22} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Antrian</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowAdd(true)}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.25)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.35)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Antrian</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
-          <Text className="text-white text-xs font-bold">+ Antrian</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView className="flex-1 px-4 pt-3">
+      </LinearGradient>
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
         {/* Now serving */}
         {serving && (
-          <Card>
-            <Text className="text-xs text-grey-text">Sedang Dilayani</Text>
-            <View className="flex-row items-center mt-1">
-              <Text className="text-3xl font-bold text-lapak mr-3">#{serving.queue_number}</Text>
-              <Text className="text-base font-bold text-dark-text flex-1">{serving.customer_name}</Text>
-              <TouchableOpacity onPress={() => handleComplete(serving.id)} className="bg-green-500 rounded-lg px-3 py-2">
-                <Text className="text-white text-xs font-bold">Selesai</Text>
+          <Card variant="glass">
+            <Text style={{ ...TYPO.small, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 0.8 }}>
+              Sedang Dilayani
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", marginTop: SPACING.xs }}>
+              <Text style={{ ...TYPO.h1, color: "#50BFC3", marginRight: SPACING.md }}>
+                #{serving.queue_number}
+              </Text>
+              <Text style={{ ...TYPO.bodyBold, color: "#1E293B", flex: 1 }}>
+                {serving.customer_name}
+              </Text>
+              <TouchableOpacity
+                onPress={() => handleComplete(serving.id)}
+                style={{
+                  backgroundColor: "#22C55E",
+                  borderRadius: RADIUS.md,
+                  paddingHorizontal: SPACING.md,
+                  paddingVertical: SPACING.sm,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: SPACING.xs,
+                }}
+              >
+                <CheckIcon size={14} color="#FFFFFF" />
+                <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>Selesai</Text>
               </TouchableOpacity>
             </View>
           </Card>
@@ -88,23 +154,52 @@ export default function QueueScreen() {
 
         {/* Call next */}
         {waitingCount > 0 && !serving && (
-          <Button title={`Panggil Berikutnya (${waitingCount} menunggu)`} onPress={handleCallNext} />
+          <View style={{ marginBottom: SPACING.md }}>
+            <Button title={`Panggil Berikutnya (${waitingCount} menunggu)`} onPress={handleCallNext} />
+          </View>
         )}
 
         {/* Queue list */}
-        <Text className="text-sm font-bold text-grey-text mt-4 mb-2">ANTRIAN HARI INI</Text>
+        <Text
+          style={{
+            ...TYPO.small,
+            color: "#94A3B8",
+            textTransform: "uppercase",
+            letterSpacing: 0.8,
+            marginTop: SPACING.lg,
+            marginBottom: SPACING.sm,
+          }}
+        >
+          ANTRIAN HARI INI
+        </Text>
         {!loading && queue.length === 0 ? (
-          <EmptyState illustration="📋" title="Belum ada antrian" actionLabel="+ Tambah Antrian" onAction={() => setShowAdd(true)} />
+          <EmptyState
+            illustration="📋"
+            title="Belum ada antrian"
+            actionLabel="+ Tambah Antrian"
+            onAction={() => setShowAdd(true)}
+          />
         ) : (
           queue.map((q) => {
             const s = STATUS_MAP[q.status];
             return (
-              <Card key={q.id}>
-                <View className="flex-row items-center">
-                  <Text className="text-2xl font-bold text-dark-text mr-3 w-10">#{q.queue_number}</Text>
-                  <View className="flex-1">
-                    <Text className="text-base font-bold text-dark-text">{q.customer_name}</Text>
-                    <Text className="text-xs text-grey-text">{formatRelativeTime(q.created_at)}</Text>
+              <Card key={q.id} variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={{
+                      ...TYPO.h2,
+                      color: "#1E293B",
+                      marginRight: SPACING.md,
+                      width: 40,
+                    }}
+                  >
+                    #{q.queue_number}
+                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{q.customer_name}</Text>
+                    <Text style={{ ...TYPO.caption, color: "#64748B" }}>
+                      {formatRelativeTime(q.created_at)}
+                    </Text>
                   </View>
                   <Badge label={s.label} variant={s.variant} />
                 </View>
@@ -113,10 +208,13 @@ export default function QueueScreen() {
           })
         )}
       </ScrollView>
+
       <Modal visible={showAdd} onClose={() => setShowAdd(false)} title="Tambah Antrian">
         <Input label="Nama Pelanggan" placeholder="contoh: Pak Andi" value={custName} onChangeText={setCustName} />
-        <View className="mt-4"><Button title="Tambah" onPress={handleAdd} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Tambah" onPress={handleAdd} loading={actionLoading} />
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -11,13 +12,32 @@ import { EmptyState } from "@components/shared/EmptyState";
 import { addStudent, getStudents, getSchedules, addSchedule, recordAttendance, getAttendanceByDate, generateStudentBilling, getStudentBillings, updateStudentBillingStatus } from "@services/lapak-advanced.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import Svg, { Path } from "react-native-svg";
 import type { Student, Schedule, Attendance, StudentBilling, AttendanceStatus, PaymentStatus } from "@app-types/lapak.types";
+
+function ArrowLeftIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M19 12H5M5 12L12 19M5 12L12 5" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function CheckIcon({ size = 12, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M20 6L9 17L4 12" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
 
 const DAY_LABELS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
 type Tab = "students" | "schedule" | "attendance" | "billing";
 
 export default function GuruScreen() {
+  const insets = useSafeAreaInsets();
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const [tab, setTab] = useState<Tab>("students");
@@ -95,35 +115,82 @@ export default function GuruScreen() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center px-4 py-3 border-b border-border-color bg-white">
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-        <Text className="text-lg font-bold text-dark-text ml-3">Guru/Pelatih</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+            <ArrowLeftIcon size={22} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Guru/Pelatih</Text>
+        </View>
+      </LinearGradient>
 
       {/* Tabs */}
-      <View className="flex-row bg-white border-b border-border-color">
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: GLASS.card.background,
+          borderBottomWidth: 1,
+          borderBottomColor: GLASS.card.border,
+        }}
+      >
         {tabs.map((t) => (
-          <TouchableOpacity key={t.key} onPress={() => setTab(t.key)} className={`flex-1 py-3 items-center ${tab === t.key ? "border-b-2 border-lapak" : ""}`}>
-            <Text className={`text-xs font-bold ${tab === t.key ? "text-lapak" : "text-grey-text"}`}>{t.label}</Text>
+          <TouchableOpacity
+            key={t.key}
+            onPress={() => setTab(t.key)}
+            style={{
+              flex: 1,
+              paddingVertical: SPACING.md,
+              alignItems: "center",
+              borderBottomWidth: tab === t.key ? 2 : 0,
+              borderBottomColor: "#50BFC3",
+            }}
+          >
+            <Text
+              style={{
+                ...TYPO.captionBold,
+                color: tab === t.key ? "#50BFC3" : "#64748B",
+              }}
+            >
+              {t.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
         {tab === "students" && (
           <>
             <Button title="+ Tambah Murid" variant="secondary" onPress={() => setShowAddStudent(true)} />
-            <View className="mt-3">
+            <View style={{ marginTop: SPACING.md }}>
               {students.map((s) => (
-                <Card key={s.id}>
-                  <View className="flex-row items-center">
-                    <View className="flex-1"><Text className="text-base font-bold text-dark-text">{s.name}</Text></View>
-                    <Text className="text-sm text-lapak font-bold">{formatRupiah(s.monthly_fee)}/bln</Text>
+                <Card key={s.id} variant="glass">
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{s.name}</Text>
+                    </View>
+                    <Text style={{ ...TYPO.money, color: "#50BFC3" }}>
+                      {formatRupiah(s.monthly_fee)}/bln
+                    </Text>
                   </View>
                 </Card>
               ))}
-              {students.length === 0 && <EmptyState illustration="📚" title="Belum ada murid" />}
+              {students.length === 0 && (
+                <EmptyState illustration="📚" title="Belum ada murid" />
+              )}
             </View>
           </>
         )}
@@ -131,33 +198,65 @@ export default function GuruScreen() {
         {tab === "schedule" && (
           <>
             <Button title="+ Tambah Jadwal" variant="secondary" onPress={() => setShowAddSchedule(true)} />
-            <View className="mt-3">
+            <View style={{ marginTop: SPACING.md }}>
               {schedules.map((sc) => (
-                <Card key={sc.id}>
-                  <Text className="text-base font-bold text-dark-text">{DAY_LABELS[sc.day_of_week]} {sc.start_time}-{sc.end_time}</Text>
-                  {sc.subject && <Text className="text-xs text-grey-text">{sc.subject}</Text>}
+                <Card key={sc.id} variant="glass">
+                  <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>
+                    {DAY_LABELS[sc.day_of_week]} {sc.start_time}-{sc.end_time}
+                  </Text>
+                  {sc.subject && (
+                    <Text style={{ ...TYPO.caption, color: "#64748B" }}>{sc.subject}</Text>
+                  )}
                 </Card>
               ))}
-              {schedules.length === 0 && <EmptyState illustration="📅" title="Belum ada jadwal" />}
+              {schedules.length === 0 && (
+                <EmptyState illustration="📅" title="Belum ada jadwal" />
+              )}
             </View>
           </>
         )}
 
         {tab === "attendance" && (
           <>
-            <Text className="text-sm font-bold text-grey-text mb-2">ABSENSI HARI INI</Text>
+            <Text
+              style={{
+                ...TYPO.small,
+                color: "#94A3B8",
+                textTransform: "uppercase",
+                letterSpacing: 0.8,
+                marginBottom: SPACING.sm,
+              }}
+            >
+              ABSENSI HARI INI
+            </Text>
             {students.map((s) => {
               const att = attendance.find((a) => (a as Attendance & { students?: { name: string } }).student_id === s.id);
               return (
-                <Card key={s.id}>
-                  <View className="flex-row items-center">
-                    <Text className="flex-1 text-base font-bold text-dark-text">{s.name}</Text>
-                    <View className="flex-row">
+                <Card key={s.id} variant="glass">
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text style={{ ...TYPO.bodyBold, color: "#1E293B", flex: 1 }}>
+                      {s.name}
+                    </Text>
+                    <View style={{ flexDirection: "row" }}>
                       {(["present", "absent", "excused"] as AttendanceStatus[]).map((st) => (
-                        <TouchableOpacity key={st} onPress={() => handleAttendance(s.id, st)}
-                          className={`px-2 py-1 rounded mx-0.5 ${att?.status === st ? "bg-lapak" : "bg-gray-100"}`}>
-                          <Text className={`text-xs font-bold ${att?.status === st ? "text-white" : "text-grey-text"}`}>
-                            {st === "present" ? "✓" : st === "absent" ? "✗" : "I"}
+                        <TouchableOpacity
+                          key={st}
+                          onPress={() => handleAttendance(s.id, st)}
+                          style={{
+                            paddingHorizontal: SPACING.sm,
+                            paddingVertical: SPACING.xs,
+                            borderRadius: RADIUS.sm,
+                            marginHorizontal: 2,
+                            backgroundColor: att?.status === st ? "#50BFC3" : "rgba(0,0,0,0.04)",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              ...TYPO.captionBold,
+                              color: att?.status === st ? "#FFFFFF" : "#64748B",
+                            }}
+                          >
+                            {st === "present" ? "\u2713" : st === "absent" ? "\u2717" : "I"}
                           </Text>
                         </TouchableOpacity>
                       ))}
@@ -171,17 +270,35 @@ export default function GuruScreen() {
 
         {tab === "billing" && (
           <>
-            {billings.length === 0 && <Button title="Generate Tagihan Bulan Ini" variant="secondary" onPress={handleGenerateBilling} />}
-            <View className="mt-3">
+            {billings.length === 0 && (
+              <Button title="Generate Tagihan Bulan Ini" variant="secondary" onPress={handleGenerateBilling} />
+            )}
+            <View style={{ marginTop: SPACING.md }}>
               {billings.map((b) => (
                 <TouchableOpacity key={b.id} onPress={() => handleToggleBilling(b)} activeOpacity={0.7}>
-                  <Card>
-                    <View className="flex-row items-center">
-                      <View className={`w-6 h-6 rounded border-2 items-center justify-center mr-3 ${b.status === "paid" ? "bg-green-500 border-green-500" : "border-border-color"}`}>
-                        {b.status === "paid" && <Text className="text-white text-xs font-bold">✓</Text>}
+                  <Card variant="glass">
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: RADIUS.sm,
+                          borderWidth: 2,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginRight: SPACING.md,
+                          backgroundColor: b.status === "paid" ? "#22C55E" : "transparent",
+                          borderColor: b.status === "paid" ? "#22C55E" : GLASS.card.border,
+                        }}
+                      >
+                        {b.status === "paid" && <CheckIcon size={12} color="#FFFFFF" />}
                       </View>
-                      <View className="flex-1"><Text className="text-base font-bold text-dark-text">{b.student_name}</Text></View>
-                      <Text className="text-sm font-bold text-lapak">{formatRupiah(b.amount)}</Text>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{b.student_name}</Text>
+                      </View>
+                      <Text style={{ ...TYPO.money, color: "#50BFC3" }}>
+                        {formatRupiah(b.amount)}
+                      </Text>
                     </View>
                   </Card>
                 </TouchableOpacity>
@@ -193,26 +310,56 @@ export default function GuruScreen() {
 
       <Modal visible={showAddStudent} onClose={() => setShowAddStudent(false)} title="Tambah Murid">
         <Input label="Nama Murid" placeholder="contoh: Ahmad" value={sName} onChangeText={setSName} />
-        <View className="mt-3"><CurrencyInput label="Biaya/Bulan" value={sFee} onChangeValue={setSFee} /></View>
-        <View className="mt-4"><Button title="Tambah" onPress={handleAddStudent} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <CurrencyInput label="Biaya/Bulan" value={sFee} onChangeValue={setSFee} />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Tambah" onPress={handleAddStudent} loading={actionLoading} />
+        </View>
       </Modal>
 
       <Modal visible={showAddSchedule} onClose={() => setShowAddSchedule(false)} title="Tambah Jadwal">
-        <Text className="text-sm font-medium text-dark-text mb-2">Hari</Text>
-        <View className="flex-row flex-wrap mb-3">
+        <Text style={{ ...TYPO.bodyBold, color: "#1E293B", marginBottom: SPACING.sm }}>Hari</Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: SPACING.md }}>
           {DAY_LABELS.map((d, i) => (
-            <TouchableOpacity key={i} onPress={() => setScDay(i)} className={`px-3 py-2 rounded-lg mr-1 mb-1 ${scDay === i ? "bg-lapak" : "bg-gray-100"}`}>
-              <Text className={`text-xs font-bold ${scDay === i ? "text-white" : "text-grey-text"}`}>{d}</Text>
+            <TouchableOpacity
+              key={i}
+              onPress={() => setScDay(i)}
+              style={{
+                paddingHorizontal: SPACING.md,
+                paddingVertical: SPACING.sm,
+                borderRadius: RADIUS.md,
+                marginRight: SPACING.xs,
+                marginBottom: SPACING.xs,
+                backgroundColor: scDay === i ? "#50BFC3" : "rgba(0,0,0,0.04)",
+              }}
+            >
+              <Text
+                style={{
+                  ...TYPO.captionBold,
+                  color: scDay === i ? "#FFFFFF" : "#64748B",
+                }}
+              >
+                {d}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
-        <View className="flex-row">
-          <View className="flex-1 mr-2"><Input label="Mulai" value={scStart} onChangeText={setScStart} placeholder="08:00" /></View>
-          <View className="flex-1 ml-2"><Input label="Selesai" value={scEnd} onChangeText={setScEnd} placeholder="09:00" /></View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1, marginRight: SPACING.sm }}>
+            <Input label="Mulai" value={scStart} onChangeText={setScStart} placeholder="08:00" />
+          </View>
+          <View style={{ flex: 1, marginLeft: SPACING.sm }}>
+            <Input label="Selesai" value={scEnd} onChangeText={setScEnd} placeholder="09:00" />
+          </View>
         </View>
-        <View className="mt-3"><Input label="Mata Pelajaran (opsional)" value={scSubject} onChangeText={setScSubject} placeholder="contoh: Matematika" /></View>
-        <View className="mt-4"><Button title="Tambah" onPress={handleAddSchedule} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="Mata Pelajaran (opsional)" value={scSubject} onChangeText={setScSubject} placeholder="contoh: Matematika" />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Tambah" onPress={handleAddSchedule} loading={actionLoading} />
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

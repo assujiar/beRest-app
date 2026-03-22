@@ -1,59 +1,112 @@
-import { useEffect } from "react";
-import { Text, TouchableOpacity, Animated } from "react-native";
+import React, { useEffect, useRef } from 'react';
+import { Text, TouchableOpacity, Animated, View } from 'react-native';
+import { GLASS, RADIUS, TYPO } from '@utils/theme';
 
 interface ToastProps {
   message: string;
-  type?: "success" | "error" | "info";
+  type?: 'success' | 'error' | 'info';
   onDismiss: () => void;
   undoLabel?: string;
   onUndo?: () => void;
   duration?: number;
 }
 
+const typeConfig = {
+  success: {
+    bg: '#156064',
+    icon: '✓',
+    iconBg: 'rgba(255,255,255,0.2)',
+  },
+  error: {
+    bg: '#DC2626',
+    icon: '!',
+    iconBg: 'rgba(255,255,255,0.2)',
+  },
+  info: {
+    bg: '#2C7695',
+    icon: 'i',
+    iconBg: 'rgba(255,255,255,0.2)',
+  },
+};
+
 export function Toast({
   message,
-  type = "success",
+  type = 'success',
   onDismiss,
   undoLabel,
   onUndo,
   duration = 3000,
 }: ToastProps) {
-  const opacity = new Animated.Value(0);
+  const translateY = useRef(new Animated.Value(60)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const cfg = typeConfig[type];
 
   useEffect(() => {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-
-    const timer = setTimeout(() => {
-      Animated.timing(opacity, {
+    Animated.parallel([
+      Animated.spring(translateY, {
         toValue: 0,
+        useNativeDriver: true,
+        damping: 15,
+        stiffness: 150,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
         duration: 200,
         useNativeDriver: true,
-      }).start(() => onDismiss());
+      }),
+    ]).start();
+
+    const timer = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: 60,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+      ]).start(() => onDismiss());
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration, onDismiss, opacity]);
-
-  const bgColor =
-    type === "error"
-      ? "bg-red-800"
-      : type === "info"
-        ? "bg-navy"
-        : "bg-gray-800";
+  }, []);
 
   return (
     <Animated.View
-      style={{ opacity }}
-      className={`${bgColor} rounded-lg mx-4 mb-2 px-4 py-3 flex-row items-center justify-between`}
+      style={{
+        opacity,
+        transform: [{ translateY }],
+        backgroundColor: cfg.bg,
+        borderRadius: RADIUS.lg,
+        marginHorizontal: 16,
+        marginBottom: 8,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        ...GLASS.shadow.md,
+      }}
     >
-      <Text className="text-white text-sm flex-1 mr-2">{message}</Text>
+      <View
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: 14,
+          backgroundColor: cfg.iconBg,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginRight: 12,
+        }}
+      >
+        <Text style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 14 }}>{cfg.icon}</Text>
+      </View>
+      <Text style={{ ...TYPO.bodyBold, color: '#FFFFFF', flex: 1 }}>{message}</Text>
       {undoLabel && onUndo && (
-        <TouchableOpacity onPress={onUndo} hitSlop={8}>
-          <Text className="text-orange font-bold text-sm">{undoLabel}</Text>
+        <TouchableOpacity onPress={onUndo} hitSlop={8} style={{ marginLeft: 8 }}>
+          <Text style={{ ...TYPO.captionBold, color: 'rgba(255,255,255,0.8)' }}>{undoLabel}</Text>
         </TouchableOpacity>
       )}
     </Animated.View>

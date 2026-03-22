@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -11,9 +12,20 @@ import { EmptyState } from "@components/shared/EmptyState";
 import { getCustomers, searchCustomers, upsertCustomer } from "@services/lapak-advanced.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import Svg, { Path } from "react-native-svg";
 import type { CustomerRecord } from "@app-types/lapak.types";
 
+function ArrowLeftIcon({ size = 20, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M19 12H5M5 12L12 19M5 12L12 5" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export default function CustomersScreen() {
+  const insets = useSafeAreaInsets();
   const { bizId } = useLocalSearchParams<{ bizId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const [customers, setCustomers] = useState<CustomerRecord[]>([]);
@@ -47,42 +59,101 @@ export default function CustomersScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}><Text className="text-lg text-navy">←</Text></TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">Pelanggan</Text>
+    <View style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={[...GRADIENTS.lapak]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+              <ArrowLeftIcon size={22} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>Pelanggan</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowAdd(true)}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.25)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.35)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Tambah</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => setShowAdd(true)} className="bg-lapak rounded-lg px-3 py-2">
-          <Text className="text-white text-xs font-bold">+ Tambah</Text>
-        </TouchableOpacity>
+      </LinearGradient>
+
+      <View style={{ paddingHorizontal: SPACING.md, paddingTop: SPACING.md }}>
+        <SearchBar value={search} onChangeText={handleSearch} placeholder="Cari pelanggan..." />
       </View>
-      <View className="px-4 pt-3"><SearchBar value={search} onChangeText={handleSearch} placeholder="Cari pelanggan..." /></View>
-      <ScrollView className="flex-1 px-4 pt-3">
+
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingTop: SPACING.md }}
+      >
         {!loading && customers.length === 0 ? (
-          <EmptyState illustration="👤" title="Belum ada pelanggan" actionLabel="+ Tambah Pelanggan" onAction={() => setShowAdd(true)} />
+          <EmptyState
+            illustration="👤"
+            title="Belum ada pelanggan"
+            actionLabel="+ Tambah Pelanggan"
+            onAction={() => setShowAdd(true)}
+          />
         ) : (
           customers.map((c) => (
-            <Card key={c.id}>
-              <View className="flex-row items-center">
-                <View className="w-10 h-10 rounded-full bg-lapak/10 items-center justify-center mr-3">
-                  <Text className="text-base font-bold text-lapak">{c.name.charAt(0).toUpperCase()}</Text>
-                </View>
-                <View className="flex-1">
-                  <Text className="text-base font-bold text-dark-text">{c.name}</Text>
-                  {c.phone && <Text className="text-xs text-grey-text">{c.phone}</Text>}
-                  <Text className="text-xs text-grey-text">{c.total_orders} order • {formatRupiah(c.total_spent)}</Text>
+            <Card key={c.id} variant="glass">
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <LinearGradient
+                  colors={[...GRADIENTS.lapakLight]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: RADIUS.full,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: SPACING.md,
+                  }}
+                >
+                  <Text style={{ ...TYPO.bodyBold, color: "#50BFC3" }}>
+                    {c.name.charAt(0).toUpperCase()}
+                  </Text>
+                </LinearGradient>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ ...TYPO.bodyBold, color: "#1E293B" }}>{c.name}</Text>
+                  {c.phone && (
+                    <Text style={{ ...TYPO.caption, color: "#64748B" }}>{c.phone}</Text>
+                  )}
+                  <Text style={{ ...TYPO.caption, color: "#64748B" }}>
+                    {c.total_orders} order • {formatRupiah(c.total_spent)}
+                  </Text>
                 </View>
               </View>
             </Card>
           ))
         )}
       </ScrollView>
+
       <Modal visible={showAdd} onClose={() => setShowAdd(false)} title="Tambah Pelanggan">
         <Input label="Nama" placeholder="contoh: Pak Andi" value={newName} onChangeText={setNewName} />
-        <View className="mt-3"><Input label="No HP (opsional)" placeholder="08123456789" value={newPhone} onChangeText={setNewPhone} keyboardType="phone-pad" /></View>
-        <View className="mt-4"><Button title="Tambah" onPress={handleAdd} loading={actionLoading} /></View>
+        <View style={{ marginTop: SPACING.md }}>
+          <Input label="No HP (opsional)" placeholder="08123456789" value={newPhone} onChangeText={setNewPhone} keyboardType="phone-pad" />
+        </View>
+        <View style={{ marginTop: SPACING.lg }}>
+          <Button title="Tambah" onPress={handleAdd} loading={actionLoading} />
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,47 +1,72 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
-import { useRoleStore } from "@stores/role.store";
+import { View, Text, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import { useRoleStore } from '@stores/role.store';
+import { GLASS, RADIUS, TYPO } from '@utils/theme';
 
 export function RoleSwitcher() {
   const { role, activeView, toggleView } = useRoleStore();
 
-  if (role !== "both") return null;
+  if (role !== 'both') return null;
 
   function handleToggle() {
     toggleView();
-    if (activeView === "provider") {
-      router.replace("/(consumer)/(tabs)");
+    if (activeView === 'provider') {
+      router.replace('/(consumer)/(tabs)');
     } else {
-      router.replace("/(provider)/(tabs)");
+      router.replace('/(provider)/(tabs)');
     }
   }
 
   return (
     <TouchableOpacity
       onPress={handleToggle}
-      className="flex-row items-center bg-white rounded-full border border-border-color px-1 py-1"
-      activeOpacity={0.7}
+      activeOpacity={0.85}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.15)',
+        borderRadius: RADIUS.full,
+        padding: 3,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.25)',
+      }}
     >
       <View
-        className={`
-          rounded-full px-4 py-2
-          ${activeView === "provider" ? "bg-navy" : ""}
-        `}
+        style={{
+          borderRadius: RADIUS.full,
+          paddingHorizontal: 14,
+          paddingVertical: 7,
+          ...(activeView === 'provider'
+            ? { backgroundColor: '#FFFFFF', ...GLASS.shadow.sm }
+            : {}),
+        }}
       >
         <Text
-          className={`text-xs font-bold ${activeView === "provider" ? "text-white" : "text-grey-text"}`}
+          style={{
+            ...TYPO.small,
+            fontWeight: '700',
+            color: activeView === 'provider' ? '#156064' : 'rgba(255,255,255,0.7)',
+          }}
         >
           Pengelola
         </Text>
       </View>
       <View
-        className={`
-          rounded-full px-4 py-2
-          ${activeView === "consumer" ? "bg-navy" : ""}
-        `}
+        style={{
+          borderRadius: RADIUS.full,
+          paddingHorizontal: 14,
+          paddingVertical: 7,
+          ...(activeView === 'consumer'
+            ? { backgroundColor: '#FFFFFF', ...GLASS.shadow.sm }
+            : {}),
+        }}
       >
         <Text
-          className={`text-xs font-bold ${activeView === "consumer" ? "text-white" : "text-grey-text"}`}
+          style={{
+            ...TYPO.small,
+            fontWeight: '700',
+            color: activeView === 'consumer' ? '#156064' : 'rgba(255,255,255,0.7)',
+          }}
         >
           Pengguna
         </Text>

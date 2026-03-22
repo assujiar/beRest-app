@@ -1,14 +1,18 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "@components/ui/Button";
-import { Input } from "@components/ui/Input";
-import { useRoleStore } from "@stores/role.store";
-import { useAuthStore } from "@stores/auth.store";
-import { upsertProfile } from "@services/auth.service";
+import { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button } from '@components/ui/Button';
+import { Input } from '@components/ui/Input';
+import { Card } from '@components/ui/Card';
+import { useRoleStore } from '@stores/role.store';
+import { useAuthStore } from '@stores/auth.store';
+import { upsertProfile } from '@services/auth.service';
+import { GRADIENTS, GLASS, RADIUS, TYPO, SPACING } from '@utils/theme';
+import Svg, { Path } from 'react-native-svg';
 
-type Step = "input" | "detected";
+type Step = 'input' | 'detected';
 
 interface DetectedConnection {
   id: string;
@@ -19,9 +23,10 @@ interface DetectedConnection {
 }
 
 export default function ConsumerOnboardingScreen() {
-  const [step, _setStep] = useState<Step>("input");
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
+  const insets = useSafeAreaInsets();
+  const [step, _setStep] = useState<Step>('input');
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [detected, setDetected] = useState<DetectedConnection[]>([]);
   const setRole = useRoleStore((s) => s.setRole);
@@ -30,141 +35,152 @@ export default function ConsumerOnboardingScreen() {
   const setProfile = useAuthStore((s) => s.setProfile);
 
   function handleCodeSubmit() {
-    if (code.length < 6) {
-      setError("Kode koneksi harus 6 karakter");
-      return;
-    }
-    // TODO: Verify code via connection service
+    if (code.length < 6) { setError('Kode koneksi harus 6 karakter'); return; }
     goToConsumerHome();
   }
 
-  function handleScanQR() {
-    router.push("/connect/scan");
-  }
+  function handleScanQR() { router.push('/connect/scan'); }
 
   function toggleDetected(id: string) {
-    setDetected((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, checked: !c.checked } : c))
-    );
+    setDetected((prev) => prev.map((c) => (c.id === id ? { ...c, checked: !c.checked } : c)));
   }
 
-  function handleConfirmDetected() {
-    // TODO: Confirm detected connections via service
-    goToConsumerHome();
-  }
+  function handleConfirmDetected() { goToConsumerHome(); }
 
   async function goToConsumerHome() {
     setSaving(true);
-
-    // Persist role to Supabase
     if (session?.user.id) {
-      const { data } = await upsertProfile(session.user.id, {
-        role: "consumer",
-      });
+      const { data } = await upsertProfile(session.user.id, { role: 'consumer' });
       if (data) setProfile(data);
     }
-
-    setRole("consumer");
-    setActiveView("consumer");
+    setRole('consumer');
+    setActiveView('consumer');
     setSaving(false);
-    router.replace("/(consumer)/(tabs)");
+    router.replace('/(consumer)/(tabs)');
   }
 
-  if (step === "detected" && detected.length > 0) {
+  if (step === 'detected' && detected.length > 0) {
     return (
-      <SafeAreaView className="flex-1 bg-light-bg">
-        <View className="flex-1 px-6 justify-between">
-          <View className="pt-8">
-            <Text className="text-2xl font-bold text-dark-text">
-              Kami menemukan kamu terhubung dengan:
-            </Text>
-            <View className="mt-6">
-              {detected.map((conn) => (
-                <TouchableOpacity
-                  key={conn.id}
-                  onPress={() => toggleDetected(conn.id)}
-                  className="flex-row items-center bg-white rounded-xl p-4 mb-3 border border-border-color"
-                >
-                  <View
-                    className={`
-                      w-6 h-6 rounded border-2 items-center justify-center mr-3
-                      ${conn.checked ? "bg-orange border-orange" : "border-border-color"}
-                    `}
-                  >
-                    {conn.checked && (
-                      <Text className="text-white text-xs font-bold">✓</Text>
-                    )}
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-base font-bold text-dark-text">
-                      {conn.providerName}
-                    </Text>
-                    <Text className="text-sm text-grey-text">
-                      {conn.role}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+      <View style={{ flex: 1, backgroundColor: '#F8FAFC' }}>
+        <LinearGradient
+          colors={GRADIENTS.primary}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            paddingTop: insets.top + SPACING.lg,
+            paddingBottom: SPACING.xl,
+            paddingHorizontal: SPACING.lg,
+            borderBottomLeftRadius: RADIUS.xxl,
+            borderBottomRightRadius: RADIUS.xxl,
+          }}
+        >
+          <Text style={{ ...TYPO.h1, color: '#FFFFFF' }}>Kamu terhubung dengan:</Text>
+        </LinearGradient>
 
-          <View className="pb-8">
-            <Button title="Konfirmasi" onPress={handleConfirmDetected} loading={saving} />
-          </View>
+        <View style={{ flex: 1, paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg }}>
+          {detected.map((conn) => (
+            <TouchableOpacity key={conn.id} onPress={() => toggleDetected(conn.id)}>
+              <Card variant={conn.checked ? 'elevated' : 'glass'}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: RADIUS.sm,
+                      borderWidth: 2,
+                      borderColor: conn.checked ? '#156064' : '#E2E8F0',
+                      backgroundColor: conn.checked ? '#156064' : 'transparent',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 14,
+                    }}
+                  >
+                    {conn.checked && <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '700' }}>✓</Text>}
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: '#1E293B' }}>{conn.providerName}</Text>
+                    <Text style={{ ...TYPO.caption, color: '#64748B' }}>{conn.role}</Text>
+                  </View>
+                </View>
+              </Card>
+            </TouchableOpacity>
+          ))}
         </View>
-      </SafeAreaView>
+
+        <View style={{ paddingHorizontal: SPACING.lg, paddingBottom: insets.bottom + SPACING.lg }}>
+          <Button title="Konfirmasi" onPress={handleConfirmDetected} loading={saving} />
+        </View>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg">
-      <View className="flex-1 px-6 justify-between">
-        <View className="pt-8">
-          <Text className="text-2xl font-bold text-dark-text">
-            Masukkan kode koneksi
-          </Text>
-          <Text className="text-sm text-grey-text mt-2">
-            Minta kode dari pengelola (pemilik kos, laundry, ketua RT, dll)
-          </Text>
+    <View style={{ flex: 1, backgroundColor: '#F8FAFC' }}>
+      <LinearGradient
+        colors={GRADIENTS.primary}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.lg,
+          paddingBottom: SPACING.xl,
+          paddingHorizontal: SPACING.lg,
+          borderBottomLeftRadius: RADIUS.xxl,
+          borderBottomRightRadius: RADIUS.xxl,
+        }}
+      >
+        <Text style={{ ...TYPO.h1, color: '#FFFFFF' }}>Masukkan kode koneksi</Text>
+        <Text style={{ ...TYPO.body, color: 'rgba(255,255,255,0.8)', marginTop: 4 }}>
+          Minta kode dari pengelola (pemilik kos, laundry, ketua RT)
+        </Text>
+      </LinearGradient>
 
-          <View className="mt-8">
-            <Input
-              label="Kode Koneksi"
-              placeholder="contoh: KOS-4829"
-              value={code}
-              onChangeText={(text) => {
-                setCode(text.toUpperCase());
-                setError("");
-              }}
-              error={error}
-              autoCapitalize="characters"
-              maxLength={10}
-            />
-          </View>
+      <View style={{ flex: 1, paddingHorizontal: SPACING.lg, justifyContent: 'space-between' }}>
+        <View style={{ paddingTop: SPACING.xl }}>
+          <Input
+            label="Kode Koneksi"
+            placeholder="contoh: KOS-4829"
+            value={code}
+            onChangeText={(text) => { setCode(text.toUpperCase()); setError(''); }}
+            error={error}
+            autoCapitalize="characters"
+            maxLength={10}
+          />
 
           <TouchableOpacity
             onPress={handleScanQR}
-            className="flex-row items-center justify-center mt-4 py-3"
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: SPACING.lg,
+              paddingVertical: 14,
+              borderRadius: RADIUS.lg,
+              borderWidth: 1.5,
+              borderColor: '#E2E8F0',
+              borderStyle: 'dashed',
+              backgroundColor: GLASS.card.background,
+            }}
           >
-            <Text className="text-base mr-2">📷</Text>
-            <Text className="text-sm text-navy font-bold">
-              Scan QR Code
-            </Text>
+            <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+              <Path d="M3 7V5C3 3.9 3.9 3 5 3H7" stroke="#2C7695" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M17 3H19C20.1 3 21 3.9 21 5V7" stroke="#2C7695" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M21 17V19C21 20.1 20.1 21 19 21H17" stroke="#2C7695" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M7 21H5C3.9 21 3 20.1 3 19V17" stroke="#2C7695" strokeWidth={2} strokeLinecap="round" />
+              <Path d="M7 7H10V10H7V7Z" stroke="#2C7695" strokeWidth={1.5} />
+              <Path d="M14 7H17V10H14V7Z" stroke="#2C7695" strokeWidth={1.5} />
+              <Path d="M7 14H10V17H7V14Z" stroke="#2C7695" strokeWidth={1.5} />
+            </Svg>
+            <Text style={{ ...TYPO.captionBold, color: '#2C7695', marginLeft: 10 }}>Scan QR Code</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="pb-8">
+        <View style={{ paddingBottom: insets.bottom + SPACING.lg }}>
           <Button title="Hubungkan" onPress={handleCodeSubmit} loading={saving} />
-          <TouchableOpacity
-            onPress={goToConsumerHome}
-            className="mt-4 items-center py-2"
-          >
-            <Text className="text-sm text-grey-text">
-              Belum punya kode? Lewati dulu
-            </Text>
+          <TouchableOpacity onPress={goToConsumerHome} style={{ marginTop: SPACING.md, alignItems: 'center', paddingVertical: 8 }}>
+            <Text style={{ ...TYPO.caption, color: '#64748B' }}>Belum punya kode? Lewati dulu</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

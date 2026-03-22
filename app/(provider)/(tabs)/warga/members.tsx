@@ -7,7 +7,8 @@ import {
   Alert,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Badge } from "@components/ui/Badge";
 import { Button } from "@components/ui/Button";
@@ -22,7 +23,10 @@ import {
 } from "@services/warga.service";
 import { useSubscription } from "@hooks/shared/useSubscription";
 import { useUIStore } from "@stores/ui.store";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import { COLORS } from "@utils/colors";
 import type { OrgMember, MemberRole } from "@app-types/warga.types";
+import Svg, { Path } from "react-native-svg";
 
 const ROLE_LABELS: Record<MemberRole, string> = {
   admin: "Admin",
@@ -31,6 +35,7 @@ const ROLE_LABELS: Record<MemberRole, string> = {
 };
 
 export default function MembersScreen() {
+  const insets = useSafeAreaInsets();
   const { orgId, orgName } = useLocalSearchParams<{
     orgId: string;
     orgName: string;
@@ -111,25 +116,60 @@ export default function MembersScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.lightBg }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.warga}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              hitSlop={12}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: RADIUS.full,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M15 18L9 12L15 6" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>
+              Anggota ({members.length})
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={handleOpenAdd}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.3)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Tambah</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">
-            Anggota ({members.length})
-          </Text>
         </View>
-        <TouchableOpacity
-          onPress={handleOpenAdd}
-          className="bg-warga rounded-lg px-3 py-2"
-        >
-          <Text className="text-white text-xs font-bold">+ Tambah</Text>
-        </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingBottom: SPACING.xxl }}
+      >
         {!loading && members.length === 0 ? (
           <EmptyState
             illustration="👥"
@@ -145,22 +185,32 @@ export default function MembersScreen() {
               onLongPress={() => handleRemove(m)}
               activeOpacity={0.8}
             >
-              <Card>
-                <View className="flex-row items-center">
-                  <View className="w-10 h-10 rounded-full bg-warga/10 items-center justify-center mr-3">
-                    <Text className="text-base font-bold text-warga">
+              <Card variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: RADIUS.full,
+                      backgroundColor: "rgba(251,143,103,0.12)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: SPACING.md,
+                    }}
+                  >
+                    <Text style={{ ...TYPO.bodyBold, color: COLORS.warga }}>
                       {m.name.charAt(0).toUpperCase()}
                     </Text>
                   </View>
-                  <View className="flex-1">
-                    <Text className="text-base font-bold text-dark-text">
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: COLORS.darkText }}>
                       {m.name}
                     </Text>
                     {m.phone && (
-                      <Text className="text-xs text-grey-text">{m.phone}</Text>
+                      <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>{m.phone}</Text>
                     )}
                     {m.member_code && (
-                      <Text className="text-xs text-grey-text">
+                      <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>
                         Kode: {m.member_code}
                       </Text>
                     )}
@@ -187,7 +237,7 @@ export default function MembersScreen() {
           value={newName}
           onChangeText={setNewName}
         />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <Input
             label="Nomor HP (opsional)"
             placeholder="contoh: 08123456789"
@@ -196,7 +246,7 @@ export default function MembersScreen() {
             keyboardType="phone-pad"
           />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.md }}>
           <Button
             title="Tambah"
             onPress={handleAddMember}
@@ -206,6 +256,6 @@ export default function MembersScreen() {
       </Modal>
 
       <UpgradeModal visible={showUpgrade} onClose={() => setShowUpgrade(false)} currentTier={tier} featureName={upgradeFeature} />
-    </SafeAreaView>
+    </View>
   );
 }

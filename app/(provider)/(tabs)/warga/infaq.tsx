@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
@@ -11,9 +12,13 @@ import { EmptyState } from "@components/shared/EmptyState";
 import { getTransactions, addTransaction } from "@services/warga.service";
 import { useUIStore } from "@stores/ui.store";
 import { formatRupiah, formatDate } from "@utils/format";
+import { GRADIENTS, RADIUS, TYPO, SPACING } from "@utils/theme";
+import { COLORS } from "@utils/colors";
 import type { OrgTransaction } from "@app-types/warga.types";
+import Svg, { Path } from "react-native-svg";
 
 export default function InfaqScreen() {
+  const insets = useSafeAreaInsets();
   const { orgId } = useLocalSearchParams<{ orgId: string }>();
   const showToast = useUIStore((s) => s.showToast);
   const [donations, setDonations] = useState<OrgTransaction[]>([]);
@@ -67,31 +72,66 @@ export default function InfaqScreen() {
   const total = donations.reduce((sum, d) => sum + d.amount, 0);
 
   return (
-    <SafeAreaView className="flex-1 bg-light-bg" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border-color bg-white">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <Text className="text-lg text-navy">←</Text>
+    <View style={{ flex: 1, backgroundColor: COLORS.lightBg }}>
+      {/* Gradient Header */}
+      <LinearGradient
+        colors={GRADIENTS.warga}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: insets.top + SPACING.sm,
+          paddingBottom: SPACING.lg,
+          paddingHorizontal: SPACING.md,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              hitSlop={12}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: RADIUS.full,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M15 18L9 12L15 6" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
+            </TouchableOpacity>
+            <Text style={{ ...TYPO.h3, color: "#FFFFFF", marginLeft: SPACING.md }}>
+              Infaq / Donasi
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowAdd(true)}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              borderRadius: RADIUS.md,
+              paddingHorizontal: SPACING.md,
+              paddingVertical: SPACING.sm,
+              borderWidth: 1,
+              borderColor: "rgba(255,255,255,0.3)",
+            }}
+          >
+            <Text style={{ ...TYPO.captionBold, color: "#FFFFFF" }}>+ Catat</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-dark-text ml-3">
-            Infaq / Donasi
-          </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => setShowAdd(true)}
-          className="bg-warga rounded-lg px-3 py-2"
-        >
-          <Text className="text-white text-xs font-bold">+ Catat</Text>
-        </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
-      <ScrollView className="flex-1 px-4 pt-3">
-        <Card>
-          <Text className="text-xs text-grey-text">Total Infaq</Text>
-          <Text className="text-2xl font-bold text-warga">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: SPACING.md, paddingBottom: SPACING.xxl }}
+      >
+        <Card variant="glass">
+          <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>Total Infaq</Text>
+          <Text style={{ ...TYPO.money, color: COLORS.warga, marginTop: SPACING.xs }}>
             {formatRupiah(total)}
           </Text>
-          <Text className="text-xs text-grey-text mt-1">
+          <Text style={{ ...TYPO.caption, color: COLORS.greyText, marginTop: SPACING.xs }}>
             {donations.length} donatur
           </Text>
         </Card>
@@ -105,26 +145,51 @@ export default function InfaqScreen() {
             onAction={() => setShowAdd(true)}
           />
         ) : (
-          donations.map((d) => (
-            <Card key={d.id}>
-              <View className="flex-row items-center">
-                <View className="w-8 h-8 rounded-full bg-warga/10 items-center justify-center mr-3">
-                  <Text className="text-sm">🤲</Text>
-                </View>
-                <View className="flex-1">
-                  <Text className="text-sm font-bold text-dark-text">
-                    {d.donor_name ?? "Hamba Allah"}
+          <>
+            <Text
+              style={{
+                ...TYPO.small,
+                color: "#94A3B8",
+                textTransform: "uppercase",
+                letterSpacing: 0.8,
+                marginBottom: SPACING.sm,
+              }}
+            >
+              RIWAYAT INFAQ
+            </Text>
+            {donations.map((d) => (
+              <Card key={d.id} variant="glass">
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: RADIUS.full,
+                      backgroundColor: "rgba(251,143,103,0.12)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: SPACING.md,
+                    }}
+                  >
+                    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+                      <Path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" stroke={COLORS.warga} strokeWidth={2} strokeLinejoin="round" />
+                    </Svg>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ ...TYPO.bodyBold, color: COLORS.darkText }}>
+                      {d.donor_name ?? "Hamba Allah"}
+                    </Text>
+                    <Text style={{ ...TYPO.caption, color: COLORS.greyText }}>
+                      {formatDate(d.transaction_date)}
+                    </Text>
+                  </View>
+                  <Text style={{ ...TYPO.bodyBold, color: COLORS.warga }}>
+                    +{formatRupiah(d.amount)}
                   </Text>
-                  <Text className="text-xs text-grey-text">
-                    {formatDate(d.transaction_date)}
-                  </Text>
                 </View>
-                <Text className="text-base font-bold text-warga">
-                  +{formatRupiah(d.amount)}
-                </Text>
-              </View>
-            </Card>
-          ))
+              </Card>
+            ))}
+          </>
         )}
       </ScrollView>
 
@@ -139,13 +204,13 @@ export default function InfaqScreen() {
           value={donorName}
           onChangeText={setDonorName}
         />
-        <View className="mt-3">
+        <View style={{ marginTop: SPACING.md }}>
           <CurrencyInput label="Jumlah" value={amount} onChangeValue={setAmount} />
         </View>
-        <View className="mt-4">
+        <View style={{ marginTop: SPACING.md }}>
           <Button title="Simpan" onPress={handleAdd} loading={addLoading} />
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
