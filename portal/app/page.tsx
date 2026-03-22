@@ -85,7 +85,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ═══ Hero — Logo-centric ═══ */}
+      {/* ═══ Hero: Logo-centric ═══ */}
       <section id="content" className="bg-[#2C7695] text-white pb-20 pt-10 md:pt-16 overflow-hidden relative">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 logo-shimmer-bg pointer-events-none" aria-hidden="true" />
@@ -93,11 +93,11 @@ export default function HomePage() {
         <div className="max-w-[960px] mx-auto px-6 relative">
           {/* Centered logo hero */}
           <div className="flex flex-col items-center text-center">
-            {/* Big logo — the star of the show */}
+            {/* Big logo: the star of the show */}
             <div className="logo-entrance logo-glow mb-8">
               <img
                 src="/logos/apick-logo-white.svg"
-                alt="apick — Life, well arranged"
+                alt="apick - Life, well arranged"
                 className="h-20 md:h-28"
               />
             </div>
@@ -168,7 +168,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 border-b border-[#E2E8F0]" aria-labelledby="story-heading">
         <div className="max-w-[960px] mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-center md:gap-16">
-            {/* Logo icon — full color, tanpa tulisan */}
+            {/* Logo icon: full color, tanpa tulisan */}
             <ScrollReveal direction="scale" className="flex justify-center md:justify-start shrink-0">
               <div className="w-[140px] h-[140px] md:w-[180px] md:h-[180px] rounded-3xl bg-[#F0F7FA] flex items-center justify-center logo-card">
                 <img
@@ -194,16 +194,16 @@ export default function HomePage() {
               </ScrollReveal>
               <ScrollReveal delay={1}>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Selama ini, app pengelolaan selalu dibuat untuk perusahaan besar — berbahasa Inggris, penuh fitur yang membingungkan, dengan harga langganan yang tidak masuk akal. Sementara itu, orang-orang di sekitar kita yang menjalankan usaha setiap hari justru masih mengandalkan catatan kertas dan grup WhatsApp.
+                  Selama ini, app pengelolaan selalu dibuat untuk perusahaan besar: berbahasa Inggris, penuh fitur yang membingungkan, dengan harga langganan yang tidak masuk akal. Sementara itu, orang-orang di sekitar kita yang menjalankan usaha setiap hari justru masih mengandalkan catatan kertas dan grup WhatsApp.
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Masalahnya bukan karena mereka tidak mau menggunakan teknologi. <span className="text-[#1E293B] font-semibold">Masalahnya, belum ada teknologi yang benar-benar dibuat untuk mereka</span> — yang berbahasa Indonesia, yang bisa langsung dipakai tanpa perlu belajar berhari-hari, dan yang harganya tidak memberatkan.
+                  Masalahnya bukan karena mereka tidak mau menggunakan teknologi. <span className="text-[#1E293B] font-semibold">Masalahnya, belum ada teknologi yang benar-benar dibuat untuk mereka.</span> Yang berbahasa Indonesia, yang bisa langsung dipakai tanpa perlu belajar berhari-hari, dan yang harganya tidak memberatkan.
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
                   Dari situlah kami bertanya: kenapa mencatat penjualan harus serumit software akuntansi? Kenapa mengelola iuran warga harus bergantung pada spreadsheet? Kenapa membuat undangan digital harus mengeluarkan biaya ratusan ribu?
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B]">
-                  apick hadir dengan keyakinan sederhana: siapa pun yang bisa menggunakan WhatsApp, seharusnya juga bisa menggunakan app untuk mengatur hidupnya — tanpa pelatihan, tanpa biaya besar, dan tanpa membaca panduan berlaman-laman. <span className="text-[#1E293B] font-semibold">Cukup buka, pakai, beres.</span>
+                  apick hadir dengan keyakinan sederhana: siapa pun yang bisa menggunakan WhatsApp, seharusnya juga bisa menggunakan app untuk mengatur hidupnya. Tanpa pelatihan, tanpa biaya besar, dan tanpa membaca panduan berlaman-laman. <span className="text-[#1E293B] font-semibold">Cukup buka, pakai, beres.</span>
                 </p>
               </ScrollReveal>
             </div>
@@ -623,9 +623,9 @@ export default function HomePage() {
                     { feature: "Catat transaksi & iuran", free: "✓", starter: "✓", pro: "✓" },
                     { feature: "Share via WhatsApp", free: "✓", starter: "✓", pro: "✓" },
                     { feature: "Portal web pelanggan", free: "✓", starter: "✓", pro: "✓" },
-                    { feature: "AI scan nota", free: "—", starter: "✓", pro: "✓" },
-                    { feature: "Export PDF", free: "—", starter: "✓", pro: "✓" },
-                    { feature: "Analisa & statistik", free: "—", starter: "—", pro: "✓" },
+                    { feature: "AI scan nota", free: "-", starter: "✓", pro: "✓" },
+                    { feature: "Export PDF", free: "-", starter: "✓", pro: "✓" },
+                    { feature: "Analisa & statistik", free: "-", starter: "-", pro: "✓" },
                   ].map((row, i) => (
                     <tr key={row.feature} className={i % 2 === 0 ? "bg-white" : "bg-[#F8FAFC]"}>
                       <td className="py-2.5 pr-4 text-[#1E293B] font-medium">{row.feature}</td>
@@ -643,7 +643,7 @@ export default function HomePage() {
           <ScrollReveal>
             <div className="mt-10 text-center">
               <p className="text-[14px] text-[#64748B] leading-[1.6] max-w-[520px] mx-auto">
-                Ga perlu langsung bayar. Mulai dari Gratis, rasakan sendiri manfaatnya. Upgrade kapan aja kalau memang butuh — bisa bulanan atau tahunan (hemat 2 bulan).
+                Ga perlu langsung bayar. Mulai dari Gratis, rasakan sendiri manfaatnya. Upgrade kapan aja kalau memang butuh, bisa bulanan atau tahunan (hemat 2 bulan).
               </p>
             </div>
           </ScrollReveal>

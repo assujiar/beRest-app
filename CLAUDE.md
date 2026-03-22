@@ -46,6 +46,9 @@ Setiap screen yang affect provider data HARUS juga consider consumer view (web +
 - SMART DEFAULTS. App harus jalan tanpa config. Pre-fill everything possible.
 - Refer to Section 4 "UI/UX Design Principles" in product concept for full specs.
 
+### Rule 10: Dilarang pakai em dash (—)
+Jangan gunakan karakter em dash (—) di bagian manapun: copy, komentar, placeholder, dsb. Gunakan alternatif: koma, titik, titik dua, tanda kurung, atau tulis ulang kalimatnya.
+
 ## TECH STACK (LOCKED)
 - Mobile: React Native + Expo SDK 52+ (TypeScript strict)
 - Web Portal: Next.js 15 (hosted Vercel free)
