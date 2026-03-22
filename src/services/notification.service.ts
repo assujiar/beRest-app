@@ -1,4 +1,6 @@
 import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 import { supabase } from "./supabase";
 import type { Notification } from "@app-types/consumer.types";
 import type { ModuleKey } from "@app-types/shared.types";
@@ -20,10 +22,32 @@ try {
 
 /** Register push token with Supabase */
 export async function registerPushToken(userId: string): Promise<void> {
-  const { status } = await Notifications.requestPermissionsAsync();
-  if (status !== "granted") return;
+  // Android requires notification channel
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "Notifikasi Apick",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      sound: "default",
+    });
+  }
 
-  const token = await Notifications.getExpoPushTokenAsync();
+  const { status: existingStatus } =
+    await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== "granted") {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== "granted") return;
+
+  const projectId =
+    Constants.expoConfig?.extra?.eas?.projectId ??
+    "4087ef4e-a903-468d-b293-d9652dc925a1";
+
+  const token = await Notifications.getExpoPushTokenAsync({ projectId });
 
   await supabase.from("push_tokens").upsert({
     user_id: userId,
@@ -81,7 +105,7 @@ export async function getUnreadCount(userId: string): Promise<number> {
   return count ?? 0;
 }
 
-/** Create a notification (called by provider actions) */
+/** Create a notification + send push to device */
 export async function createNotification(params: {
   userId: string;
   providerId: string;
@@ -104,6 +128,35 @@ export async function createNotification(params: {
     reference_id: params.referenceId ?? null,
     deep_link: params.deepLink ?? null,
     is_read: false,
+  });
+
+  if (error) throw error;
+
+  // Send push notification to device (fire-and-forget)
+  sendPush({
+    userIds: [params.userId],
+    title: params.title,
+    body: params.body,
+    deepLink: params.deepLink,
+  }).catch((err) =>
+    console.warn("[Apick] Push send failed:", err)
+  );
+}
+
+/** Send push to multiple users via Supabase Edge Function */
+export async function sendPush(params: {
+  userIds: string[];
+  title: string;
+  body?: string;
+  deepLink?: string;
+}): Promise<void> {
+  const { error } = await supabase.functions.invoke("send-push", {
+    body: {
+      user_ids: params.userIds,
+      title: params.title,
+      body: params.body ?? "",
+      data: params.deepLink ? { deep_link: params.deepLink } : {},
+    },
   });
 
   if (error) throw error;
