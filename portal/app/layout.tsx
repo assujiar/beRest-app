@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "apick - Life, well arranged",
   description: "1 app untuk kelola usaha, properti sewa, organisasi warga, dan hajatan. Simpel, gratis, dibuat untuk Indonesia.",
+  verification: {
+    google: "337Hj8x-nMpHpnL_qCDtThGV6EIEOjwvU_fkCKq-dis",
+  },
 };
 
 export default function RootLayout({
