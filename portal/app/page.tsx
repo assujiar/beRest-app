@@ -164,106 +164,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ Logo Showcase — Full Color & White ═══ */}
-      <section className="py-16 md:py-24 border-b border-[#E2E8F0]" aria-labelledby="brand-heading">
+      {/* ═══ Kenapa Apick Dibuat ═══ */}
+      <section className="py-16 md:py-24 border-b border-[#E2E8F0]" aria-labelledby="story-heading">
         <div className="max-w-[960px] mx-auto px-6">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#94A3B8] mb-4">
-                Brand Kami
-              </p>
-              <h2
-                id="brand-heading"
-                className="text-[28px] md:text-[36px] font-extrabold leading-[1.1] text-[#1E293B] mb-3"
-              >
-                apick
-              </h2>
-              <p className="text-[15px] text-[#64748B] editorial-serif">
-                Life, well arranged.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Full color logo on light background */}
-            <ScrollReveal delay={1}>
-              <div className="logo-card bg-white rounded-2xl border border-[#E2E8F0] p-10 md:p-14 flex flex-col items-center justify-center min-h-[240px]">
+          <div className="flex flex-col md:flex-row md:items-center md:gap-16">
+            {/* Logo icon — full color, tanpa tulisan */}
+            <ScrollReveal direction="scale" className="flex justify-center md:justify-start shrink-0">
+              <div className="w-[140px] h-[140px] md:w-[180px] md:h-[180px] rounded-3xl bg-[#F0F7FA] flex items-center justify-center logo-card">
                 <img
-                  src="/logos/apick-logo-full.svg"
-                  alt="apick logo — full color"
-                  className="h-14 md:h-20 mb-6"
+                  src="/logos/apick-app-icon.svg"
+                  alt="apick"
+                  className="w-[90px] h-[90px] md:w-[120px] md:h-[120px]"
                 />
-                <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="/logos/apick-app-icon.svg"
-                    alt=""
-                    className="w-10 h-10 rounded-xl shadow-md"
-                    aria-hidden="true"
-                  />
-                  <div className="text-left">
-                    <p className="text-[13px] font-bold text-[#1E293B]">apick</p>
-                    <p className="text-[11px] text-[#94A3B8]">Life, well arranged.</p>
-                  </div>
-                </div>
-                <p className="text-[12px] text-[#94A3B8] mt-2 tracking-wide uppercase font-medium">
-                  Full Color
+              </div>
+            </ScrollReveal>
+
+            {/* Story */}
+            <div className="mt-8 md:mt-0 flex-1">
+              <ScrollReveal>
+                <p className="text-[13px] font-semibold tracking-[0.2em] uppercase text-[#156064] mb-4">
+                  Cerita di balik apick
                 </p>
-              </div>
-            </ScrollReveal>
-
-            {/* White logo on dark background */}
-            <ScrollReveal delay={2}>
-              <div className="logo-card bg-[#2C7695] rounded-2xl p-10 md:p-14 flex flex-col items-center justify-center min-h-[240px] relative overflow-hidden">
-                <div className="absolute inset-0 logo-shimmer-bg pointer-events-none" aria-hidden="true" />
-                <div className="relative">
-                  <img
-                    src="/logos/apick-logo-white.svg"
-                    alt="apick logo — white"
-                    className="h-14 md:h-20 mb-6 logo-glow"
-                  />
-                  <div className="flex items-center gap-3 mb-3 justify-center">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center" aria-hidden="true">
-                      <img
-                        src="/logos/apick-app-icon.svg"
-                        alt=""
-                        className="w-8 h-8 rounded-lg brightness-0 invert"
-                      />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-[13px] font-bold text-white">apick</p>
-                      <p className="text-[11px] text-white/50">Life, well arranged.</p>
-                    </div>
-                  </div>
-                  <p className="text-[12px] text-white/40 mt-2 tracking-wide uppercase font-medium text-center">
-                    White
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          {/* Module color strip */}
-          <ScrollReveal delay={3}>
-            <div className="mt-8 flex items-center justify-center gap-3">
-              {[
-                { name: "Lapak", color: "#50BFC3" },
-                { name: "Sewa", color: "#00C49A" },
-                { name: "Warga", color: "#FB8F67" },
-                { name: "Hajat", color: "#D95877" },
-              ].map((m) => (
-                <div key={m.name} className="flex items-center gap-1.5">
-                  <span
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: m.color }}
-                    aria-hidden="true"
-                  />
-                  <span className="text-[12px] font-semibold" style={{ color: m.color }}>
-                    {m.name}
-                  </span>
-                </div>
-              ))}
+                <h2
+                  id="story-heading"
+                  className="text-[28px] md:text-[36px] font-extrabold leading-[1.15] text-[#1E293B] mb-5"
+                >
+                  Berawal dari buku catatan yang sering hilang.
+                </h2>
+              </ScrollReveal>
+              <ScrollReveal delay={1}>
+                <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
+                  Pedagang yang lupa omzet kemarin. Ibu kos yang pusing nagih satu-satu.
+                  Bendahara RT yang dicurigai warga karena laporan keuangan ga jelas.
+                  Calon pengantin yang habis ratusan ribu cuma buat undangan digital.
+                </p>
+                <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
+                  Mereka semua punya masalah yang sama: <span className="text-[#1E293B] font-semibold">catatan berantakan, hidup jadi ribet.</span>
+                </p>
+                <p className="text-[15px] leading-[1.8] text-[#64748B]">
+                  apick dibuat supaya orang-orang biasa — yang belum tentu paham teknologi — bisa ngatur hal-hal penting dalam hidup mereka. Sesimpel buka WhatsApp. Segratis mungkin. Selengkap yang dibutuhkan.
+                </p>
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </section>
 
