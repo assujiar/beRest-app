@@ -194,16 +194,16 @@ export default function HomePage() {
               </ScrollReveal>
               <ScrollReveal delay={1}>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Kebanyakan app pengelolaan dibuat buat perusahaan besar. Bahasa Inggris, fitur bertumpuk, dashboard yang bikin pusing, langganan ratusan ribu per bulan. Orang-orang di sekitar kita — yang usahanya jalan tiap hari, yang ngurusin hajat hidup orang banyak — malah masih pakai cara manual.
+                  Selama ini, app pengelolaan selalu dibuat untuk perusahaan besar — berbahasa Inggris, penuh fitur yang membingungkan, dengan harga langganan yang tidak masuk akal. Sementara itu, orang-orang di sekitar kita yang menjalankan usaha setiap hari justru masih mengandalkan catatan kertas dan grup WhatsApp.
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Bukan karena mereka ga mau pakai teknologi. <span className="text-[#1E293B] font-semibold">Tapi belum ada yang bikin teknologi untuk mereka.</span> Yang bahasa Indonesia. Yang ga minta belajar dulu seminggu sebelum bisa dipakai. Yang harganya masuk akal — atau bahkan gratis.
+                  Masalahnya bukan karena mereka tidak mau menggunakan teknologi. <span className="text-[#1E293B] font-semibold">Masalahnya, belum ada teknologi yang benar-benar dibuat untuk mereka</span> — yang berbahasa Indonesia, yang bisa langsung dipakai tanpa perlu belajar berhari-hari, dan yang harganya tidak memberatkan.
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B] mb-4">
-                  Kami mulai dari pertanyaan simpel: kenapa app buat catat jualan harus serumit software akuntansi? Kenapa ngatur iuran warga harus pakai spreadsheet? Kenapa bikin undangan digital harus bayar ratusan ribu?
+                  Dari situlah kami bertanya: kenapa mencatat penjualan harus serumit software akuntansi? Kenapa mengelola iuran warga harus bergantung pada spreadsheet? Kenapa membuat undangan digital harus mengeluarkan biaya ratusan ribu?
                 </p>
                 <p className="text-[15px] leading-[1.8] text-[#64748B]">
-                  apick lahir dari keyakinan bahwa kalau seseorang bisa pakai WhatsApp, dia harusnya bisa pakai app untuk ngatur hidupnya. Tanpa pelatihan. Tanpa biaya besar. Tanpa baca manual 50 halaman. Cukup buka, pakai, beres. <span className="text-[#1E293B] font-semibold">Hidup jadi rapi, tanpa harus jadi ahli teknologi.</span>
+                  apick hadir dengan keyakinan sederhana: siapa pun yang bisa menggunakan WhatsApp, seharusnya juga bisa menggunakan app untuk mengatur hidupnya — tanpa pelatihan, tanpa biaya besar, dan tanpa membaca panduan berlaman-laman. <span className="text-[#1E293B] font-semibold">Cukup buka, pakai, beres.</span>
                 </p>
               </ScrollReveal>
             </div>
