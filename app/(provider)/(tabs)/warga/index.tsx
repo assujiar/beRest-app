@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
@@ -30,9 +31,11 @@ export default function WargaScreen() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (profile?.id) loadOrgs();
-  }, [profile?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (profile?.id) loadOrgs();
+    }, [profile?.id])
+  );
 
   async function loadOrgs() {
     try {

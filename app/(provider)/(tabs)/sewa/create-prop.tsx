@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect } from "react-native-svg";
@@ -85,11 +86,13 @@ export default function CreatePropertyScreen() {
   const [error, setError] = useState("");
   const [propCount, setPropCount] = useState(0);
 
-  useEffect(() => {
-    if (profile?.id) {
-      getProperties(profile.id).then((data) => setPropCount(data.length)).catch(() => {});
-    }
-  }, [profile?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (profile?.id) {
+        getProperties(profile.id).then((data) => setPropCount(data.length)).catch(() => {});
+      }
+    }, [profile?.id])
+  );
 
   async function handleCreate() {
     if (!name.trim()) { setError("Nama properti wajib diisi"); return; }

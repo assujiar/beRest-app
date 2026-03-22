@@ -23,6 +23,7 @@
 | 2026-03-22 | app/(auth)/otp.tsx | Updated UI text to reference WhatsApp instead of SMS |
 | 2026-03-22 | portal/app/layout.tsx | Added Google site verification meta tag for apick.id |
 |------|---------------|--------|
+| 2026-03-22 | 26 screen files across all modules | Fix useEffect → useFocusEffect across all provider screens so data reloads on navigation back |
 | 2026-03-22 | src/services/supabase.ts | Fix CRUD blocked by RLS - enable autoRefreshToken so JWT stays valid on cold start |
 | 2026-03-22 | src/components/ui/Modal.tsx | Fix subscription modal not scrollable - add ScrollView so Pro package is visible |
 | 2026-03-22 | app/(provider)/(tabs)/sewa/index.tsx | Fix new property not appearing after creation - use useFocusEffect to reload on screen focus |

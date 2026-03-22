@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
@@ -52,9 +53,11 @@ export default function DuesScreen() {
   const [setupAmount, setSetupAmount] = useState(0);
   const [setupLoading, setSetupLoading] = useState(false);
 
-  useEffect(() => {
-    if (orgId) loadData();
-  }, [orgId, period]);
+  useFocusEffect(
+    useCallback(() => {
+      if (orgId) loadData();
+    }, [orgId, period])
+  );
 
   async function loadData() {
     setLoading(true);

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -71,7 +72,7 @@ export default function ContractsScreen() {
   const [generatedText, setGeneratedText] = useState("");
   const [showPreview, setShowPreview] = useState(false);
 
-  useEffect(() => { if (profile?.id) loadData(); }, [profile?.id]);
+  useFocusEffect(useCallback(() => { if (profile?.id) loadData(); }, [profile?.id]));
 
   async function loadData() {
     try { setContracts(await getContracts(profile!.id)); } catch { /* silent */ } finally { setLoading(false); }

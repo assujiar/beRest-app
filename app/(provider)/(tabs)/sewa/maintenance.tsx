@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Circle } from "react-native-svg";
@@ -44,7 +45,7 @@ export default function MaintenanceScreen() {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { if (propId) loadData(); }, [propId]);
+  useFocusEffect(useCallback(() => { if (propId) loadData(); }, [propId]));
 
   async function loadData() {
     try { setRequests(await getMaintenanceRequests(propId!)); } catch { /* silent */ } finally { setLoading(false); }

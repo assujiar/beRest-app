@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -58,7 +59,7 @@ export default function BillingScreen() {
   const [showReminder, setShowReminder] = useState(false);
   const [reminderDay, setReminderDay] = useState(1);
 
-  useEffect(() => { if (propId) loadData(); }, [propId]);
+  useFocusEffect(useCallback(() => { if (propId) loadData(); }, [propId]));
 
   async function loadData() {
     try { setBillings(await getBillingByPeriod(propId!, period)); }

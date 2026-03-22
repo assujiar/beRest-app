@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -52,7 +53,7 @@ export default function UnitDetailScreen() {
   const [actionLoading, setActionLoading] = useState(false);
   const [ktpScanLoading, setKtpScanLoading] = useState(false);
 
-  useEffect(() => { if (unitId) loadUnit(); }, [unitId]);
+  useFocusEffect(useCallback(() => { if (unitId) loadUnit(); }, [unitId]));
 
   async function loadUnit() {
     const { data } = await supabase.from("property_units").select("*").eq("id", unitId!).single();

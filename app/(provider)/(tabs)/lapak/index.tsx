@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
@@ -25,9 +26,11 @@ export default function LapakScreen() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (profile?.id) loadData();
-  }, [profile?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (profile?.id) loadData();
+    }, [profile?.id])
+  );
 
   async function loadData() {
     try {

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
@@ -36,7 +37,7 @@ export default function CustomersScreen() {
   const [newPhone, setNewPhone] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => { if (bizId) loadData(); }, [bizId]);
+  useFocusEffect(useCallback(() => { if (bizId) loadData(); }, [bizId]));
 
   async function loadData() {
     try { setCustomers(await getCustomers(bizId!)); } catch {} finally { setLoading(false); }

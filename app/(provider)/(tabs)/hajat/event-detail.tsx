@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
@@ -86,7 +87,7 @@ export default function EventDetailScreen() {
   const [giftAmount, setGiftAmount] = useState(0);
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => { if (eventId) loadAll(); }, [eventId, tab]);
+  useFocusEffect(useCallback(() => { if (eventId) loadAll(); }, [eventId, tab]));
 
   async function loadAll() {
     try {

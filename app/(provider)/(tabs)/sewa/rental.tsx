@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -45,7 +46,7 @@ export default function RentalScreen() {
   const [bName, setBName] = useState(""); const [bPhone, setBPhone] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => { if (profile?.id) loadData(); }, [profile?.id, tab]);
+  useFocusEffect(useCallback(() => { if (profile?.id) loadData(); }, [profile?.id, tab]));
 
   async function loadData() {
     if (!profile?.id) return;

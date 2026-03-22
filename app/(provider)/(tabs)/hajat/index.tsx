@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
@@ -32,7 +33,7 @@ export default function HajatScreen() {
   const [events, setEvents] = useState<HajatEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { if (profile?.id) loadData(); }, [profile?.id]);
+  useFocusEffect(useCallback(() => { if (profile?.id) loadData(); }, [profile?.id]));
   async function loadData() { try { setEvents(await getEvents(profile!.id)); } catch {} finally { setLoading(false); } }
 
   if (!loading && events.length === 0) {

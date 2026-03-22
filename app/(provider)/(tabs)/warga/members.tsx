@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Alert,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Card } from "@components/ui/Card";
@@ -49,9 +50,11 @@ export default function MembersScreen() {
   const [newPhone, setNewPhone] = useState("");
   const [addLoading, setAddLoading] = useState(false);
 
-  useEffect(() => {
-    if (orgId) loadMembers();
-  }, [orgId]);
+  useFocusEffect(
+    useCallback(() => {
+      if (orgId) loadMembers();
+    }, [orgId])
+  );
 
   async function loadMembers() {
     try {
