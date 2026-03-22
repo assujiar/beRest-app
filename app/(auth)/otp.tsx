@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,12 +19,47 @@ export default function OtpScreen() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [otpFailCount, setOtpFailCount] = useState(0);
   const [magicLinkMode, setMagicLinkMode] = useState(false);
   const [magicLinkSending, setMagicLinkSending] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendCooldown, setResendCooldown] = useState(60);
+  const [otpExpiry, setOtpExpiry] = useState(300); // 5 min countdown
   const inputs = useRef<(TextInput | null)[]>([]);
   const showToast = useUIStore((s) => s.showToast);
+
+  // OTP expiry countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOtpExpiry((c) => {
+        if (c <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((c) => {
+        if (c <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  function formatTime(seconds: number) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
 
   function handleChange(text: string, index: number) {
     const newOtp = [...otp];
@@ -55,6 +90,11 @@ export default function OtpScreen() {
       return;
     }
 
+    if (otpExpiry <= 0) {
+      setError("Kode OTP sudah kedaluwarsa. Kirim ulang ya.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -65,8 +105,6 @@ export default function OtpScreen() {
     setLoading(false);
 
     if (authError) {
-      const newFailCount = otpFailCount + 1;
-      setOtpFailCount(newFailCount);
       setError(authError.message ?? "Kode OTP salah. Cek lagi ya.");
       return;
     }
@@ -92,23 +130,27 @@ export default function OtpScreen() {
     if (resendCooldown > 0) return;
 
     if (isEmail) {
-      await signInWithEmail(email ?? "");
+      const { error: sendError } = await signInWithEmail(email ?? "");
+      if (sendError) {
+        setError(sendError.message ?? "Gagal kirim ulang. Coba lagi nanti.");
+        return;
+      }
       showToast("Kode OTP baru dikirim ke email!", "success");
     } else {
-      await signInWithPhone(phone ?? "");
+      const { error: sendError } = await signInWithPhone(phone ?? "");
+      if (sendError) {
+        setError(sendError.message ?? "Gagal kirim ulang. Coba lagi nanti.");
+        return;
+      }
       showToast("Kode OTP baru dikirim via WhatsApp!", "success");
     }
 
+    // Reset expiry and cooldown
+    setOtpExpiry(300);
     setResendCooldown(60);
-    const interval = setInterval(() => {
-      setResendCooldown((c) => {
-        if (c <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return c - 1;
-      });
-    }, 1000);
+    setOtp(["", "", "", "", "", ""]);
+    setError("");
+    inputs.current[0]?.focus();
   }
 
   const channelText = isEmail ? "email" : "WhatsApp";
@@ -145,7 +187,6 @@ export default function OtpScreen() {
               onPress={() => {
                 setMagicLinkMode(false);
                 setError("");
-                setOtpFailCount(0);
               }}
               className="items-center py-3"
             >
@@ -171,8 +212,19 @@ export default function OtpScreen() {
             Kode 6 digit sudah dikirim via {channelText} ke {destination}
           </Text>
 
+          {/* OTP expiry indicator */}
+          {otpExpiry > 0 ? (
+            <Text className={`text-xs mt-2 ${otpExpiry <= 60 ? "text-red-500 font-bold" : "text-grey-text"}`}>
+              Kode berlaku {formatTime(otpExpiry)}
+            </Text>
+          ) : (
+            <Text className="text-xs mt-2 text-red-500 font-bold">
+              Kode sudah kedaluwarsa. Kirim ulang di bawah.
+            </Text>
+          )}
+
           {/* OTP inputs */}
-          <View className="flex-row justify-between mt-8">
+          <View className="flex-row justify-between mt-6">
             {otp.map((digit, i) => (
               <TextInput
                 key={i}
@@ -180,10 +232,12 @@ export default function OtpScreen() {
                 className={`
                   w-12 h-14 rounded-lg border text-center text-xl font-bold text-dark-text
                   ${error ? "border-red-500" : digit ? "border-navy" : "border-border-color"}
+                  ${otpExpiry <= 0 ? "opacity-50" : ""}
                 `}
                 maxLength={1}
                 keyboardType="number-pad"
                 value={digit}
+                editable={otpExpiry > 0}
                 onChangeText={(text) => handleChange(text, i)}
                 onKeyPress={({ nativeEvent }) =>
                   handleKeyPress(nativeEvent.key, i)
@@ -196,32 +250,36 @@ export default function OtpScreen() {
             <Text className="text-sm text-red-500 mt-3">{error}</Text>
           ) : null}
 
-          {/* Magic link fallback - show after 1 failed OTP attempt (email only) */}
-          {isEmail && otpFailCount >= 1 ? (
+          {/* Magic link option - always show for email */}
+          {isEmail ? (
             <TouchableOpacity
               onPress={handleMagicLink}
               disabled={magicLinkSending}
               className="bg-white rounded-xl p-4 mt-4 border border-border-color"
             >
               <Text className="text-sm font-bold text-dark-text">
-                Kode OTP bermasalah?
+                Masuk lewat link email
               </Text>
               <Text className="text-xs text-grey-text mt-1">
                 {magicLinkSending
                   ? "Mengirim link ke email..."
-                  : "Ketuk di sini untuk masuk lewat link di email."}
+                  : "Gak perlu ketik kode. Klik link di email untuk langsung masuk."}
               </Text>
             </TouchableOpacity>
           ) : null}
 
-          <Text
-            className={`text-sm mt-4 ${resendCooldown > 0 ? "text-grey-text" : "text-navy font-bold"}`}
+          {/* Resend */}
+          <TouchableOpacity
             onPress={handleResend}
+            disabled={resendCooldown > 0}
+            className="mt-4"
           >
-            {resendCooldown > 0
-              ? `Kirim ulang kode dalam ${resendCooldown} detik`
-              : "Kirim ulang kode OTP"}
-          </Text>
+            <Text className={`text-sm ${resendCooldown > 0 ? "text-grey-text" : "text-navy font-bold"}`}>
+              {resendCooldown > 0
+                ? `Kirim ulang kode dalam ${resendCooldown} detik`
+                : "Kirim ulang kode OTP"}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Bottom - thumb zone */}
@@ -230,6 +288,7 @@ export default function OtpScreen() {
             title="Verifikasi"
             onPress={() => handleVerify()}
             loading={loading}
+            disabled={otpExpiry <= 0}
           />
         </View>
       </View>

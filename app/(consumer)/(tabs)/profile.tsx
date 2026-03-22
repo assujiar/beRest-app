@@ -87,6 +87,12 @@ export default function ConsumerProfileScreen() {
                 variant="info"
               />
             </View>
+            <TouchableOpacity
+              className="mt-3 bg-orange/10 rounded-lg px-4 py-2"
+              onPress={() => router.push("/edit-profile")}
+            >
+              <Text className="text-orange text-sm font-bold">Edit Profil</Text>
+            </TouchableOpacity>
           </View>
         </Card>
 

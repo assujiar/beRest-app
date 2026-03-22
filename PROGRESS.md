@@ -6,6 +6,9 @@
 
 ## MODIFICATIONS LOG
 | Date | Files Modified | Reason |
+| 2026-03-22 | app/auth/callback.tsx (NEW), app/+not-found.tsx (NEW), app/_layout.tsx | Fix magic link "unmatched route" - add callback route + not-found fallback |
+| 2026-03-22 | app/edit-profile.tsx (NEW), app/(provider)/(tabs)/profile.tsx, app/(consumer)/(tabs)/profile.tsx | Add edit profile screen with avatar upload + name edit, add Edit Profil button |
+| 2026-03-22 | app/(auth)/otp.tsx | Improved OTP UX: expiry countdown (5 min), magic link always visible for email, reset on resend |
 | 2026-03-22 | src/services/auth.service.ts, app/_layout.tsx, app/(auth)/otp.tsx | Fix email magic link redirect to localhost - add emailRedirectTo, deep link handler, OTP screen update |
 | 2026-03-22 | supabase/migrations/00009_fix_handle_new_user_trigger.sql (NEW) | Fix "Database error saving new user" - add email field, ON CONFLICT, error handling |
 | 2026-03-22 | app/(auth)/register.tsx | Improved error message for database signup errors |

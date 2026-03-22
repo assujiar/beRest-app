@@ -104,6 +104,12 @@ export default function ProviderProfileScreen() {
                 variant="info"
               />
             </View>
+            <TouchableOpacity
+              className="mt-3 bg-navy/10 rounded-lg px-4 py-2"
+              onPress={() => router.push("/edit-profile")}
+            >
+              <Text className="text-navy text-sm font-bold">Edit Profil</Text>
+            </TouchableOpacity>
           </View>
         </Card>
 
