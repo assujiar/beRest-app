@@ -6,6 +6,9 @@
 
 ## MODIFICATIONS LOG
 | Date | Files Modified | Reason |
+| 2026-03-22 | app/(provider)/(tabs)/warga/org-detail.tsx, members.tsx, dues.tsx, finance.tsx, announcements.tsx, jadwal.tsx, infaq.tsx, fundraising.tsx | UI redesign: glassmorphism + flat vector. Replaced SafeAreaView+className with View+insets+inline styles. Gradient headers, glass cards, SVG icons, theme system (GRADIENTS, GLASS, RADIUS, TYPO, SPACING). |
+| 2026-03-22 | app/(provider)/(tabs)/sewa/prop-detail.tsx, unit-detail.tsx, billing.tsx, contracts.tsx, vacant.tsx, maintenance.tsx, rental.tsx | UI redesign: glassmorphism + flat vector. Replaced SafeAreaView+className with View+insets+inline styles. Gradient headers, glass cards, SVG icons, theme system. |
+| 2026-03-22 | app/(provider)/(tabs)/lapak/dashboard.tsx, products.tsx, queue.tsx, customers.tsx, expenses.tsx, laundry.tsx, guru.tsx | UI redesign: glassmorphism + flat vector. Replaced SafeAreaView+className with View+insets+inline styles. Gradient headers, glass cards, SVG icons, theme system (GRADIENTS, GLASS, RADIUS, TYPO, SPACING). |
 | 2026-03-22 | app/auth/callback.tsx (NEW), app/+not-found.tsx (NEW), app/_layout.tsx | Fix magic link "unmatched route" - add callback route + not-found fallback |
 | 2026-03-22 | app/edit-profile.tsx (NEW), app/(provider)/(tabs)/profile.tsx, app/(consumer)/(tabs)/profile.tsx | Add edit profile screen with avatar upload + name edit, add Edit Profil button |
 | 2026-03-22 | app/(auth)/otp.tsx | Improved OTP UX: expiry countdown (5 min), magic link always visible for email, reset on resend |
