@@ -40,13 +40,15 @@ jobs:
           packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Determine channel
+      - name: Determine channel and environment
         id: channel
         run: |
           if [[ "$GITHUB_REF_NAME" == "main" ]]; then
             echo "channel=production" >> $GITHUB_OUTPUT
+            echo "environment=production" >> $GITHUB_OUTPUT
           else
             echo "channel=preview" >> $GITHUB_OUTPUT
+            echo "environment=preview" >> $GITHUB_OUTPUT
           fi
 
       - name: Publish OTA Update
@@ -55,4 +57,5 @@ jobs:
         run: |
           eas update \
             --channel "${{ steps.channel.outputs.channel }}" \
+            --environment "${{ steps.channel.outputs.environment }}" \
             --message "${{ github.event.head_commit.message }}"

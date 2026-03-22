@@ -63,10 +63,15 @@ export async function signInWithGoogle() {
 // ─── Phone OTP (WhatsApp/SMS) ───────────────────────────────────
 
 export async function signInWithPhone(phone: string) {
-  const { data, error } = await supabase.auth.signInWithOtp({ phone });
+  const { data, error } = await supabase.auth.signInWithOtp({ phone }).catch((err) => ({
+    data: null as any,
+    error: { message: err?.message ?? "Network request failed" } as any,
+  }));
   if (error) {
     const msg = error.message?.toLowerCase() ?? "";
-    if (msg.includes("rate limit") || msg.includes("too many")) {
+    if (msg.includes("network") || msg.includes("fetch")) {
+      error.message = "Tidak bisa terhubung ke server. Cek koneksi internet kamu ya.";
+    } else if (msg.includes("rate limit") || msg.includes("too many")) {
       error.message = "Terlalu sering kirim OTP. Tunggu beberapa menit ya.";
     } else if (msg.includes("invalid") && msg.includes("phone")) {
       error.message = "Format nomor HP tidak valid. Coba pakai format 08xx.";
@@ -104,10 +109,15 @@ export async function signInWithEmail(email: string) {
     options: {
       emailRedirectTo: "apick://auth/callback",
     },
-  });
+  }).catch((err) => ({
+    data: null as any,
+    error: { message: err?.message ?? "Network request failed" } as any,
+  }));
   if (error) {
     const msg = error.message?.toLowerCase() ?? "";
-    if (msg.includes("rate limit") || msg.includes("too many")) {
+    if (msg.includes("network") || msg.includes("fetch")) {
+      error.message = "Tidak bisa terhubung ke server. Cek koneksi internet kamu ya.";
+    } else if (msg.includes("rate limit") || msg.includes("too many")) {
       error.message = "Terlalu sering kirim kode. Tunggu beberapa menit ya.";
     } else if (msg.includes("invalid") && msg.includes("email")) {
       error.message = "Format email tidak valid. Cek lagi ya.";
