@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@components/ui/Card";
@@ -13,6 +13,8 @@ import {
   linkPhone,
   linkEmail,
   linkGoogle,
+  verifyPhoneLink,
+  verifyEmailLink,
   syncLinkedMethods,
 } from "@services/auth.service";
 import { formatPhoneE164, formatPhoneDisplay } from "@utils/format";
@@ -30,6 +32,8 @@ const METHOD_DESCRIPTIONS: Record<AuthMethod, string> = {
   google: "Login langsung via akun Google",
 };
 
+type LinkStep = "input" | "otp";
+
 export default function LinkedAccountsScreen() {
   const session = useAuthStore((s) => s.session);
   const profile = useAuthStore((s) => s.profile);
@@ -42,11 +46,21 @@ export default function LinkedAccountsScreen() {
   const [phoneInput, setPhoneInput] = useState("");
   const [showPhoneForm, setShowPhoneForm] = useState(false);
   const [phoneLinking, setPhoneLinking] = useState(false);
+  const [phoneStep, setPhoneStep] = useState<LinkStep>("input");
+  const [phoneFormatted, setPhoneFormatted] = useState("");
 
   // Link email state
   const [emailInput, setEmailInput] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailLinking, setEmailLinking] = useState(false);
+  const [emailStep, setEmailStep] = useState<LinkStep>("input");
+  const [emailTrimmed, setEmailTrimmed] = useState("");
+
+  // OTP state
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const otpInputs = useRef<(TextInput | null)[]>([]);
 
   const [error, setError] = useState("");
 
@@ -59,6 +73,66 @@ export default function LinkedAccountsScreen() {
   useEffect(() => {
     loadMethods();
   }, [loadMethods]);
+
+  function resetOtp() {
+    setOtp(["", "", "", "", "", ""]);
+    setOtpVerifying(false);
+    setError("");
+  }
+
+  function resetPhoneForm() {
+    setShowPhoneForm(false);
+    setPhoneInput("");
+    setPhoneStep("input");
+    setPhoneFormatted("");
+    resetOtp();
+  }
+
+  function resetEmailForm() {
+    setShowEmailForm(false);
+    setEmailInput("");
+    setEmailStep("input");
+    setEmailTrimmed("");
+    resetOtp();
+  }
+
+  function startResendCooldown() {
+    setResendCooldown(60);
+    const interval = setInterval(() => {
+      setResendCooldown((c) => {
+        if (c <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+  }
+
+  // ─── OTP input handlers ──────────────────────────────────────
+
+  function handleOtpChange(text: string, index: number) {
+    const newOtp = [...otp];
+    newOtp[index] = text;
+    setOtp(newOtp);
+    setError("");
+
+    if (text && index < 5) {
+      otpInputs.current[index + 1]?.focus();
+    }
+
+    if (text && index === 5 && newOtp.every((d) => d)) {
+      handleVerifyOtp(newOtp.join(""));
+    }
+  }
+
+  function handleOtpKeyPress(key: string, index: number) {
+    if (key === "Backspace" && !otp[index] && index > 0) {
+      otpInputs.current[index - 1]?.focus();
+    }
+  }
+
+  // ─── Phone linking ───────────────────────────────────────────
 
   async function handleLinkPhone() {
     if (phoneInput.length < 10) {
@@ -77,15 +151,25 @@ export default function LinkedAccountsScreen() {
       return;
     }
 
-    showToast("Nomor HP berhasil dihubungkan!", "success");
-    setShowPhoneForm(false);
-    setPhoneInput("");
-
-    if (session?.user.id) {
-      const methods = await syncLinkedMethods(session.user.id);
-      setLinkedMethods(methods);
-    }
+    setPhoneFormatted(formatted);
+    setPhoneStep("otp");
+    resetOtp();
+    startResendCooldown();
+    showToast("Kode OTP dikirim ke nomor baru!", "success");
   }
+
+  async function handleResendPhoneOtp() {
+    if (resendCooldown > 0) return;
+    const { error: linkError } = await linkPhone(phoneFormatted);
+    if (linkError) {
+      setError(linkError.message);
+      return;
+    }
+    showToast("Kode OTP dikirim ulang!", "success");
+    startResendCooldown();
+  }
+
+  // ─── Email linking ───────────────────────────────────────────
 
   async function handleLinkEmail() {
     const trimmed = emailInput.trim().toLowerCase();
@@ -104,15 +188,61 @@ export default function LinkedAccountsScreen() {
       return;
     }
 
-    showToast("Email berhasil dihubungkan! Cek inbox untuk konfirmasi.", "success");
-    setShowEmailForm(false);
-    setEmailInput("");
+    setEmailTrimmed(trimmed);
+    setEmailStep("otp");
+    resetOtp();
+    startResendCooldown();
+    showToast("Kode OTP dikirim ke email!", "success");
+  }
+
+  async function handleResendEmailOtp() {
+    if (resendCooldown > 0) return;
+    const { error: linkError } = await linkEmail(emailTrimmed);
+    if (linkError) {
+      setError(linkError.message);
+      return;
+    }
+    showToast("Kode OTP dikirim ulang ke email!", "success");
+    startResendCooldown();
+  }
+
+  // ─── OTP verification ────────────────────────────────────────
+
+  async function handleVerifyOtp(code?: string) {
+    const token = code ?? otp.join("");
+    if (token.length < 6) {
+      setError("Masukkan 6 digit kode OTP");
+      return;
+    }
+
+    setOtpVerifying(true);
+    setError("");
+
+    const isPhone = showPhoneForm && phoneStep === "otp";
+    const { error: verifyError } = isPhone
+      ? await verifyPhoneLink(phoneFormatted, token)
+      : await verifyEmailLink(emailTrimmed, token);
+
+    setOtpVerifying(false);
+
+    if (verifyError) {
+      setError(verifyError.message);
+      return;
+    }
+
+    const label = isPhone ? "Nomor HP" : "Email";
+    showToast(`${label} berhasil dihubungkan!`, "success");
+
+    if (isPhone) resetPhoneForm();
+    else resetEmailForm();
 
     if (session?.user.id) {
       const methods = await syncLinkedMethods(session.user.id);
       setLinkedMethods(methods);
     }
   }
+
+  // ─── Google linking ───────────────────────────────────────────
 
   async function handleLinkGoogle() {
     setLinkingMethod("google");
@@ -130,6 +260,71 @@ export default function LinkedAccountsScreen() {
       setLinkedMethods(methods);
     }
   }
+
+  // ─── OTP input UI ────────────────────────────────────────────
+
+  function renderOtpInput(onResend: () => void, destination: string, channel: string) {
+    return (
+      <View className="mt-4 pt-4 border-t border-border-color">
+        <Text className="text-sm text-grey-text mb-3">
+          Masukkan kode 6 digit yang dikirim via {channel} ke {destination}
+        </Text>
+
+        <View className="flex-row justify-between mb-3">
+          {otp.map((digit, i) => (
+            <TextInput
+              key={i}
+              ref={(ref) => { otpInputs.current[i] = ref; }}
+              className={`
+                w-11 h-12 rounded-lg border text-center text-lg font-bold text-dark-text
+                ${error ? "border-red-500" : digit ? "border-navy" : "border-border-color"}
+              `}
+              maxLength={1}
+              keyboardType="number-pad"
+              value={digit}
+              onChangeText={(text) => handleOtpChange(text, i)}
+              onKeyPress={({ nativeEvent }) => handleOtpKeyPress(nativeEvent.key, i)}
+            />
+          ))}
+        </View>
+
+        {error ? (
+          <Text className="text-xs text-red-500 mb-2">{error}</Text>
+        ) : null}
+
+        <Text
+          className={`text-xs mb-3 ${resendCooldown > 0 ? "text-grey-text" : "text-navy font-bold"}`}
+          onPress={onResend}
+        >
+          {resendCooldown > 0
+            ? `Kirim ulang dalam ${resendCooldown} detik`
+            : "Kirim ulang kode OTP"}
+        </Text>
+
+        <View className="flex-row">
+          <View className="flex-1 mr-2">
+            <Button
+              title="Batal"
+              variant="secondary"
+              onPress={() => {
+                if (showPhoneForm) resetPhoneForm();
+                else resetEmailForm();
+              }}
+            />
+          </View>
+          <View className="flex-1 ml-2">
+            <Button
+              title="Verifikasi"
+              onPress={() => handleVerifyOtp()}
+              loading={otpVerifying}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  // ─── Render ───────────────────────────────────────────────────
 
   const isLinked = (method: AuthMethod) => linkedMethods.includes(method);
   const allMethods: AuthMethod[] = ["phone", "email", "google"];
@@ -181,7 +376,7 @@ export default function LinkedAccountsScreen() {
                     </Text>
                   )}
                 </View>
-                {!linked && (
+                {!linked && !(method === "phone" && showPhoneForm) && !(method === "email" && showEmailForm) && (
                   <TouchableOpacity
                     className="bg-navy/10 rounded-lg px-3 py-2"
                     onPress={() => {
@@ -189,9 +384,11 @@ export default function LinkedAccountsScreen() {
                       if (method === "phone") {
                         setShowPhoneForm(true);
                         setShowEmailForm(false);
+                        resetEmailForm();
                       } else if (method === "email") {
                         setShowEmailForm(true);
                         setShowPhoneForm(false);
+                        resetPhoneForm();
                       } else {
                         handleLinkGoogle();
                       }
@@ -205,8 +402,8 @@ export default function LinkedAccountsScreen() {
                 )}
               </View>
 
-              {/* Inline link phone form */}
-              {method === "phone" && showPhoneForm && !linked && (
+              {/* Phone: input step */}
+              {method === "phone" && showPhoneForm && !linked && phoneStep === "input" && (
                 <View className="mt-4 pt-4 border-t border-border-color">
                   <Input
                     placeholder="contoh: 08123456789"
@@ -217,23 +414,19 @@ export default function LinkedAccountsScreen() {
                     }}
                     keyboardType="phone-pad"
                     label="Nomor HP baru"
-                    error={error && showPhoneForm ? error : undefined}
+                    error={error && showPhoneForm && phoneStep === "input" ? error : undefined}
                   />
                   <View className="flex-row mt-3">
                     <View className="flex-1 mr-2">
                       <Button
                         title="Batal"
                         variant="secondary"
-                        onPress={() => {
-                          setShowPhoneForm(false);
-                          setPhoneInput("");
-                          setError("");
-                        }}
+                        onPress={resetPhoneForm}
                       />
                     </View>
                     <View className="flex-1 ml-2">
                       <Button
-                        title="Hubungkan"
+                        title="Kirim OTP"
                         onPress={handleLinkPhone}
                         loading={phoneLinking}
                       />
@@ -242,8 +435,13 @@ export default function LinkedAccountsScreen() {
                 </View>
               )}
 
-              {/* Inline link email form */}
-              {method === "email" && showEmailForm && !linked && (
+              {/* Phone: OTP step */}
+              {method === "phone" && showPhoneForm && !linked && phoneStep === "otp" &&
+                renderOtpInput(handleResendPhoneOtp, phoneFormatted, "WhatsApp/SMS")
+              }
+
+              {/* Email: input step */}
+              {method === "email" && showEmailForm && !linked && emailStep === "input" && (
                 <View className="mt-4 pt-4 border-t border-border-color">
                   <Input
                     placeholder="contoh: nama@email.com"
@@ -255,23 +453,19 @@ export default function LinkedAccountsScreen() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     label="Alamat email"
-                    error={error && showEmailForm ? error : undefined}
+                    error={error && showEmailForm && emailStep === "input" ? error : undefined}
                   />
                   <View className="flex-row mt-3">
                     <View className="flex-1 mr-2">
                       <Button
                         title="Batal"
                         variant="secondary"
-                        onPress={() => {
-                          setShowEmailForm(false);
-                          setEmailInput("");
-                          setError("");
-                        }}
+                        onPress={resetEmailForm}
                       />
                     </View>
                     <View className="flex-1 ml-2">
                       <Button
-                        title="Hubungkan"
+                        title="Kirim OTP"
                         onPress={handleLinkEmail}
                         loading={emailLinking}
                       />
@@ -279,6 +473,11 @@ export default function LinkedAccountsScreen() {
                   </View>
                 </View>
               )}
+
+              {/* Email: OTP step */}
+              {method === "email" && showEmailForm && !linked && emailStep === "otp" &&
+                renderOtpInput(handleResendEmailOtp, emailTrimmed, "email")
+              }
             </Card>
           );
         })}

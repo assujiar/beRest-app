@@ -1,6 +1,6 @@
 name: EAS Update (OTA)
 
-# Setiap push ke branch develop/main/claude/* → otomatis update di dev app
+# Setiap push ke branch develop/main/claude/* → otomatis OTA update
 on:
   push:
     branches:
@@ -40,11 +40,19 @@ jobs:
           packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Determine channel
+        id: channel
+        run: |
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            echo "channel=production" >> $GITHUB_OUTPUT
+          else
+            echo "channel=preview" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish OTA Update
         env:
           CI: 1
         run: |
-          BRANCH_NAME="${GITHUB_REF_NAME//\//-}"
           eas update \
-            --branch "$BRANCH_NAME" \
+            --channel "${{ steps.channel.outputs.channel }}" \
             --message "${{ github.event.head_commit.message }}"
