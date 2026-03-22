@@ -3,6 +3,7 @@ import {
   View,
   TextInput,
   Text,
+  Platform,
   type TextInputProps,
 } from 'react-native';
 import { GLASS, RADIUS, TYPO } from '@utils/theme';
@@ -60,12 +61,11 @@ export function Input({
           backgroundColor: bgColor,
           paddingHorizontal: 16,
           gap: 10,
-          ...(isFocused ? {
+          ...(isFocused && Platform.OS === 'ios' ? {
             shadowColor: '#2C7695',
             shadowOffset: { width: 0, height: 0 },
             shadowOpacity: 0.15,
             shadowRadius: 8,
-            elevation: 2,
           } : {}),
         }}
       >
