@@ -1,12 +1,14 @@
 import "../global.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as Notifications from "expo-notifications";
 import { useAuthStore } from "@stores/auth.store";
 import { onAuthStateChange, getProfile } from "@services/auth.service";
+import { registerPushToken } from "@services/notification.service";
 import { useRoleStore } from "@stores/role.store";
 import { useModulesStore } from "@stores/modules.store";
 
@@ -119,6 +121,11 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
                 setActiveModules(profile.active_modules);
               }
             }
+
+            // Register push token after login
+            registerPushToken(session.user.id).catch((err) =>
+              console.warn("[Apick] Push token registration failed:", err)
+            );
           } else {
             setProfile(null);
             setRole("consumer");
@@ -144,12 +151,43 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** Handle notification tap → navigate to deep_link */
+function NotificationHandler() {
+  const router = useRouter();
+  const responseListener = useRef<Notifications.EventSubscription | null>(null);
+
+  useEffect(() => {
+    // When user taps a notification
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        const deepLink =
+          response.notification.request.content.data?.deep_link as
+            | string
+            | undefined;
+        if (deepLink) {
+          try {
+            router.push(deepLink as any);
+          } catch (err) {
+            console.warn("[Apick] Deep link navigation failed:", err);
+          }
+        }
+      });
+
+    return () => {
+      responseListener.current?.remove();
+    };
+  }, [router]);
+
+  return null;
+}
+
 export default function RootLayout() {
   return (
     <AppErrorBoundary>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
           <AuthInitializer>
+            <NotificationHandler />
             <StatusBar style="dark" />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="index" />
