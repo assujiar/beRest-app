@@ -146,7 +146,12 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
           setSession(session);
 
           if (session) {
-            const profile = await getProfile(session.user.id);
+            let profile = null;
+            try {
+              profile = await getProfile(session.user.id);
+            } catch (fetchErr) {
+              console.warn("[Apick] Profile fetch failed (offline?):", fetchErr);
+            }
             if (profile) {
               setProfile(profile);
               setRole(profile.role ?? "consumer");

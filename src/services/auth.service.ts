@@ -1,7 +1,14 @@
-import { supabase } from "./supabase";
+import { supabase, isSupabaseConfigured } from "./supabase";
 import type { Profile, AuthMethod } from "@app-types/shared.types";
 import * as WebBrowser from "expo-web-browser";
 import { makeRedirectUri } from "expo-auth-session";
+
+const CONFIG_ERROR = {
+  data: null,
+  error: {
+    message: "Aplikasi belum terhubung ke server. Hubungi developer untuk setup.",
+  } as any,
+};
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -11,6 +18,7 @@ const WEB_CLIENT_ID =
 // ─── Google OAuth ───────────────────────────────────────────────
 
 export async function signInWithGoogle() {
+  if (!isSupabaseConfigured) return CONFIG_ERROR;
   try {
     const redirectUri = makeRedirectUri({ native: "apick://auth/callback" });
 
@@ -63,6 +71,7 @@ export async function signInWithGoogle() {
 // ─── Phone OTP (WhatsApp/SMS) ───────────────────────────────────
 
 export async function signInWithPhone(phone: string) {
+  if (!isSupabaseConfigured) return CONFIG_ERROR;
   const { data, error } = await supabase.auth.signInWithOtp({ phone }).catch((err) => ({
     data: null as any,
     error: { message: err?.message ?? "Network request failed" } as any,
@@ -104,6 +113,7 @@ export async function verifyOtp(phone: string, token: string) {
 // ─── Email OTP ──────────────────────────────────────────────────
 
 export async function signInWithEmail(email: string) {
+  if (!isSupabaseConfigured) return CONFIG_ERROR;
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
     options: {
