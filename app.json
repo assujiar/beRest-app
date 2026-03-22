@@ -24,14 +24,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false,
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [{ "scheme": "apick", "host": "auth", "pathPrefix": "/callback" }],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ]
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
